@@ -1,6 +1,6 @@
 {
   "name": "luzmo-agent-skills",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Do embedded analytics right with Luzmo. Give your AI agent end-to-end expertise: secure embedding and embed tokens, airtight multi-tenant isolation, dashboards and charts (Flex and custom), AI-powered analytics (/aiprompt), data integration, and full resource management — build, secure, and manage analytics in Luzmo, correctly the first time.",
   "author": {
     "name": "Luzmo",

@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Official Luzmo agent skills for Claude Code — embedded analytics: auth, dashboards, Flex charts, AI (/aiprompt), multi-tenancy, theming, and troubleshooting.",
-    "version": "0.1.1"
+    "version": "0.1.2"
   },
   "plugins": [
     {
       "name": "luzmo-agent-skills",
       "source": "./",
       "description": "Do embedded analytics right with Luzmo. Give your AI agent end-to-end expertise: secure embedding and embed tokens, airtight multi-tenant isolation, dashboards and charts (Flex and custom), AI-powered analytics (/aiprompt), data integration, and full resource management — build, secure, and manage analytics in Luzmo, correctly the first time.",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "author": {
         "name": "Luzmo"
       },
