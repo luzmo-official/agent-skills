@@ -123,7 +123,7 @@ write(
   '.cursor-plugin',
   'marketplace.json',
   marketplaceManifest(
-    'Official Luzmo agent skills for Cursor — embedded analytics: auth, dashboards, Flex charts, AI (/aiprompt), multi-tenancy, theming, and troubleshooting.'
+    'Embedded analytics, done right, without leaving Cursor. Give your agent end-to-end Luzmo expertise: secure embedding, multi-tenant isolation, dashboards and charts, AI analytics, data integration, and resource management. Production-grade analytics, generated correctly the first time.'
   )
 );
 write('.claude-plugin', 'plugin.json', pluginManifest(false));
@@ -131,7 +131,7 @@ write(
   '.claude-plugin',
   'marketplace.json',
   marketplaceManifest(
-    'Official Luzmo agent skills for Claude Code — embedded analytics: auth, dashboards, Flex charts, AI (/aiprompt), multi-tenancy, theming, and troubleshooting.'
+    'Embedded analytics, done right, without leaving Claude Code. Give your agent end-to-end Luzmo expertise: secure embedding, multi-tenant isolation, dashboards and charts, AI analytics, data integration, and resource management. Production-grade analytics, generated correctly the first time.'
   )
 );
 write('.codex-plugin', 'plugin.json', codexPluginManifest());

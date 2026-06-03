@@ -5,7 +5,7 @@
     "email": "support@luzmo.com"
   },
   "metadata": {
-    "description": "Official Luzmo agent skills for Cursor — embedded analytics: auth, dashboards, Flex charts, AI (/aiprompt), multi-tenancy, theming, and troubleshooting.",
+    "description": "Embedded analytics, done right, without leaving Cursor. Give your agent end-to-end Luzmo expertise: secure embedding, multi-tenant isolation, dashboards and charts, AI analytics, data integration, and resource management. Production-grade analytics, generated correctly the first time.",
     "version": "0.1.2"
   },
   "plugins": [
