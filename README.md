@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@luzmo/agent-skills/alpha)](https://www.npmjs.com/package/@luzmo/agent-skills)
 [![CI](https://github.com/luzmo-official/agent-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/luzmo-official/agent-skills/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/luzmo-official/agent-skills/blob/main/LICENSE)
 
 Agent skills for building embedded analytics applications with [Luzmo](https://luzmo.com). Compatible with Cursor, Claude Code, Codex, Windsurf, Google Antigravity, GitHub Copilot, and any tool that supports the [Agent Skills](https://agentskills.io/) standard.
 
@@ -130,7 +130,7 @@ npx skills add luzmo-official/agent-skills          # install all
 npx skills add luzmo-official/agent-skills --skill core
 ```
 
-Cursor and Claude Code marketplace manifests are generated from [`plugin.config.yaml`](plugin.config.yaml) — see [Contributing](CONTRIBUTING.md) to regenerate them.
+Cursor and Claude Code marketplace manifests are generated from [`plugin.config.yaml`](https://github.com/luzmo-official/agent-skills/blob/main/plugin.config.yaml) — see [Contributing](https://github.com/luzmo-official/agent-skills/blob/main/CONTRIBUTING.md) to regenerate them.
 
 ## Skills
 
@@ -183,11 +183,11 @@ git clone https://github.com/luzmo-official/agent-skills .agents/skills/agent-sk
 
 - [Luzmo Developer Docs](https://developer.luzmo.com/) — canonical specs (`llms.txt`, `llms-full.txt`)
 - [Agent Skills Specification](https://agentskills.io/)
-- [Contributing](CONTRIBUTING.md) — development setup, plugin manifest regeneration, changelog
-- [Eval framework](EVAL_FRAMEWORK.md) — skill quality evals ([evals/README.md](evals/README.md) for runner details)
+- [Contributing](https://github.com/luzmo-official/agent-skills/blob/main/CONTRIBUTING.md) — development setup, plugin manifest regeneration, changelog
+- [Eval framework](https://github.com/luzmo-official/agent-skills/blob/main/EVAL_FRAMEWORK.md) — skill quality evals ([evals/README.md](https://github.com/luzmo-official/agent-skills/blob/main/evals/README.md) for runner details)
 
 ## License
 
-[Apache License 2.0](LICENSE) — Copyright © 2026 Luzmo.
+[Apache License 2.0](https://github.com/luzmo-official/agent-skills/blob/main/LICENSE) — Copyright © 2026 Luzmo.
 
-You may use, modify, and distribute these skills under the terms of the Apache 2.0 license. See [LICENSE](LICENSE) and [NOTICE](NOTICE) for details. "Luzmo" and related marks are trademarks of Luzmo and are not licensed for use except as described in the license.
+You may use, modify, and distribute these skills under the terms of the Apache 2.0 license. See [LICENSE](https://github.com/luzmo-official/agent-skills/blob/main/LICENSE) and [NOTICE](https://github.com/luzmo-official/agent-skills/blob/main/NOTICE) for details. "Luzmo" and related marks are trademarks of Luzmo and are not licensed for use except as described in the license.

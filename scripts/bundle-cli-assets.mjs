@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const cli = join(root, 'packages/cli');
 
-for (const name of ['skills', 'skills.manifest.json', 'plugin.config.yaml', 'LICENSE', 'NOTICE']) {
+for (const name of ['skills', 'skills.manifest.json', 'plugin.config.yaml', 'README.md', 'LICENSE', 'NOTICE']) {
   const src = join(root, name);
   const dest = join(cli, name);
   if (!existsSync(src)) {

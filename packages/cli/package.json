@@ -1,7 +1,28 @@
 {
   "name": "@luzmo/agent-skills",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Install Luzmo agent skills and optional MCP config for Cursor, Claude Code, Codex, and more.",
+  "keywords": [
+    "luzmo",
+    "agent-skills",
+    "embedded-analytics",
+    "cursor",
+    "claude-code",
+    "codex",
+    "mcp",
+    "ai",
+    "analytics",
+    "dashboard"
+  ],
+  "homepage": "https://github.com/luzmo-official/agent-skills#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luzmo-official/agent-skills.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/luzmo-official/agent-skills/issues"
+  },
   "license": "Apache-2.0",
   "type": "module",
   "bin": {

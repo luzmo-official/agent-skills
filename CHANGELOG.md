@@ -5,6 +5,20 @@ All notable changes to Luzmo Agent Skills are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project is in `alpha`; until `1.0.0`, minor versions may include breaking changes.
 
+## [0.1.1] - 2026-06-04
+
+### Fixed
+
+- The published npm package now includes `README.md`. It was listed in the package `files` but never
+  copied into `packages/cli/` by the publish-time bundler, so the npm page rendered without a readme.
+
+### Changed
+
+- Converted relative repo-file links in the README to absolute GitHub URLs so they resolve on the npm
+  page as well as GitHub.
+- Added `keywords`, `homepage`, `repository`, and `bugs` metadata to `@luzmo/agent-skills` for better
+  npm discoverability and links.
+
 ## [0.1.0] - 2026-06-01
 
 ### Added

@@ -30,6 +30,7 @@ ENV/
 packages/cli/skills/
 packages/cli/skills.manifest.json
 packages/cli/plugin.config.yaml
+packages/cli/README.md
 packages/cli/LICENSE
 packages/cli/NOTICE
 
