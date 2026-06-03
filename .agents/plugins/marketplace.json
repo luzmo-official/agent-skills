@@ -1,11 +1,11 @@
 {
-  "name": "agent-skills",
+  "name": "luzmo-agent-skills",
   "interface": {
     "displayName": "Luzmo Agent Skills"
   },
   "plugins": [
     {
-      "name": "agent-skills",
+      "name": "luzmo-agent-skills",
       "source": {
         "source": "local",
         "path": "./"

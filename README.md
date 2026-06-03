@@ -91,7 +91,7 @@ Everything ships from **this single repository** — there are no separate per-t
 |---|---|
 | Any tool | `npx @luzmo/agent-skills@alpha` (interactive wizard — copies skills into the right dirs) |
 | Cursor | `/add-plugin https://github.com/luzmo-official/agent-skills.git` (reads `.cursor-plugin/`) |
-| Claude Code | `/plugin marketplace add luzmo-official/agent-skills` then `/plugin install agent-skills` (reads `.claude-plugin/`) |
+| Claude Code | `/plugin marketplace add luzmo-official/agent-skills` then `/plugin install luzmo-agent-skills` (reads `.claude-plugin/`) |
 | Google Antigravity | `npx @luzmo/agent-skills@alpha add --tool antigravity` (auto-discovered from `.agents/skills/`) |
 | Codex / Copilot / Gemini CLI | `npx skills add luzmo-official/agent-skills` (via [skills.sh](https://skills.sh)) |
 | Manual | clone or copy `skills/*` (see [Manual install](#manual-install-fallback)) |
@@ -106,7 +106,7 @@ Everything ships from **this single repository** — there are no separate per-t
 
 ```bash
 /plugin marketplace add luzmo-official/agent-skills
-/plugin install agent-skills
+/plugin install luzmo-agent-skills
 ```
 
 ### Google Antigravity

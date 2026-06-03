@@ -14,6 +14,9 @@ This project is in `alpha`; until `1.0.0`, minor versions may include breaking c
 
 ### Changed
 
+- Renamed the Cursor/Claude Code plugin from `agent-skills` to `luzmo-agent-skills` for a unique,
+  branded marketplace identity. Claude install is now `/plugin install luzmo-agent-skills`. The npm
+  package name (`@luzmo/agent-skills`) is unchanged.
 - Converted relative repo-file links in the README to absolute GitHub URLs so they resolve on the npm
   page as well as GitHub.
 - Added `keywords`, `homepage`, `repository`, and `bugs` metadata to `@luzmo/agent-skills` for better

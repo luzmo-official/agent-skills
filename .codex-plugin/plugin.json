@@ -1,7 +1,7 @@
 {
-  "name": "agent-skills",
-  "version": "0.1.0",
-  "description": "Skills for embedded analytics with Luzmo — auth, dashboards, Flex, AI (/aiprompt), multi-tenancy, theming, troubleshooting.",
+  "name": "luzmo-agent-skills",
+  "version": "0.1.1",
+  "description": "Do embedded analytics right with Luzmo. Give your AI agent end-to-end expertise: secure embedding and embed tokens, airtight multi-tenant isolation, dashboards and charts (Flex and custom), AI-powered analytics (/aiprompt), data integration, and full resource management — build, secure, and manage analytics in Luzmo, correctly the first time.",
   "author": {
     "name": "Luzmo",
     "email": "support@luzmo.com"
@@ -25,8 +25,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Luzmo Agent Skills",
-    "shortDescription": "Skills for embedded analytics with Luzmo — auth, dashboards, Flex, AI (/aiprompt), multi-tenancy, theming, troubleshooting.",
-    "longDescription": "Skills for embedded analytics with Luzmo — auth, dashboards, Flex, AI (/aiprompt), multi-tenancy, theming, troubleshooting.",
+    "shortDescription": "Do embedded analytics right with Luzmo. Give your AI agent end-to-end expertise: secure embedding and embed tokens, airtight multi-tenant isolation, dashboards and charts (Flex and custom), AI-powered analytics (/aiprompt), data integration, and full resource management — build, secure, and manage analytics in Luzmo, correctly the first time.",
+    "longDescription": "Do embedded analytics right with Luzmo. Give your AI agent end-to-end expertise: secure embedding and embed tokens, airtight multi-tenant isolation, dashboards and charts (Flex and custom), AI-powered analytics (/aiprompt), data integration, and full resource management — build, secure, and manage analytics in Luzmo, correctly the first time.",
     "developerName": "Luzmo",
     "category": "Productivity",
     "websiteURL": "https://luzmo.com",
