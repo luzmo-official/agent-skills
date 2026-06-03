@@ -1,0 +1,82 @@
+[
+  {
+    "query": "We're white-labeling our embedded analytics for resellers — each reseller wants their own primary color and logo on the dashboards. Theme API or token-level theme override?",
+    "should_trigger": true
+  },
+  {
+    "query": "Switched our embedded dashboard to default_dark via the authorization token but the area around the chart stays white. Is there a CSS variable I need to set?",
+    "should_trigger": true
+  },
+  {
+    "query": "Our IQ Chat component looks completely off-brand. Where do I find the available customization options/CSS variables for it?",
+    "should_trigger": true
+  },
+  {
+    "query": "Want to use our own design system (Tailwind tokens) inside ACK editor components. Is there a theming guide for ACK?",
+    "should_trigger": true
+  },
+  {
+    "query": "Need to apply a custom font (Inter) across all charts in the dashboard. Does that go in createTheme or per-component?",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I create a reusable theme that all our dashboards can reference instead of duplicating the JSON?",
+    "should_trigger": true
+  },
+  {
+    "query": "Per-tenant theme via embed token — each tenant has their own color palette stored in our DB. How do I pass it on createAuthorization?",
+    "should_trigger": true
+  },
+  {
+    "query": "Built-in theme list — is there a list of every theme ID I can use without creating a custom one?",
+    "should_trigger": true
+  },
+  {
+    "query": "luzmo-iq-embed-answer's link color clashes with our brand. Which CSS variable controls it?",
+    "should_trigger": true
+  },
+  {
+    "query": "Why does my Theme API theme not apply to the IQ chat? Same dashboard, same embed.",
+    "should_trigger": true
+  },
+  {
+    "query": "Multi-tenant SaaS — each tenant must only see their own rows. Pattern 1 vs Pattern 2?",
+    "should_trigger": false
+  },
+  {
+    "query": "Embed a dashboard in React with LuzmoDashboardComponent and authKey/authToken.",
+    "should_trigger": false
+  },
+  {
+    "query": "Add a Snowflake connection so my dashboards can query the orders table.",
+    "should_trigger": false
+  },
+  {
+    "query": "Build a chart builder UI where users drag fields onto a Flex chart and save it. ACK setup.",
+    "should_trigger": false
+  },
+  {
+    "query": "Python script to delete all dashboards with 'test_' prefix, with confirmation.",
+    "should_trigger": false
+  },
+  {
+    "query": "IQ Chat returns wrong dataset when users ask about churn. How do I improve accuracy?",
+    "should_trigger": false
+  },
+  {
+    "query": "Flex chart is invisible — container has height but chart renders 0px.",
+    "should_trigger": false
+  },
+  {
+    "query": "401 from createAuthorization. Env vars seem set, EU region.",
+    "should_trigger": false
+  },
+  {
+    "query": "Need to push a 200k-row CSV into Luzmo. How do I batch with createData?",
+    "should_trigger": false
+  },
+  {
+    "query": "Slot config for a date-range filter linked to a bar chart.",
+    "should_trigger": false
+  }
+]

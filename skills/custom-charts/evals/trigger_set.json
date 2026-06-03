@@ -1,0 +1,42 @@
+[
+  {
+    "query": "We need a proprietary Sankey-style chart that none of Luzmo's built-in types support. How do we build and release a custom chart plugin for our org?",
+    "should_trigger": true
+  },
+  {
+    "query": "Working on our custom chart manifest — what slot properties are required for a numeric measure vs a hierarchy dimension?",
+    "should_trigger": true
+  },
+  {
+    "query": "Our custom chart uploaded fine but it's not showing in the chart picker for other users. Did we miss the org release step?",
+    "should_trigger": true
+  },
+  {
+    "query": "How should buildQuery work when we need to reshape the query before render() gets the data?",
+    "should_trigger": true
+  },
+  {
+    "query": "What's the right way to build a Flex bar chart in our Vue 3 app for the sales team?",
+    "should_trigger": false
+  },
+  {
+    "query": "My Flex bar chart component renders in the DOM but is completely invisible — DevTools shows 0px height.",
+    "should_trigger": false
+  },
+  {
+    "query": "Backend just gave me { id, token } from createAuthorization. How do I pass these to luzmo-embed-dashboard in vanilla JS?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I let my power users edit charts inside the embedded dashboard? Looking at ACK from @luzmo/analytics-components-kit.",
+    "should_trigger": false
+  },
+  {
+    "query": "Getting 'Invalid label' errors when I configure a Flex donut chart in Angular — my measure has aggregationFunc set and everything.",
+    "should_trigger": false
+  },
+  {
+    "query": "Need to embed an existing Luzmo dashboard by id in our Next.js app — which component and props do I use?",
+    "should_trigger": false
+  }
+]

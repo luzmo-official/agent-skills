@@ -1,0 +1,34 @@
+{
+  "name": "agent-skills",
+  "displayName": "Luzmo Agent Skills",
+  "version": "0.1.0",
+  "description": "Skills for embedded analytics with Luzmo — auth, dashboards, Flex, AI (/aiprompt), multi-tenancy, theming, troubleshooting.",
+  "author": {
+    "name": "Luzmo",
+    "email": "support@luzmo.com"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "luzmo",
+    "embedded",
+    "analytics",
+    "dashboards",
+    "flex",
+    "ack",
+    "ai",
+    "aiprompt",
+    "multi-tenancy",
+    "theming"
+  ],
+  "homepage": "https://luzmo.com",
+  "repository": "https://github.com/luzmo-official/agent-skills",
+  "mcpServers": {
+    "luzmo": {
+      "url": "https://api.luzmo.com/0.1.0/mcp",
+      "headers": {
+        "X-Luzmo-Key": "${LUZMO_KEY}",
+        "X-Luzmo-Token": "${LUZMO_TOKEN}"
+      }
+    }
+  }
+}

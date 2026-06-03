@@ -1,0 +1,39 @@
+{
+  "name": "@luzmo/agent-skills",
+  "version": "0.1.0",
+  "description": "Install Luzmo agent skills and optional MCP config for Cursor, Claude Code, Codex, and more.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "agent-skills": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "skills",
+    "skills.manifest.json",
+    "plugin.config.yaml",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test dist/**/*.test.js 2>/dev/null || echo 'no tests yet'",
+    "prepublishOnly": "tsup",
+    "prepack": "node ../../scripts/bundle-cli-assets.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.1",
+    "commander": "^13.1.0",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "skill_name": "data-integration",
+  "boundary_notes": "Edge cases vs other skills: embedding saved dashboards → core; Flex charts → data-visualization; per-tenant database/schema → also multitenancy (Pattern 3); column/dataset naming fixes for IQ → also ai-analytics; bulk CRUD over datasets → resource-management; data not showing → troubleshooting FIRST.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to connect our PostgreSQL database (host: db.acme.com, port: 5432, database: analytics, user: readonly) to Luzmo and import the 'orders' and 'customers' tables. What's the easiest way to do this?",
+      "expected_output": "The agent should direct the user to run the ready-made connect-datasource script rather than hand-rolling the API calls. The script command should include all the required connection flags and the table names.",
+      "expectations": [
+        "Directs the user to run `connect-datasource.js` rather than writing raw API calls from scratch",
+        "Includes `--provider postgresql` flag in the suggested command",
+        "Includes `--host db.acme.com` in the suggested command",
+        "Includes `--tables orders,customers` in the suggested command",
+        "References `https://developer.luzmo.com/api/createDataprovider.md`",
+        "Does not suggest using `createDataset` for this database connection"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I have a CSV file with 85,000 sales records that I need to push to Luzmo for a new dataset. Can you give me a script to do this?",
+      "expected_output": "The agent should direct the user to the push-data script, explaining that the 10k-row limit per API call means batching is needed and the script handles this automatically. The replace mode should be used for a fresh dataset.",
+      "expectations": [
+        "Directs the user to use `push-data.js`",
+        "Mentions the 10,000-row limit per API call",
+        "Explains that the script handles batching automatically",
+        "Suggests `--mode replace` for a new dataset",
+        "References `https://developer.luzmo.com/api/createData.md`",
+        "Includes `--format csv` in the suggested command"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Should I use createData or createDataset when pushing data via the API? My colleague says createDataset is the standard way to create a dataset.",
+      "expected_output": "A clear correction: createData is the right approach for data-push datasets. createDataset is a lower-level primitive; the docs explicitly say to use createData for push datasets and createDataprovider for database connections.",
+      "expectations": [
+        "States that `createData` is the correct API for pushing data",
+        "States that `createDataset` should not be the default for data-push use cases",
+        "References `https://developer.luzmo.com/api/createData.md`",
+        "Explains that `createData` can automatically create the dataset if no `dataset_id` is provided"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "We push daily sales data to an existing Luzmo dataset. Each morning we want to add the previous day's rows without wiping out historical data. Which push mode should we use and how?",
+      "expected_output": "Explain the append mode: use --mode append with the existing dataset-id so only new rows are added. Contrast with replace which truncates first.",
+      "expectations": [
+        "Recommends `--mode append` (not `replace`)",
+        "Explains that `replace` truncates the dataset first — losing historical data",
+        "Includes `--dataset-id <uuid>` flag in the suggested script command",
+        "References `https://developer.luzmo.com/api/createData.md`"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I want to add a formula column to my Luzmo dataset that calculates profit margin as (revenue - cost) / revenue. Where do I configure this?",
+      "expected_output": "Direct the user to the data-modeling reference (Warp / formula columns). The answer should mention that formulas are configured at the dataset column level and point to the data-modeling docs.",
+      "expectations": [
+        "References data modeling docs or `references/data-modeling.md` from the skill",
+        "Mentions that derived/formula columns are configured at the dataset/column level",
+        "Does not suggest doing the calculation in the dashboard chart slots instead"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "I've connected my PostgreSQL database and the datasets are now in Luzmo. How do I display this data in an embedded dashboard in my React app?",
+      "expected_output": "The data-integration work is done — this is now an embedding question. The skill should route to `core` for saved dashboard embedding.",
+      "expectations": [
+        "Recognizes that the data integration is complete",
+        "Routes to `core` for saved dashboard embedding",
+        "Does NOT attempt to fully cover the React embedding setup from the data-integration skill",
+        "May briefly mention `@luzmo/react-embed` and embed token generation as context, but defers to `core` or `data-visualization` for the full guide"
+      ]
+    }
+  ]
+}

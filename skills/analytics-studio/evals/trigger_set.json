@@ -1,0 +1,82 @@
+[
+  {
+    "query": "Building a white-label analytics studio for our SaaS — customers should be able to drag fields onto a bar chart and save the result back to their account. What does the architecture look like with @luzmo/analytics-components-kit?",
+    "should_trigger": true
+  },
+  {
+    "query": "I dropped a luzmo-item-slot-drop-panel onto the page and nothing renders. Do I also need a separate component to actually show the chart?",
+    "should_trigger": true
+  },
+  {
+    "query": "We want a 'Lite' editor where users can change colors and rearrange items but not delete the dashboard. What role does the embed token need — designer or owner?",
+    "should_trigger": true
+  },
+  {
+    "query": "Programmatically add a KPI tile to an existing Luzmo dashboard without wiping the other items already on it. Using @luzmo/nodejs-sdk.",
+    "should_trigger": true
+  },
+  {
+    "query": "User switches the chart type from bar to line in our ACK UI — how do I remap the existing slots so they fit the new chart? Heard there's a switchItem helper.",
+    "should_trigger": true
+  },
+  {
+    "query": "Where should slotsContents and options actually live in my React app? Are they meant to be ACK-internal state or do I have to lift them up to useState?",
+    "should_trigger": true
+  },
+  {
+    "query": "Our embedded dashboard has an Edit button but clicking it doesn't put the dashboard into editing mode — token role is 'viewer'. Is that the problem?",
+    "should_trigger": true
+  },
+  {
+    "query": "Setting up loadDataFieldsForDatasets for a custom field picker in our Vue analytics studio. Need to know what shape the result should plug into.",
+    "should_trigger": true
+  },
+  {
+    "query": "We're getting a license error trying to use ACK components — does ACK need a separate add-on enabled on our Luzmo account?",
+    "should_trigger": true
+  },
+  {
+    "query": "Need to update a dashboard's contents via the API but I'm worried about overwriting existing items. Is contents merged or fully replaced?",
+    "should_trigger": true
+  },
+  {
+    "query": "Our SaaS app needs each tenant to only see their own data — every chart should auto-filter by tenant_id. How do I configure the token?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I display a single existing Luzmo dashboard in a React page using LuzmoDashboardComponent?",
+    "should_trigger": false
+  },
+  {
+    "query": "Configuring a Snowflake connection via createAccount — what properties do I need for the warehouse/role pair?",
+    "should_trigger": false
+  },
+  {
+    "query": "Trying to brand the embedded dashboards to match our app — primary color, font, dark background. Theme API or token CSS?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I push a CSV with 50k rows into a Luzmo dataset using the SDK?",
+    "should_trigger": false
+  },
+  {
+    "query": "What's the right way to store LUZMO_API_TOKEN — env var, AWS Secrets Manager, both?",
+    "should_trigger": false
+  },
+  {
+    "query": "luzmo-iq-embed-chat is rendering but every answer comes back wrong — IQ keeps picking the marketing dataset when users ask about sales.",
+    "should_trigger": false
+  },
+  {
+    "query": "Need to bulk-delete 30 old test dashboards from our Luzmo org via a Python script.",
+    "should_trigger": false
+  },
+  {
+    "query": "Dark theme on our embedded chart looks half broken — the chart turns dark but the container around it stays white.",
+    "should_trigger": false
+  },
+  {
+    "query": "Building a plugin connector for our internal billing API so Luzmo can query it directly. Where are the endpoint specs?",
+    "should_trigger": false
+  }
+]

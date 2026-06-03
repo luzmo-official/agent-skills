@@ -1,0 +1,78 @@
+[
+  {
+    "query": "How do I set up Luzmo API authentication?",
+    "should_trigger": true
+  },
+  {
+    "query": "What should I read before building with Luzmo?",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I generate an embed token for Luzmo?",
+    "should_trigger": true
+  },
+  {
+    "query": "Can I use my Luzmo API key directly in React?",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I configure Luzmo environment variables?",
+    "should_trigger": true
+  },
+  {
+    "query": "What are the Luzmo API base URLs for the US region?",
+    "should_trigger": true
+  },
+  {
+    "query": "Does Luzmo use REST GET requests for reads?",
+    "should_trigger": true
+  },
+  {
+    "query": "Which SDK packages do I need for a basic Luzmo integration?",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I embed a dashboard in React?",
+    "should_trigger": true
+  },
+  {
+    "query": "Backend just gave me { id, token } from createAuthorization. How do I actually pass these to luzmo-embed-dashboard in vanilla JS?",
+    "should_trigger": true
+  },
+  {
+    "query": "Trying to put a Luzmo dashboard inside a fixed-height drawer (600px) but it overflows. Best way to deal with the variable-height behavior?",
+    "should_trigger": true
+  },
+  {
+    "query": "On mobile our embedded dashboard looks crammed and only uses ~40% of the screen width. What screen modes do I need to configure?",
+    "should_trigger": true
+  },
+  {
+    "query": "I'm using <cumul-dashboard> in our React app — it's not loading anymore after we upgraded the SDK. Did the tag name change?",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I create a bar chart in Luzmo Flex?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I handle multi-tenant filtering in Luzmo?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I create a dataset in Luzmo?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I create a custom theme for a Luzmo dashboard?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I use Luzmo IQ chat?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I create a custom data plugin for Luzmo?",
+    "should_trigger": false
+  }
+]

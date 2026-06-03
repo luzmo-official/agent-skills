@@ -1,0 +1,47 @@
+{
+  "skill_name": "custom-charts",
+  "boundary_notes": "Edge cases vs other skills: Flex charts with built-in types → data-visualization; embedding saved dashboards by id → core; self-service chart editing → analytics-studio; auth/token setup → core; chart broken/blank after release → troubleshooting FIRST.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "None of Luzmo's built-in chart types can render the proprietary funnel visualization we need. We want to build our own chart component, package it, and release it org-wide so our team can use it in dashboards and Flex embeds. Where do we start?",
+      "expected_output": "Route to custom chart development: confirm built-in types and Flex are exhausted, then scaffold a custom chart project, configure manifest slots, implement render/resize/buildQuery, package/upload, and org release. Fetch developer.luzmo.com custom charts docs.",
+      "expectations": [
+        "Confirms this is a custom chart path (not Flex with built-in types)",
+        "Mentions manifest configuration and core functions (render, resize, buildQuery)",
+        "Mentions packaging, upload, and org-wide release workflow",
+        "References developer.luzmo.com custom charts documentation"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We uploaded our custom chart but it doesn't show up in the chart picker. The manifest validates locally. What are we missing?",
+      "expected_output": "Identify that the chart must be uploaded and released org-wide before it appears in the picker. Walk through the upload and org release workflow.",
+      "expectations": [
+        "Identifies org-wide release as a likely missing step",
+        "Mentions upload/validation workflow",
+        "Does not route to Flex chart sizing or contextId issues unless embed-specific"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I build a Flex bar chart in React with @luzmo/react-embed? I have my embed token already.",
+      "expected_output": "This is a Flex chart with a built-in type — route to data-visualization, not custom charts.",
+      "expectations": [
+        "Routes to `data-visualization` for Flex bar chart setup",
+        "Does not start a custom chart development workflow",
+        "May mention Flex sizing and localized strings as context"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Our custom chart renders in the dashboard but the data shape in render() doesn't match what we expected. We have a buildQuery function — could that be wrong?",
+      "expected_output": "Review buildQuery and manifest slot mapping vs. the data shape passed to render. Fetch manifest and chart implementation docs.",
+      "expectations": [
+        "Identifies buildQuery or slot mapping as likely cause",
+        "Mentions reviewing manifest slots vs. render data shape",
+        "Does not route to dashboard embedding setup (core) unless user asks about embed"
+      ]
+    }
+  ]
+}

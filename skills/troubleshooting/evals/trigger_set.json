@@ -1,0 +1,82 @@
+[
+  {
+    "query": "Embedded my dashboard with <luzmo-embed-dashboard> and it just doesn't render — no error, no element on the page. Token comes back fine from the backend. What now?",
+    "should_trigger": true
+  },
+  {
+    "query": "Our Flex bar chart shows up as a 0px-tall div even though the container has height. Tried setting height='400px' on the component but still invisible.",
+    "should_trigger": true
+  },
+  {
+    "query": "Three charts on the same page, two of them are swapping data with each other randomly on page reload. Something feels off but I can't tell what.",
+    "should_trigger": true
+  },
+  {
+    "query": "Getting 'Action \"search\" not found' from the Luzmo API when I try to list dashboards. The SDK call looks correct.",
+    "should_trigger": true
+  },
+  {
+    "query": "Help, our customer just emailed saying they can see another customer's revenue in our embedded dashboard. This is bad.",
+    "should_trigger": true
+  },
+  {
+    "query": "401 Unauthorized when calling createAuthorization from our Node backend — env vars look set, region is EU. What should I check first?",
+    "should_trigger": true
+  },
+  {
+    "query": "Flex chart throws 'Invalid title' on init. options.title is set to 'Quarterly revenue'.",
+    "should_trigger": true
+  },
+  {
+    "query": "Dark theme is applied via the embed token but the area around the chart is still bright white. Looks awful.",
+    "should_trigger": true
+  },
+  {
+    "query": "ACK is showing the slot drop panel but no chart ever appears no matter what fields I drop. Designer token, ACK addon is enabled.",
+    "should_trigger": true
+  },
+  {
+    "query": "IQ Chat in our React app returns completely unrelated answers — asks for 'top 5 customers by revenue' and gets back a list of products.",
+    "should_trigger": true
+  },
+  {
+    "query": "Setting up a brand-new Luzmo integration from scratch. Where do I start with auth and the SDK?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I push a 25k-row CSV into a new dataset using @luzmo/nodejs-sdk?",
+    "should_trigger": false
+  },
+  {
+    "query": "Building a multi-tenant SaaS — each tenant gets their own filtered view. What pattern should I use, dataset-level or token-level filters?",
+    "should_trigger": false
+  },
+  {
+    "query": "Creating a custom theme JSON that matches our brand palette and Inter font. What's the schema?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I let end-users edit dashboards in a white-label studio? Looking at ACK.",
+    "should_trigger": false
+  },
+  {
+    "query": "Python script to associate a dashboard with a dataset programmatically.",
+    "should_trigger": false
+  },
+  {
+    "query": "Need to model a derived column that calculates 'profit margin' as a percentage. How does that work in Luzmo's data model?",
+    "should_trigger": false
+  },
+  {
+    "query": "What's the difference between Pattern 1 (EmbedFilterGroup) and Pattern 2 (token filters) for tenant isolation in terms of security guarantees?",
+    "should_trigger": false
+  },
+  {
+    "query": "Integrating Luzmo IQ as a tool for our internal Claude agent. How do I register the tool definition?",
+    "should_trigger": false
+  },
+  {
+    "query": "What's the latest version of @luzmo/react-embed and what does it require Peer-Dep-wise?",
+    "should_trigger": false
+  }
+]

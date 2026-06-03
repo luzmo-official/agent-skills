@@ -1,0 +1,40 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: node scripts/bundle-cli-assets.mjs
+      - run: npm publish -w @luzmo/agent-skills --access public --tag alpha
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # Cursor and Claude Code install directly from this repo via the root
+  # .cursor-plugin/ and .claude-plugin/ marketplace manifests — no separate
+  # plugin repos to publish. This job just verifies those manifests are in sync
+  # with plugin.config.yaml on the released tag.
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm run plugins:build
+      - name: Verify root marketplace manifests are committed and in sync
+        run: git diff --exit-code .cursor-plugin .claude-plugin .codex-plugin .agents/plugins .mcp.json

@@ -1,0 +1,48 @@
+{
+  "skill_name": "data-visualization",
+  "boundary_notes": "Edge cases vs other skills: embedding saved dashboards by id → core; editing/building charts for end-users → analytics-studio; multi-tenant isolation → multitenancy; auth/token setup → core; dark theme container background → also handled in theming; chart broken/blank → troubleshooting FIRST.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have three Luzmo Flex charts on the same page and they all seem to be sharing filter state — when I change a filter on one chart, it affects the others. I'm pretty sure each chart should be independent.",
+      "expected_output": "Identify the contextId gotcha: all chart instances on the page must have a unique contextId. Sharing a contextId causes charts to share state (filters, interactions).",
+      "expectations": [
+        "Identifies `contextId` as the cause of shared state",
+        "States that `contextId` must be unique across all chart instances on the page",
+        "Explains that reusing a contextId causes filter and interaction state to be shared"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm getting 'Invalid title' error when I set my Flex bar chart options to { title: 'Quarterly Revenue' }. What's wrong with this?",
+      "expected_output": "Identifies that title must be a localized object { en: 'Quarterly Revenue' } not a plain string, and explains this applies to all user-facing text properties.",
+      "expectations": [
+        "Identifies the plain string as the error cause",
+        "Shows the correct localized shape: `{ en: 'Quarterly Revenue' }`",
+        "States this applies to title, label, description, and other user-facing text",
+        "May warn against nested title pattern: `{ title: { en: '...' } }`"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "My Flex bar chart component renders in the DOM but is completely invisible — DevTools shows 0px height. I'm using React with @luzmo/react-embed. What am I missing?",
+      "expected_output": "Identify the Flex sizing requirement: both the container div AND the chart component need explicit height and width. Without dimensions, Flex charts collapse to 0 height.",
+      "expectations": [
+        "Identifies missing explicit dimensions as the cause",
+        "States that BOTH the container and the component need height/width set",
+        "Mentions this is the most common Flex rendering failure",
+        "Does not route to dashboard embedding docs — this is a Flex chart issue"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I need to embed a Luzmo dashboard in a React app. I have my API key and token but I'm not sure which npm package to install or how to pass the credentials safely. Can you walk me through the setup?",
+      "expected_output": "This is a saved dashboard embedding question — route to `core` for dashboard component setup and secure token handling.",
+      "expectations": [
+        "Routes to `core` for embedding a saved dashboard by id",
+        "Does not attempt to fully answer dashboard embedding without referencing core",
+        "May briefly mention server-side token generation as context"
+      ]
+    }
+  ]
+}

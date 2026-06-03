@@ -1,0 +1,22 @@
+---
+description: Non-negotiable Luzmo security guardrails for credentials and embed tokens
+alwaysApply: true
+---
+
+# Luzmo Security Guardrails
+
+These apply to all Luzmo code. Stop and fix before continuing if any are violated.
+
+- **API credentials are server-side only.** `LUZMO_API_KEY` / `LUZMO_API_TOKEN` must never appear in browser/client code, bundles, or env vars exposed to the frontend.
+- **Embed tokens are minted on the backend** via `createAuthorization`. Only the returned `id` and `token` go to the frontend, as `authKey` / `authToken`.
+- **Frontend uses embed tokens, never API keys.** Use `@luzmo/embed`, `@luzmo/react-embed`, `@luzmo/ngx-embed`, or `@luzmo/vue-embed` with `authKey`/`authToken` — never the backend SDK in a browser.
+- **Multi-tenant isolation is a security boundary.** Scope every embed token with the correct `access`, filters, and `parameter_overrides`/`account_overrides` so a user can only see their own tenant's data. Wrong isolation is a breach, not a bug.
+
+```javascript
+// ❌ NEVER — credentials exposed in client code
+const client = new Luzmo({ api_key: 'KEY', api_token: 'TOKEN' });
+
+// ✅ Backend mints the token, frontend gets only id/token
+const auth = await client.create('authorization', { type: 'embed', /* ... */ });
+// <luzmo-embed-dashboard authKey={auth.id} authToken={auth.token} />
+```

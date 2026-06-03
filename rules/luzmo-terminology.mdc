@@ -1,0 +1,26 @@
+---
+description: Maps common BI/analytics terms to Luzmo-specific vocabulary and resource names
+alwaysApply: false
+---
+
+# Luzmo Terminology
+
+Use Luzmo's vocabulary when reasoning about resources and APIs.
+
+| You might say | In Luzmo it is |
+| --- | --- |
+| Report / view / page | **Dashboard** |
+| Data table / data model / data source row set | **Dataset** |
+| Generic "resource" in the API | **Securable** (dashboards and datasets are securables) |
+| Custom / code-defined chart | **Flex** chart |
+| Pre-built editable charts for end users | **Analytics Components Kit (ACK)** |
+| Database/warehouse/SaaS connection | **Connector** / dataprovider (`createDataprovider`) |
+| Sending app data in via API | **Push data** (`createData`) |
+| Embed auth token / signed token | **Authorization** / embed token (`createAuthorization` → `id`/`token` used as `authKey`/`authToken`) |
+| Tenant / customer / workspace | **Suborganization** (`suborganization` on the token) |
+| Row-level security / per-customer filtering | **Multi-tenancy** via token `access`, filters, `parameter_overrides`, `account_overrides` |
+| Natural-language AI Q&A | **IQ** / `/aiprompt` (IQ Chat, IQ Answer components) |
+| Query acceleration / caching | **Warp** |
+
+- Roles on an embed token: `viewer` (default), `designer`, `owner`.
+- Regions: EU (`api.luzmo.com`), US (`api.us.luzmo.com`), VPC (`{vpc}-api.luzmo.com`).

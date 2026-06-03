@@ -1,0 +1,82 @@
+[
+  {
+    "query": "I'm using @luzmo/react-embed in our Next.js admin. I dropped a LuzmoVizItemComponent into a sidebar and it just shows up as nothing — zero height, no errors in the console. Container is a flex child if that matters.",
+    "should_trigger": true
+  },
+  {
+    "query": "What's the right way to build a Flex bar chart in our Vue 3 app for the sales team?",
+    "should_trigger": true
+  },
+  {
+    "query": "We've got like 12 Flex charts on the same page and a few of them are showing the wrong data — feels like they're swapping. Could that be a contextId thing?",
+    "should_trigger": true
+  },
+  {
+    "query": "Backend just gave me { id, token } from createAuthorization. How do I actually pass these to luzmo-embed-dashboard in vanilla JS?",
+    "should_trigger": false
+  },
+  {
+    "query": "Trying to put a Luzmo dashboard inside a fixed-height drawer (600px) but it overflows. Best way to deal with the variable-height behavior?",
+    "should_trigger": false
+  },
+  {
+    "query": "Getting 'Invalid label' errors when I configure a Flex donut chart in Angular — my measure has aggregationFunc set and everything.",
+    "should_trigger": true
+  },
+  {
+    "query": "Dark theme on our Flex charts looks half-broken — the charts go dark but the page around them stays white. Same in our React app and the storybook isolation.",
+    "should_trigger": true
+  },
+  {
+    "query": "Need to add a datetime hierarchy dimension to a line chart at month granularity, what does the slot config look like for that?",
+    "should_trigger": true
+  },
+  {
+    "query": "On mobile our embedded dashboard looks crammed and only uses ~40% of the screen width. What screen modes do I need to configure?",
+    "should_trigger": false
+  },
+  {
+    "query": "I'm using <cumul-dashboard> in our React app — it's not loading anymore after we upgraded the SDK. Did the tag name change?",
+    "should_trigger": false
+  },
+  {
+    "query": "We need to set up multi-tenant data isolation for our SaaS users — every customer should only see their own org's rows. Where do I start?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I create a Plugin connector for a proprietary REST data source so Luzmo can query it?",
+    "should_trigger": false
+  },
+  {
+    "query": "Best practice for storing LUZMO_API_KEY in our Node backend deployed on Fly.io?",
+    "should_trigger": false
+  },
+  {
+    "query": "Want to give our designers a luzmo-iq-embed-chat sidebar so they can ask questions about the marketing dataset.",
+    "should_trigger": false
+  },
+  {
+    "query": "Need a Python script that searches for all dashboards created before 2024 and deletes them after confirmation.",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I let my power users edit charts inside the embedded dashboard? Looking at ACK from @luzmo/analytics-components-kit.",
+    "should_trigger": false
+  },
+  {
+    "query": "Trying to design a custom theme that matches our brand palette (#0F172A primary, Inter font). Theme API or token override?",
+    "should_trigger": false
+  },
+  {
+    "query": "Help me figure out the createAccount properties for a Snowflake connection — host, warehouse, role…",
+    "should_trigger": false
+  },
+  {
+    "query": "Refactoring our backend: should I use @luzmo/nodejs-sdk or call /securable endpoints directly with fetch?",
+    "should_trigger": false
+  },
+  {
+    "query": "IQ keeps picking the wrong dataset when our PM asks 'revenue last quarter'. Token has all 47 datasets attached — how do I improve accuracy?",
+    "should_trigger": false
+  }
+]

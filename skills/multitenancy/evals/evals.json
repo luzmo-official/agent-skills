@@ -1,0 +1,87 @@
+{
+  "skill_name": "multitenancy",
+  "boundary_notes": "Edge cases vs other skills: pure token shape with no isolation → core; visualization rendering → data-visualization; editor that exposes filters → also analytics-studio (editors can bypass weak patterns); per-tenant database setup → also data-integration; suspected breach → troubleshooting FIRST to confirm.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We have a multi-tenant SaaS app where all customers share the same Luzmo dataset but each row has a tenant_id column. When embedding dashboards we need each customer to only see their own rows. What's the recommended way to enforce this?",
+      "expected_output": "Recommend Pattern 1 (dataset-level EmbedFilterGroup with parameter_overrides). The EmbedFilterGroup enforces the filter at the dataset level so even editor users cannot bypass it. Guide through the three steps: create EmbedFilterGroup, associate it to the dataset, pass parameter_overrides in createAuthorization.",
+      "expectations": [
+        "Recommends `EmbedFilterGroup` with parameter filtering as the primary approach",
+        "Explains the three steps: create EmbedFilterGroup, associate to dataset, pass `parameter_overrides` in `createAuthorization`",
+        "States that dataset-level filtering cannot be bypassed even by editor users",
+        "References `https://developer.luzmo.com/api/createEmbedFilterGroup.md`",
+        "References `https://developer.luzmo.com/api/associateEmbedFilterGroup.md`",
+        "References `https://developer.luzmo.com/api/createAuthorization.md`"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Each of our enterprise customers has their own separate PostgreSQL database with identical schema. How do I configure Luzmo so that embedding a dashboard for Customer A queries Customer A's DB, and Customer B gets Customer B's DB?",
+      "expected_output": "Direct the user to Pattern 3 (account_overrides). The createAuthorization call should include account_overrides with the per-tenant connection details. Should fetch the connection-overrides docs before describing the exact payload shape.",
+      "expectations": [
+        "Identifies `account_overrides` as the correct mechanism",
+        "Explains that `account_overrides` is set inside the `createAuthorization` request server-side",
+        "References `https://developer.luzmo.com/guide/dashboard-embedding--handling-multi-tenant-data--connection-overrides.md`",
+        "References `https://developer.luzmo.com/api/createAuthorization.md`",
+        "Does not suggest mixing up tenant data by reusing one connection for all tenants"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We have an EmbedFilterGroup set up to filter by tenant_id, but one of our internal admin users needs to see all tenant data in the embedded dashboard — no filter applied. How do we clear the parameter for that user?",
+      "expected_output": "Explain that parameter_overrides supports a clear flag: { 'clear': true } which removes the filter constraint for that embed token. This is documented in the createAuthorization API.",
+      "expectations": [
+        "States that `parameter_overrides` with `{ \"clear\": true }` removes the filter for that token",
+        "References `https://developer.luzmo.com/api/createAuthorization.md`",
+        "Does not suggest deleting or modifying the EmbedFilterGroup itself"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "When should I use token-level filters (the 'filters' field in createAuthorization) versus setting up a dataset-level EmbedFilterGroup? I'm not sure which is more secure.",
+      "expected_output": "A clear comparison: dataset-level EmbedFilterGroup (Pattern 1) is stronger because it prevents even editor users from bypassing the filter. Token-level filters are enforced only at query time and an editor with sufficient rights could potentially work around them. Recommend EmbedFilterGroup when end-users have edit access.",
+      "expectations": [
+        "States that dataset-level `EmbedFilterGroup` is stronger — editors cannot bypass it",
+        "States that dashboard-level or token-level filters are weaker — editors can potentially remove them",
+        "Recommends `EmbedFilterGroup` for editor scenarios",
+        "References `https://developer.luzmo.com/guide/dashboard-embedding--handling-multi-tenant-data.md`"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Can I just filter the data in my React frontend after I fetch it from Luzmo? That way I can show each user only their data without touching the embed token.",
+      "expected_output": "Firmly reject client-side isolation as insecure: all multi-tenant filtering must be in the server-side createAuthorization call. Client-side filtering means all tenant data is fetched and exposed in the browser.",
+      "expectations": [
+        "Clearly states that client-side filtering is insecure for data isolation",
+        "Explains that without server-side filtering, all tenant data is sent to the browser",
+        "States that all multi-tenant logic must be in the server-side `createAuthorization` call",
+        "Does not present client-side filtering as a valid alternative"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Can you walk me through all the fields I can set in the createAuthorization API request body? I want to understand what role, access, expiry, and username mean.",
+      "expected_output": "This is a general token generation and auth API question — multitenancy skill should recognize it goes beyond multi-tenant filtering and route to core for the full createAuthorization property reference.",
+      "expectations": [
+        "Recognizes this is a general auth/token question, not specifically a multi-tenant isolation question",
+        "Routes to `core` for the full `createAuthorization` property reference",
+        "Does NOT attempt to fully document all createAuthorization fields from memory",
+        "References `https://developer.luzmo.com/api/createAuthorization.md` for the canonical field list"
+      ]
+    }
+  ,
+    {
+      "id": 7,
+      "prompt": "We run a reseller platform. Each reseller partner manages their own end-customers, and end-customers should only see their own data rows. So we need two levels: partners see only their customers' data, and end-customers see only their own rows. Can Luzmo handle two levels of tenant hierarchy, and what's the right setup?",
+      "expected_output": "Explanation that Luzmo supports two-level hierarchy by combining suborganization (for partner-level isolation of the user pool) with EmbedFilterGroup + parameter_overrides (for end-customer row-level isolation). The embed token uses suborganization to scope the partner context and parameter_overrides to filter to the specific end-customer's rows within that partition. Should clarify that suborganization alone does not provide row-level data isolation.",
+      "expectations": [
+        "Explains that two-level hierarchy requires combining `suborganization` with `EmbedFilterGroup` + `parameter_overrides`",
+        "States that `suborganization` handles partner-level isolation (each partner's user pool is scoped separately)",
+        "States that `parameter_overrides` + `EmbedFilterGroup` handles row-level isolation for end-customers within each partner",
+        "References `https://developer.luzmo.com/api/createAuthorization.md` for both `suborganization` and `parameter_overrides`",
+        "Does NOT claim that `suborganization` alone provides row-level data isolation"
+      ]
+    }
+  ]
+}

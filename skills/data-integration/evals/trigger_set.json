@@ -1,0 +1,82 @@
+[
+  {
+    "query": "Need to hook up our company's Snowflake warehouse to Luzmo so my dashboards can query the `analytics.public.orders` table directly. Where do I start?",
+    "should_trigger": true
+  },
+  {
+    "query": "I've got a 120k-row CSV of marketing leads I want to load into Luzmo. The createData endpoint says max 10k per call — how do I batch this?",
+    "should_trigger": true
+  },
+  {
+    "query": "Already have a Postgres account configured in Luzmo from a previous project. Don't want to create a duplicate — how do I list existing accounts and pick the right one?",
+    "should_trigger": true
+  },
+  {
+    "query": "We use a niche billing API (no native Luzmo connector). Want to build a plugin so Luzmo can query our billing data directly. Where are the endpoint specs?",
+    "should_trigger": true
+  },
+  {
+    "query": "My numeric column is a price but IQ formats it as a plain number. How do I tell Luzmo it's currency?",
+    "should_trigger": true
+  },
+  {
+    "query": "Need a derived column for `profit_margin = (revenue - cost) / revenue`. Where is that configured?",
+    "should_trigger": true
+  },
+  {
+    "query": "Datasets are slow on big aggregations. Can Warp acceleration help and how do I enable it?",
+    "should_trigger": true
+  },
+  {
+    "query": "createDataexport returned an id but no file. Where does the exported XLSX actually go?",
+    "should_trigger": true
+  },
+  {
+    "query": "I want to build a custom chart type (a Sankey variant) that doesn't exist in Flex. How does the manifest/structure work?",
+    "should_trigger": true
+  },
+  {
+    "query": "What's the difference between createDataset, createData, and createDataprovider? Got confused after reading three different docs.",
+    "should_trigger": true
+  },
+  {
+    "query": "Need to embed a single Luzmo dashboard in a React page using LuzmoDashboardComponent and authKey/authToken.",
+    "should_trigger": false
+  },
+  {
+    "query": "Multi-tenant SaaS — each customer must only see their own rows. EmbedFilterGroup or token filters?",
+    "should_trigger": false
+  },
+  {
+    "query": "Trying to build a white-label editor with ACK. Configure→Store→Render mental model still confusing me.",
+    "should_trigger": false
+  },
+  {
+    "query": "Customize the look of our embedded dashboards to match our brand — primary color #0F172A, Inter font.",
+    "should_trigger": false
+  },
+  {
+    "query": "401 from createAuthorization in production. Env vars look set, region EU. What's the most likely cause?",
+    "should_trigger": false
+  },
+  {
+    "query": "Need a Python script to dissociate a dashboard from a dataset.",
+    "should_trigger": false
+  },
+  {
+    "query": "luzmo-iq-embed-chat returns wrong answers — usually picks the marketing dataset when users ask about finance.",
+    "should_trigger": false
+  },
+  {
+    "query": "Embedded dashboard goes blank when toggled to dark mode — chart darkens but container is still white.",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I make end-users able to edit a dashboard themselves inside our SaaS UI?",
+    "should_trigger": false
+  },
+  {
+    "query": "Flex chart is showing 0 height with no error. Container has height 600px.",
+    "should_trigger": false
+  }
+]

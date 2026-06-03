@@ -1,0 +1,9 @@
+{
+  "luzmo": {
+    "url": "https://api.luzmo.com/0.1.0/mcp",
+    "headers": {
+      "X-Luzmo-Key": "${LUZMO_KEY}",
+      "X-Luzmo-Token": "${LUZMO_TOKEN}"
+    }
+  }
+}

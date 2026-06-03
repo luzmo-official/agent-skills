@@ -1,0 +1,73 @@
+{
+  "skill_name": "theming",
+  "boundary_notes": "Edge cases vs other skills: functional config (slots/options) → data-visualization; per-tenant theming wired to tokens → also multitenancy; ACK editor styling → also analytics-studio; IQ component styling → also ai; bulk theme scripts → resource-management; dark mode broken → troubleshooting FIRST.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to create a custom theme for our Luzmo dashboards that matches our brand colors (primary: #2563EB, background: #F8FAFC) and apply it org-wide so all dashboards use it by default.",
+      "expected_output": "A docs-first answer that guides the user to use the Theme API (createTheme) to create a reusable theme object, and then associate or apply it. Should fetch the createTheme docs before describing the JSON schema.",
+      "expectations": [
+        "References `https://developer.luzmo.com/api/createTheme.md`",
+        "Explains that the Theme API creates reusable org-wide themes",
+        "States the agent will fetch `createTheme.md` before generating the theme JSON schema",
+        "Does not invent theme JSON field names without fetching the docs"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We have a white-label product and each customer should see the embedded dashboard in their own brand colors. Can I apply different CSS styling per customer without creating a separate Luzmo theme for each one?",
+      "expected_output": "Direct the user to the runtime CSS override via the createAuthorization 'css' field. This allows per-embed-token CSS customization without creating separate Theme API resources.",
+      "expectations": [
+        "Mentions the `css` field in `createAuthorization` as the mechanism for per-embed styling",
+        "References `https://developer.luzmo.com/api/createAuthorization.md`",
+        "Explains this is separate from (and more dynamic than) the Theme API",
+        "Optionally also mentions the `theme` field in `createAuthorization` for built-in theme selection"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We switched to the 'default_dark' theme in our embed token and now the charts have dark colors but the area around the dashboard still looks white. How do we fix this?",
+      "expected_output": "Explain that when using a dark theme, the container element's background color must be set explicitly in CSS (e.g. background-color: #1a1a1e). The Luzmo dashboard adapts to the theme but does not set the outer container background automatically.",
+      "expectations": [
+        "Explains that the container element background must be set explicitly in CSS",
+        "Does not claim that the theme automatically sets the container background",
+        "Provides an example CSS rule for the container (e.g. `background-color: #1a1a2e`)",
+        "References the theming docs or `createAuthorization.md` for the dark theme note"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I'm building a custom dashboard studio with ACK (Analytics Components Kit). I tried applying a theme via the Theme API but the ACK components still look unstyled. Are they not supported by the Theme API?",
+      "expected_output": "Clarify that ACK components have their own separate theming system, documented in the ACK theming guide. The dashboard Theme API applies to Luzmo embed dashboard components, not to ACK components from @luzmo/analytics-components-kit.",
+      "expectations": [
+        "States that the dashboard Theme API does NOT control ACK component styling",
+        "Directs the user to the ACK theming guide",
+        "References `https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--theming.md`",
+        "Explains that ACK and Luzmo Embed are separate component libraries with separate theming"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Our tenants can customize the dashboard CSS by typing raw CSS into our settings panel. I take that input and pass it directly into the `css` field of `createAuthorization`. Is there a security issue with this?",
+      "expected_output": "Flag the CSS injection risk. Untrusted tenant-supplied CSS can be used for tracking pixels, exfiltration via @import, and other abuse vectors. The css field must sanitize any tenant-supplied input server-side before injecting it.",
+      "expectations": [
+        "Explicitly warns about CSS injection risks when passing untrusted user input",
+        "Mentions that `background: url(...)` can be used as a tracking pixel",
+        "Mentions that `@import` can exfiltrate data",
+        "Recommends sanitizing or whitelisting the CSS server-side before placing it in the `css` payload",
+        "Does NOT suggest it is safe to pass raw user input directly"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Can I pass both `theme` and `css` in the same `createAuthorization` call? Will they conflict?",
+      "expected_output": "Yes, both can coexist in the same token. `theme` sets the base theme (by ID or full JSON), while `css` is applied on top as an additional override. They do not conflict — css overrides layer on top of the theme.",
+      "expectations": [
+        "Confirms that `theme` and `css` can both be set in the same `createAuthorization` call",
+        "Explains that `css` overrides layer on TOP of the theme, not instead of it",
+        "Does NOT claim they conflict or that one cancels the other",
+        "References `https://developer.luzmo.com/api/createAuthorization.md` for the exact field shapes"
+      ]
+    }
+  ]
+}

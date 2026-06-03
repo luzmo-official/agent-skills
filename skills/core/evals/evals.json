@@ -1,0 +1,129 @@
+{
+  "skill_name": "core",
+  "boundary_notes": "Edge cases vs other skills: saved dashboard/chart embedding by id → core; Flex chart building → data-visualization; custom chart development → custom-charts; multi-tenant token scoping → multitenancy; CRUD scripts against API → resource-management; 401/403 troubleshooting from a working frontend → troubleshooting FIRST.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "What's wrong with putting `LUZMO_API_KEY` and `LUZMO_API_TOKEN` directly in a browser-based dashboard component?",
+      "expected_output": "A security-focused explanation that API credentials must remain server-side and that embed tokens should be used client-side.",
+      "expectations": [
+        "Explicitly says API credentials must not be exposed client-side",
+        "Explains that the frontend should receive `authKey` and `authToken` instead",
+        "Mentions server-side embed token generation",
+        "Does not suggest any client-side API key usage"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Show me how to make a GET request to fetch a Luzmo dashboard by ID.",
+      "expected_output": "A correction that Luzmo APIs are POST-based with an `action` field, not REST-style GET requests. Includes a concrete example of the correct POST body shape.",
+      "expectations": [
+        "Explains that Luzmo API operations use POST with `action`",
+        "Does not recommend GET, PUT, PATCH, or DELETE",
+        "Points to `https://developer.luzmo.com/guide/api--overview.md` or the relevant API docs",
+        "Provides a code example showing a POST request body with `action: 'get'` targeting the Securable endpoint"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I'm in the US region. Which Luzmo URLs and environment variables should I use?",
+      "expected_output": "The correct US API host and app server, plus the standard environment variable names used server-side.",
+      "expectations": [
+        "Provides `https://api.us.luzmo.com`",
+        "Provides `https://app.us.luzmo.com`",
+        "Mentions `LUZMO_API_HOST` and `LUZMO_APP_SERVER`",
+        "Mentions `LUZMO_API_KEY` and `LUZMO_API_TOKEN`",
+        "Notes that the API key-token pair should be used server-side only"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I'm building a Node.js backend and a React frontend. Which Luzmo SDK packages do I install on each side? I don't want to accidentally put server-side credentials in the browser.",
+      "expected_output": "A clear split: the Node.js backend uses @luzmo/nodejs-sdk (or the raw API) for server-side operations like generating embed tokens; the React frontend uses @luzmo/react-embed for rendering. API credentials never go in the frontend package.",
+      "expectations": [
+        "Specifies a backend SDK (e.g. `@luzmo/nodejs-sdk`) for Node.js server-side use",
+        "Specifies `@luzmo/react-embed` for the React frontend",
+        "States that API credentials (`LUZMO_API_KEY`, `LUZMO_API_TOKEN`) stay on the backend",
+        "States the frontend only receives `authKey` and `authToken` from the embed token"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "We're a SaaS platform for retail chains. Each store has its own employees. When an employee logs in, they should only be able to see and interact with colleagues from their own store — not employees from other stores. Can I use suborganizations for this?",
+      "expected_output": "Explain that `suborganization` in `createAuthorization` scopes the embed token to a logical tenant within the organization, isolating the user pool so employees only see colleagues from their own store. Fetch the createAuthorization docs for the exact shape.",
+      "expectations": [
+        "Explains that `suborganization` in `createAuthorization` isolates the user pool to a single tenant (store), so employees only see colleagues from their own store",
+        "References `https://developer.luzmo.com/api/createAuthorization.md`",
+        "Does not invent suborganization features beyond what is documented",
+        "Mentions that `suborganization` is used for logical tenant isolation within a single Luzmo organization"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "We have a Luzmo dashboard showing sales data and we want each of our 200 customer tenants to only see their own rows. All tenants share the same dataset. How do I enforce that at the data level?",
+      "expected_output": "This is a multi-tenant data isolation question — the foundation skill should recognize this is out of its scope and route to multitenancy for the full pattern guidance (EmbedFilterGroup, parameter_overrides, Pattern 1 vs 2 vs 3).",
+      "expectations": [
+        "Recognizes this is a multi-tenant data isolation problem",
+        "Routes the user to `multitenancy` for the full implementation",
+        "Does NOT attempt to fully solve this with only token shapes from core",
+        "May briefly mention `parameter_overrides` and `EmbedFilterGroup` as relevant concepts, but defers to multitenancy skill for the full implementation"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "I need to embed a Luzmo dashboard in a React app. I have my API key and token but I'm not sure which npm package to install or how to pass the credentials safely. Can you walk me through the setup?",
+      "expected_output": "A docs-first answer that specifies @luzmo/react-embed as the React package, explains that the embed token (authKey/authToken) is generated server-side from API credentials, and only the returned id and token are passed to the React component — never the raw API key.",
+      "expectations": [
+        "Specifies `@luzmo/react-embed` as the correct React package",
+        "Explains that the embed token is generated server-side",
+        "States that only `authKey` (from token `id`) and `authToken` (from token `token`) are passed to the frontend component",
+        "Does not suggest putting API credentials in client-side code",
+        "References the dashboard embedding docs"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "My embedded dashboard is not filling the full width of its container even though the container is 1400px wide. It just renders in a narrower column.",
+      "expected_output": "Explain the largeScreen screen mode: dashboards default to the desktop screen mode which may have a narrower layout. If the dashboard has a largeScreen mode configured, it activates when the embed is wide enough. Guide the user to check the dashboard's screen mode configuration.",
+      "expectations": [
+        "Mentions the `largeScreen` screen mode as a relevant factor for wide layouts",
+        "Explains that dashboards fill available width but screen mode configuration affects layout columns",
+        "References the dashboard embedding docs or screenmodes documentation"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "What's the correct npm package for embedding a Luzmo dashboard in a Vue 3 app? I've seen @luzmo/embed and @luzmo/vue-embed mentioned — which one do I use?",
+      "expected_output": "Specify @luzmo/vue-embed as the Vue-specific package. Clarify that @luzmo/embed is the vanilla Web Components package (framework-agnostic) and @luzmo/vue-embed wraps it with Vue-friendly bindings.",
+      "expectations": [
+        "Specifies `@luzmo/vue-embed` as the Vue-specific package",
+        "Clarifies the role of `@luzmo/embed` as the vanilla web components package",
+        "References the dashboard embedding docs for framework install instructions"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "I want to give some users view-only access to a dashboard and others edit access. Do I need two separate embed tokens or can I use one token for both?",
+      "expected_output": "Explain that viewer and editor access requires different embed tokens with different roles: 'viewer' for view-only and 'designer' or 'owner' for edit access. Generate a separate token per session based on the user's access level.",
+      "expectations": [
+        "States that viewer and editor access requires tokens with different `role` values",
+        "Mentions `role: 'viewer'` for view-only",
+        "Mentions `role: 'designer'` (or `'owner'`) for edit access",
+        "Explains that the token is generated per session server-side with the appropriate role",
+        "References `https://developer.luzmo.com/api/createAuthorization.md`"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "I've embedded a dashboard and it works great, but now I realize each of our customers should only see their own company's data. The dataset has a company_id column. How do I filter by the logged-in user's company?",
+      "expected_output": "This is a multi-tenant isolation question. The core skill should recognize this is out of its scope and route to multitenancy for the full implementation (EmbedFilterGroup + parameter_overrides is the recommended pattern).",
+      "expectations": [
+        "Recognizes this is a multi-tenant data isolation requirement",
+        "Routes the user to `multitenancy` for the full implementation",
+        "Does NOT recommend dashboard-level filters as the isolation mechanism",
+        "Does NOT attempt to fully solve this with only embedding patterns",
+        "May briefly mention that `parameter_overrides` in `createAuthorization` is part of the solution"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "skill_name": "analytics-studio",
+  "boundary_notes": "Edge cases vs other skills: view-only embedding → data-visualization; multi-tenant editor (editors can bypass weak filters!) → also multitenancy; data ingestion/modeling first → data-integration; ACK doesn't render → troubleshooting FIRST.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to let my SaaS users edit their own Luzmo dashboards inside our app. They should be able to rearrange charts and change colors, but not delete the dashboard itself. How do I generate the right embed token for this?",
+      "expected_output": "A docs-backed answer explaining that the embed token must include role: 'designer', generated server-side via createAuthorization. Should clarify when to use 'owner' vs 'designer' and warn that a 'viewer' token cannot activate edit mode.",
+      "expectations": [
+        "States that role: 'designer' is required for edit mode (not 'viewer')",
+        "Explains that 'viewer' tokens cannot activate the editor",
+        "Mentions that the token is generated server-side",
+        "References `https://developer.luzmo.com/api/createAuthorization.md` or the embedded-editor token docs",
+        "Clarifies the difference between 'designer' and 'owner' roles"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to programmatically add a bar chart to an existing Luzmo dashboard via the API without losing the charts that are already on it. What's the safe way to update a dashboard's contents?",
+      "expected_output": "A step-by-step answer covering the retrieve-patch-send cycle: first fetch current contents with searchDashboard/updateDashboard, then patch the returned contents JSON to add the new item, then send the full modified contents back. Must explicitly warn that contents is fully replaced on update.",
+      "expectations": [
+        "Warns that dashboard `contents` is fully replaced on update — not merged",
+        "Explains the retrieve-first-then-patch-then-send cycle",
+        "References `https://developer.luzmo.com/api/searchDashboard.md` or `updateDashboard.md`",
+        "References `https://developer.luzmo.com/api/createDashboard.md`",
+        "Mentions that `version: '0.1.99'` must be present in the contents",
+        "Mentions that a fresh UUID should be generated for each new item"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "My team is debating whether to use the Analytics Components Kit (ACK) or just the standard embedded editor. When should we use each? We want users to be able to configure their own charts with our own branded UI.",
+      "expected_output": "A clear explanation of the difference: the embedded editor (Path A) is Luzmo's own out-of-the-box editor UI; ACK (Path B) lets you build a fully custom branded configuration UI with your own layout and controls. ACK requires a license add-on and is the right choice for a custom branded UI.",
+      "expectations": [
+        "Explains that ACK builds a custom branded chart configuration UI",
+        "Explains that the embedded editor is the out-of-the-box Luzmo UI",
+        "Mentions that ACK requires the 'Analytics Components Kit' add-on license",
+        "States that ACK configures charts but a Luzmo Embed component handles rendering",
+        "References `https://developer.luzmo.com/guide/ack--overview.md`"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I'm using the ACK and setting slotsContents to configure my bar chart but the chart title I'm passing as a plain string keeps failing validation. What's the correct format?",
+      "expected_output": "Explanation that all user-facing text fields in Luzmo must be localized objects, not plain strings. The correct format is { 'en': 'My Title' }.",
+      "expectations": [
+        "States that text fields like `label` and `title` must be localized objects (e.g. `{ \"en\": \"My label\" }`)",
+        "Explicitly says plain strings are not valid for these fields",
+        "References the dashboard contents slot content fields documentation or ACK docs"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "We just provisioned a new Luzmo tenant in the EU VPC for a European customer, but the embedded dashboard isn't loading — we're getting CORS errors. We use the same appServer and apiHost as our US setup.",
+      "expected_output": "An explanation that for certain embedded components (web component dashboards in embed mode, Flex charts, and IQ widgets), the appServer and apiHost must be on the same domain as the parent application — not just the correct Luzmo region URL. EU and US also have different base URLs that cannot be mixed. If same-domain hosting is not possible, the user should contact support@luzmo.com to arrange a CNAME record (e.g. analytics.example.com pointing to the Luzmo app server, analytics-api.example.com pointing to the Luzmo API).",
+      "expectations": [
+        "Explains that web component dashboards in embed mode, Flex charts, and IQ widgets require appServer and apiHost to be on the same domain as the parent application",
+        "Notes that EU and US use different base URLs and cannot be mixed",
+        "Mentions that if same-domain co-hosting is not possible, the user can contact support@luzmo.com to arrange a CNAME",
+        "Provides an example of a CNAME-based setup (e.g. analytics.example.com for the app server, analytics-api.example.com for the API)",
+        "Does not suggest the US URLs can be reused for an EU VPC"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "I added luzmo-item-slot-drop-panel to my React app and I can drag fields into slots, but no chart appears on the page. The ACK components are visible and working. What am I missing?",
+      "expected_output": "Identifies the #1 ACK misunderstanding: ACK only configures, doesn't render. App must capture slotsContents from ACK events and pass to a separate luzmo-embed-viz-item component.",
+      "expectations": [
+        "States that ACK components do NOT render charts",
+        "Explains the Configure → Store → Render pattern",
+        "Recommends adding `<luzmo-embed-viz-item>` wired to captured `slotsContents`",
+        "Notes that ACK `item-type` must match rendering component `type`"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "We're building an analytics studio where each of our SaaS customers can edit dashboards with their own data. Customers should never be able to see other customers' data even while in edit mode. How do I enforce that?",
+      "expected_output": "This is a security-critical multi-tenant isolation question for an editor scenario. The analytics-studio skill should recognize that editor-level multi-tenant isolation is out of its scope and MUST route to multitenancy — specifically Pattern 1 (dataset-level EmbedFilterGroup) which cannot be bypassed by designer/owner roles.",
+      "expectations": [
+        "Recognizes this is a multi-tenant data isolation problem for users with editor roles",
+        "Routes the user to `multitenancy` (Pattern 1 / EmbedFilterGroup) for the implementation",
+        "Emphasizes that dashboard-level or token-level filters can be bypassed by designer/owner roles — making Pattern 1 essential",
+        "Does NOT present token-level filters as sufficient for an editor scenario",
+        "May briefly note that designer tokens combined with Pattern 1 (dataset-level) is the correct combination"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "My ACK luzmo-item-slot-drop-panel emits events — I can see 'item-updated' firing in the console — but my slotsContents React state is always empty when I pass it to luzmo-embed-viz-item. The chart never updates. How do I correctly wire the ACK event to my React component state?",
+      "expected_output": "A code-level answer showing: (1) add an event listener for the 'item-updated' event on the ACK component ref, (2) extract the configuration from event.detail (slotsContents, options, filters), (3) store it in React state via useState/setState, (4) pass the stored slotsContents state as a prop to luzmo-embed-viz-item. Must not suggest polling or a two-way binding shortcut.",
+      "expectations": [
+        "Shows adding a listener for the 'item-updated' event on the ACK component",
+        "Reads slotsContents (and optionally options/filters) from the event payload (e.g. event.detail)",
+        "Updates React state (useState or equivalent) with the captured slotsContents",
+        "Passes the React state value as the slotsContents prop to luzmo-embed-viz-item",
+        "Does NOT suggest polling the ACK component for state"
+      ]
+    }
+  ]
+}

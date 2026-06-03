@@ -1,0 +1,20 @@
+---
+description: Luzmo REST API conventions — POST + action model, base URLs, includes. Apply when calling the Luzmo API or writing SDK code.
+alwaysApply: false
+---
+
+# Luzmo API Conventions
+
+The Luzmo API is **not** traditional REST. Every call is a `POST` to `/:resource` with an `action` field in the body.
+
+- **Method is always `POST`.** Never use `GET` / `PUT` / `PATCH` / `DELETE`.
+- **Valid actions:** `create`, `get`, `update`, `delete`, `associate`, `dissociate`. There is **no `search`** — list/search uses `action: "get"` (doc URLs like `searchDashboard.md` are a naming convention only).
+- **Body shape:** `{ key, token, version: "0.1.0", action, ...params }`. Prefer the official SDKs, which wrap this (`client.get('dashboard', { find })`, `client.create('dashboard', {...})`).
+- **Base URL includes the version path:** EU `https://api.luzmo.com/0.1.0` · US `https://api.us.luzmo.com/0.1.0` · VPC `https://{vpc}-api.luzmo.com/0.1.0`.
+- **Includes return lowercase-plural properties:** `include: [{ model: 'Column' }]` → response has `columns` (not `Columns`); `Securable` → `securables`; `Account` → `accounts`.
+- **Fetch the doc before coding:** `https://developer.luzmo.com/api/{action}{Resource}.md` (e.g. `createAuthorization.md`). Don't rely on cached shapes.
+
+```javascript
+// ✅ list dashboards (no "search" action)
+await client.get('dashboard', { find: { where: { /* ... */ } }, include: [{ model: 'Column' }] });
+```

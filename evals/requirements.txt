@@ -1,0 +1,2 @@
+# Optional: enables skill-creator quick_validate.py during `npm run evals:validate`
+pyyaml>=6.0

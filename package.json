@@ -1,0 +1,22 @@
+{
+  "name": "agent-skills",
+  "private": true,
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "workspaces": [
+    "packages/*",
+    "tools/plugin-builder"
+  ],
+  "scripts": {
+    "format": "node -e \"console.log('no formatter configured')\"",
+    "typecheck": "npm -w @luzmo/agent-skills run typecheck && npm -w @luzmo/skills-plugin-builder run typecheck",
+    "build": "npm -w @luzmo/agent-skills run build",
+    "test": "npm -w @luzmo/agent-skills run test",
+    "plugins:build": "npm -w @luzmo/skills-plugin-builder run build && npm -w @luzmo/skills-plugin-builder run generate",
+    "evals": "./evals/runner.sh",
+    "evals:validate": "./evals/runner.sh validate"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

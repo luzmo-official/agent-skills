@@ -1,0 +1,33 @@
+name: agent-skills
+displayName: Luzmo Agent Skills
+description: Skills for embedded analytics with Luzmo — auth, dashboards, Flex, AI (/aiprompt), multi-tenancy, theming, troubleshooting.
+version: 0.1.0
+author:
+  name: Luzmo
+  email: support@luzmo.com
+homepage: https://luzmo.com
+repository: https://github.com/luzmo-official/agent-skills
+license: Apache-2.0
+keywords:
+  - luzmo
+  - embedded
+  - analytics
+  - dashboards
+  - flex
+  - ack
+  - ai
+  - aiprompt
+  - multi-tenancy
+  - theming
+logo: assets/logo.svg
+
+mcp:
+  defaultRegion: eu
+  pathVersion: "0.1.0"
+  regions:
+    eu:
+      apiHost: https://api.luzmo.com
+      appUrl: https://app.luzmo.com
+    us:
+      apiHost: https://api.us.luzmo.com
+      appUrl: https://app.us.luzmo.com

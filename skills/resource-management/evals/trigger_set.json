@@ -1,0 +1,42 @@
+[
+  {
+    "query": "Can you draft a Python script that creates and then updates a Luzmo dashboard using plain HTTP POST calls?",
+    "should_trigger": true
+  },
+  {
+    "query": "I need to list all datasets in Luzmo and then fetch one by id. Please keep it API-level and not SDK-only.",
+    "should_trigger": true
+  },
+  {
+    "query": "Show me a Node.js CRUD flow for Luzmo channels with secure server-side credentials.",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I associate a dashboard to related resources and later dissociate it through the API?",
+    "should_trigger": true
+  },
+  {
+    "query": "Give me a generic resource-management script template for create/search/update/delete in Luzmo.",
+    "should_trigger": true
+  },
+  {
+    "query": "Help me embed a dashboard in React with authKey/authToken props.",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I model a star schema for better dashboard performance?",
+    "should_trigger": false
+  },
+  {
+    "query": "Can you design a dark theme palette and CSS overrides for my charts?",
+    "should_trigger": false
+  },
+  {
+    "query": "I need a plugin endpoint implementation for a proprietary data source.",
+    "should_trigger": false
+  },
+  {
+    "query": "How can I use Luzmo IQ chat components in my product UI?",
+    "should_trigger": false
+  }
+]

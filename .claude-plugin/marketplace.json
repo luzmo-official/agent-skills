@@ -1,0 +1,36 @@
+{
+  "name": "agent-skills",
+  "owner": {
+    "name": "Luzmo",
+    "email": "support@luzmo.com"
+  },
+  "metadata": {
+    "description": "Official Luzmo agent skills for Claude Code — embedded analytics: auth, dashboards, Flex charts, AI (/aiprompt), multi-tenancy, theming, and troubleshooting.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "agent-skills",
+      "source": "./",
+      "description": "Skills for embedded analytics with Luzmo — auth, dashboards, Flex, AI (/aiprompt), multi-tenancy, theming, troubleshooting.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Luzmo"
+      },
+      "license": "Apache-2.0",
+      "keywords": [
+        "luzmo",
+        "embedded",
+        "analytics",
+        "dashboards",
+        "flex",
+        "ack",
+        "ai",
+        "aiprompt",
+        "multi-tenancy",
+        "theming"
+      ],
+      "category": "data"
+    }
+  ]
+}

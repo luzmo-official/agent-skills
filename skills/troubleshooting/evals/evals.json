@@ -1,0 +1,88 @@
+{
+  "skill_name": "troubleshooting",
+  "boundary_notes": "This skill diagnoses and routes — it does not implement fixes. Edge cases vs other skills: saved dashboard embedding → core; Flex chart rendering → data-visualization; auth/token generation → core; multi-tenant isolation → multitenancy; data ingestion/push → data-integration; visual branding → theming; ACK / dashboard editor → analytics-studio; IQ quality → ai-analytics.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I dropped <luzmo-embed-viz-item type=\"bar-chart\" ...> into our vanilla JS page. Container is a regular div with no inline styles. It just renders as nothing — no error, no element visible. What's going on?",
+      "expected_output": "A diagnostic answer that identifies the Flex sizing issue: Flex charts need explicit height/width on BOTH container and component. Without dimensions they render at 0 height. Should also mention checking console for errors and verifying the component name is correct.",
+      "expectations": [
+        "Identifies missing dimensions as the most likely cause for invisible Flex charts",
+        "States that BOTH the container AND the component need explicit height/width",
+        "Provides a code example showing height/width set on both",
+        "Mentions checking the browser console for errors as a first step",
+        "Routes the user to `data-visualization` for the full implementation fix"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Getting 401 Unauthorized from createAuthorization in our Node backend. LUZMO_API_KEY and LUZMO_API_TOKEN are set in our env. We're on the EU tenancy. Where do I look?",
+      "expected_output": "Diagnostic answer that walks through checking: env vars actually loaded at runtime, correct region/host, credentials not swapped (key vs token), credentials are server-side only. Routes to core for deeper auth setup.",
+      "expectations": [
+        "Suggests verifying env vars are actually loaded at runtime (e.g. console.log them on startup with caution)",
+        "Asks the user to verify region/host: `https://api.luzmo.com` (EU) vs `https://api.us.luzmo.com` (US)",
+        "Suggests verifying key vs token aren't swapped",
+        "Mentions that API credentials must be server-side ONLY",
+        "Routes to `core` for full auth/SDK guidance"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Three Flex charts on the same page in our React dashboard. Two of them keep swapping data — sometimes chart A shows chart B's bars and vice versa. No error. What could that be?",
+      "expected_output": "Identifies duplicate contextId as the most likely cause and explains why. Recommends a unique-per-chart pattern.",
+      "expectations": [
+        "Identifies duplicate `contextId` as the most likely cause",
+        "Explains that each chart instance needs a unique `contextId`",
+        "Suggests a pattern like `chart-${id}` or `${section}-${index}`",
+        "Notes that the same `contextId` value across charts causes state conflicts",
+        "Routes to `data-visualization` for more contextId patterns"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "URGENT: One of our SaaS customers just told us they can see another customer's revenue in our embedded dashboard. We use a tenant_id column in the dataset and applied a filter in the dashboard editor. What did we mess up?",
+      "expected_output": "Identifies that dashboard-level filters can be bypassed by editors (designer/owner roles), and recommends switching to dataset-level EmbedFilterGroup (Pattern 1). Treats this as a security incident.",
+      "expectations": [
+        "Treats the situation as a security incident requiring immediate action",
+        "Identifies dashboard-level filters as bypassable by editors",
+        "Recommends switching to dataset-level `EmbedFilterGroup` + `parameter_overrides`",
+        "Mentions that filters must be enforced server-side via the authorization token",
+        "Routes to `multitenancy` for the full Pattern 1 implementation"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I get 'Action search not found' when trying to list dashboards via the Luzmo API using fetch. The body has `{ action: 'search', ... }`.",
+      "expected_output": "Corrects to use `action: 'get'` instead of `action: 'search'`. Mentions that search is a common confusion and that get is the right action.",
+      "expectations": [
+        "Identifies that `action: 'search'` does not exist in the Luzmo API",
+        "Provides the correct shape with `action: 'get'`",
+        "Lists the valid actions: create, get, update, delete, associate, dissociate",
+        "Routes to `core` for the full API architecture explanation",
+        "Reinforces that Luzmo uses POST-only with action in the body, NOT REST verbs"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Pushed a 25k-row CSV to Luzmo using createData in one call and got an error. What's the limit and how do I work around it?",
+      "expected_output": "States the 10,000-row-per-call limit on createData and recommends using the bundled push-data script which batches automatically.",
+      "expectations": [
+        "States the 10,000-row-per-call limit on `createData`",
+        "Recommends using the bundled `scripts/push-data.{js,py}` from `data-integration` which batches automatically",
+        "Mentions `mode: 'append'` vs `mode: 'replace'` semantics for follow-up batches",
+        "Routes to `data-integration` for full push-data guidance"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "My embedded dashboard loads but the brand colors are completely wrong — the primary color is showing as Luzmo's default blue instead of our company's green. The theme was applied last month and we haven't changed anything. Where do I start?",
+      "expected_output": "A diagnostic that checks whether the theme is set on the embed token or via the Theme API, whether the token is refreshed with the correct theme, and whether a newer token is overriding the theme. Should route to theming for full theme implementation guidance once the diagnostic is complete.",
+      "expectations": [
+        "Asks whether the theme is applied via `createAuthorization` (token-level) or the Theme API",
+        "Suggests verifying the embed token being sent to the frontend still includes the correct `theme` field",
+        "Routes to `theming` for the full theming implementation once the diagnostic identifies the cause",
+        "Does not immediately rewrite the entire theming implementation without diagnosing first"
+      ]
+    }
+  ]
+}

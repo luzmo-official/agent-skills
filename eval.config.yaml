@@ -1,0 +1,22 @@
+# Eval configuration (skill-creator pipeline)
+# Runtime secrets: evals/.env.local (see evals/.env.example)
+
+defaults:
+  model: claude-sonnet-4-6
+  grader_model: claude-sonnet-4-6
+  timeout_sec: 600
+  grader_timeout_sec: 300
+  runs_per_eval: 1
+  trigger_runs_per_query: 3
+  trigger_threshold: 0.5
+  workspaces_dir: evals/workspaces
+
+grading:
+  grader_prompt: tools/skill-creator/agents/grader.md
+
+viewer:
+  default_port: 3117
+
+skill_creator:
+  path: tools/skill-creator
+  vendor_commit: da20c92503b2e8ff1cf28ca81a0df4673debdbf7

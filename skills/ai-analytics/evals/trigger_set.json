@@ -1,0 +1,82 @@
+[
+  {
+    "query": "We want to let our customers 'ask questions' about their sales dashboard in plain English and get a chart back. Looking at luzmo-iq-embed-chat in our React app — what auth and dataset scoping do I need?",
+    "should_trigger": true
+  },
+  {
+    "query": "IQ keeps picking the wrong dataset for finance questions. Token has access to 47 datasets across marketing, sales, finance, HR. How do I narrow it down?",
+    "should_trigger": true
+  },
+  {
+    "query": "Our PMs say IQ doesn't understand 'AOV' as a column name — it returns nonsense. What's the recommended way to expose business metrics to IQ?",
+    "should_trigger": true
+  },
+  {
+    "query": "Want to plug Luzmo IQ into our internal Claude agent as a tool. Where's the IQMessage tool/function definition I'd register?",
+    "should_trigger": true
+  },
+  {
+    "query": "luzmo-iq-embed-answer takes a messages prop — what's the shape of an IQMessage exactly?",
+    "should_trigger": true
+  },
+  {
+    "query": "Trying to use the IQ components in our React Native mobile app and they just won't load.",
+    "should_trigger": true
+  },
+  {
+    "query": "Getting an IQ license error in the console. Is IQ a separate add-on we need to enable?",
+    "should_trigger": true
+  },
+  {
+    "query": "IQ formats our `mrr_eur` column as a plain integer in answers — no currency formatting. How do I fix that?",
+    "should_trigger": true
+  },
+  {
+    "query": "Server-side IQConversation call — want to drive the conversation programmatically from our backend rather than embedding a chat component.",
+    "should_trigger": true
+  },
+  {
+    "query": "Want IQ to know that `MRR` means 'Monthly Recurring Revenue normalized monthly' for our finance dataset. Where do I add that context?",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I embed a normal (non-AI) Luzmo dashboard in a Vue app?",
+    "should_trigger": false
+  },
+  {
+    "query": "Multi-tenant SaaS, each customer must only see their data. Pattern 1 or Pattern 2?",
+    "should_trigger": false
+  },
+  {
+    "query": "Push a 50k-row XLSX into a Luzmo dataset using @luzmo/nodejs-sdk.",
+    "should_trigger": false
+  },
+  {
+    "query": "Customize the appearance of our embedded dashboards — brand colors and dark theme.",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I let users build their own charts using ACK?",
+    "should_trigger": false
+  },
+  {
+    "query": "Python script that searches for all dashboards owned by a user and deletes them with confirmation.",
+    "should_trigger": false
+  },
+  {
+    "query": "Flex line chart renders with no axis labels — what slot config am I missing?",
+    "should_trigger": false
+  },
+  {
+    "query": "401 Unauthorized from createAuthorization. Env vars look right.",
+    "should_trigger": false
+  },
+  {
+    "query": "Charts on the same page swap data sometimes — feels like a contextId conflict.",
+    "should_trigger": false
+  },
+  {
+    "query": "Connect a Salesforce account so our Luzmo dashboards can query opportunities.",
+    "should_trigger": false
+  }
+]

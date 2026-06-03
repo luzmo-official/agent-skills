@@ -1,0 +1,82 @@
+[
+  {
+    "query": "We're a B2B SaaS — each customer's users sign in and embed a Luzmo dashboard. Right now they can see all customers' rows. How do I lock this down so customer A never sees customer B?",
+    "should_trigger": true
+  },
+  {
+    "query": "Our designers (designer role) can remove the dashboard's filter and see everyone's data. Token-level filters aren't holding. What's the right pattern here?",
+    "should_trigger": true
+  },
+  {
+    "query": "Each customer has their own Postgres database with the same schema. How do we point Luzmo at the correct database based on the logged-in user?",
+    "should_trigger": true
+  },
+  {
+    "query": "Trying to set up account_overrides on createAuthorization but the property doesn't seem to be picked up. Is it called connection_overrides or accountOverrides?",
+    "should_trigger": true
+  },
+  {
+    "query": "EmbedFilterGroup with `tenant_id = {{tenant_id}}` — I want to also filter by region. Can I create a second EmbedFilterGroup or do I add another parameter to the existing one?",
+    "should_trigger": true
+  },
+  {
+    "query": "URGENT: customer just emailed that they can see a competitor's pipeline data in their dashboard. We're in the same Luzmo org. What pattern broke?",
+    "should_trigger": true
+  },
+  {
+    "query": "Setting up row-level security in Luzmo for our healthcare SaaS where each clinic has its own patients. Editors must not be able to bypass the filter.",
+    "should_trigger": true
+  },
+  {
+    "query": "How does suborganization differ from EmbedFilterGroup for isolating tenants?",
+    "should_trigger": true
+  },
+  {
+    "query": "We have 200 tenants, each on their own schema in a shared Snowflake. What's the cleanest way to route queries per tenant?",
+    "should_trigger": true
+  },
+  {
+    "query": "Building parameter_overrides into createAuthorization but want to clear a parameter for one user role. Is there a 'clear' option?",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I embed a Luzmo dashboard in a public marketing page where everyone sees the same data?",
+    "should_trigger": false
+  },
+  {
+    "query": "Configuring slots for a stacked bar chart in Flex — label, type, level, aggregationFunc, do I need all of them?",
+    "should_trigger": false
+  },
+  {
+    "query": "Trying to apply a custom dark theme to our embedded dashboards. Theme API or per-token CSS?",
+    "should_trigger": false
+  },
+  {
+    "query": "@luzmo/nodejs-sdk or call POST endpoints directly with fetch for a small Node backend?",
+    "should_trigger": false
+  },
+  {
+    "query": "IQ Chat returns wrong answers when users ask about churn — looks like a column-naming issue. How do I improve IQ accuracy?",
+    "should_trigger": false
+  },
+  {
+    "query": "Best way to push a 100k-row CSV into a Luzmo dataset?",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I let users build their own charts inside our app with ACK?",
+    "should_trigger": false
+  },
+  {
+    "query": "401 errors keep coming back from createAuthorization — env vars look set. What should I check first?",
+    "should_trigger": false
+  },
+  {
+    "query": "Python script to delete all dashboards with 'test' in the name. With confirmation prompt.",
+    "should_trigger": false
+  },
+  {
+    "query": "Flex chart is invisible — 0 height — even though I set width=100%.",
+    "should_trigger": false
+  }
+]

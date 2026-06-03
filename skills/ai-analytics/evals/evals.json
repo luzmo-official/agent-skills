@@ -1,0 +1,85 @@
+{
+  "skill_name": "ai-analytics",
+  "boundary_notes": "Edge cases vs other skills: pure data modeling fixes that improve IQ accuracy → also data-integration; per-tenant IQ token scoping → also multitenancy; styling IQ components → theming; IQ in React Native (NOT supported); IQ returns wrong answers → troubleshooting FIRST.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to add an AI chat widget to our embedded analytics so users can ask questions about their data in plain English. We're using React. How do I embed the IQ Chat component and wire it up securely?",
+      "expected_output": "A docs-first answer that: covers the LuzmoIQChatComponent for React, explains that the embed token must be generated server-side and only authKey/authToken passed to the frontend, and mentions the IQ add-on license requirement.",
+      "expectations": [
+        "Mentions `LuzmoIQChatComponent` for React",
+        "States that IQ is available as an add-on license",
+        "Explains that the embed token is generated server-side",
+        "States that only `authKey` and `authToken` are passed to the frontend",
+        "References `https://developer.luzmo.com/guide/iq--introduction--chat-component.md`"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I want to send a question to Luzmo IQ from our Node.js backend and display the answer in our own custom UI — not the built-in chat widget. Which API do I use and what does the request look like?",
+      "expected_output": "Direct the user to the /aiprompt API (POST /0.1.0/aiprompt) for server-side prompts. Should fetch createAIPrompt.md before describing the request shape.",
+      "expectations": [
+        "Identifies `/aiprompt` or `createAIPrompt` as the correct API (not legacy IQMessage)",
+        "States that this is a backend / server-side API call",
+        "References `https://developer.luzmo.com/api/createAIPrompt.md`",
+        "Does not invent request/response shapes without fetching the docs"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "What's the difference between the IQ Chat component and the IQ Answer component? My designer wants to show the answer to a specific question inline in our dashboard page, not a full conversational widget.",
+      "expected_output": "Clear explanation: IQ Chat is a full conversational UI; IQ Answer renders a specific analytics answer without the chat UI. For a non-chat inline answer, the Answer component is appropriate.",
+      "expectations": [
+        "Explains that IQ Chat is a full conversational widget",
+        "Explains that IQ Answer renders a specific answer inline without the full chat UI",
+        "Recommends the Answer component for the described use case",
+        "References `https://developer.luzmo.com/guide/iq--introduction--answer-component.md`"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "We're building an LLM-powered agent using Claude that needs to answer data questions about our Luzmo datasets. How can the agent call Luzmo IQ as a tool?",
+      "expected_output": "Guide the user to the Luzmo IQ agentic workflow docs and/or hosted MCP, covering /aiprompt or MCP answer_question as a tool for function calling in an LLM agent loop.",
+      "expectations": [
+        "References `https://developer.luzmo.com/guide/guides--adding-luzmo-iq-to-agentic-workflow.md` and/or `https://developer.luzmo.com/guide/mcp--introduction.md`",
+        "Mentions `/aiprompt` or MCP tools (`answer_question`, `create_chart`) as agent-callable analytics interfaces",
+        "Explains the agentic pattern: agent calls Luzmo when a data question is detected"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Can I use the Luzmo IQ chat component in a React Native mobile app? We're building a native iOS/Android app and want the conversational AI widget in it.",
+      "expected_output": "A clear statement that React Native is not supported for the IQ Chat and Answer components, without fabricating a workaround.",
+      "expectations": [
+        "Clearly states that React Native is not supported for IQ Chat and Answer components",
+        "Does not suggest a React Native workaround that is not documented",
+        "Optionally suggests using a web view as a potential approach or contacting support"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Our Luzmo IQ keeps returning wrong answers - it picks the wrong datasets and doesn't understand our column names. We have 45 datasets in the token scope. How do I improve IQ answer quality?",
+      "expected_output": "Identifies token scope as too broad (45 datasets), recommends narrowing to 5-10 relevant datasets, and emphasizes dataset/column naming, descriptions, and subtypes for quality.",
+      "expectations": [
+        "Identifies over-broad token scope (45 datasets) as a primary issue",
+        "Recommends narrowing `access.datasets` in the embed token to 5-10 relevant datasets",
+        "Mentions dataset and column naming best practices",
+        "Suggests adding column descriptions for calculated fields",
+        "References column subtypes (currency, duration) for proper formatting",
+        "May reference the IQ quality fundamentals section or data modeling patterns"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "We're embedding IQ Chat for our SaaS customers. Each customer should only be able to ask questions about their own data — not see other customers' rows when IQ queries the datasets. How do I set this up?",
+      "expected_output": "Recognizes this is a multi-tenant data isolation requirement for IQ. The skill should route to multitenancy for the isolation implementation (parameter_overrides / EmbedFilterGroup), while noting the IQ-specific consideration of scoping access.datasets to the tenant's datasets.",
+      "expectations": [
+        "Recognizes this is a multi-tenant isolation problem, not just an IQ quality problem",
+        "Routes to `multitenancy` for the data isolation implementation",
+        "Mentions that the embed token's `access.datasets` must be scoped to only the tenant's datasets",
+        "Notes that `parameter_overrides` (Pattern 1) ensures IQ cannot see other tenants' rows even when it picks the right dataset",
+        "Does NOT present only narrowing dataset scope as sufficient — row-level isolation also requires multitenancy patterns"
+      ]
+    }
+  ]
+}

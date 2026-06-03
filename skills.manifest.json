@@ -1,0 +1,75 @@
+{
+  "version": "0.1.0",
+  "skills": [
+    {
+      "id": "core",
+      "path": "skills/core",
+      "required": true,
+      "description": "Auth, API patterns, security, embed saved dashboards/charts by id",
+      "depends_on": []
+    },
+    {
+      "id": "troubleshooting",
+      "path": "skills/troubleshooting",
+      "required": false,
+      "description": "Diagnose and triage Luzmo integration issues",
+      "depends_on": ["core"]
+    },
+    {
+      "id": "data-visualization",
+      "path": "skills/data-visualization",
+      "required": false,
+      "description": "Build Flex charts in code",
+      "depends_on": ["core"]
+    },
+    {
+      "id": "custom-charts",
+      "path": "skills/custom-charts",
+      "required": false,
+      "description": "Build a brand-new chart component when no built-in type fits",
+      "depends_on": ["core", "data-visualization"]
+    },
+    {
+      "id": "analytics-studio",
+      "path": "skills/analytics-studio",
+      "required": false,
+      "description": "Self-service analytics: Embedded Dashboard Editor or ACK",
+      "depends_on": ["core", "data-visualization"]
+    },
+    {
+      "id": "ai-analytics",
+      "path": "skills/ai-analytics",
+      "required": false,
+      "description": "AI analytics via /aiprompt and IQ embed components",
+      "depends_on": ["core"]
+    },
+    {
+      "id": "multitenancy",
+      "path": "skills/multitenancy",
+      "required": false,
+      "description": "Multi-tenant data isolation for SaaS",
+      "depends_on": ["core"]
+    },
+    {
+      "id": "data-integration",
+      "path": "skills/data-integration",
+      "required": false,
+      "description": "Connect data sources and push data",
+      "depends_on": ["core"]
+    },
+    {
+      "id": "resource-management",
+      "path": "skills/resource-management",
+      "required": false,
+      "description": "CRUD for dashboards, datasets, resources",
+      "depends_on": ["core"]
+    },
+    {
+      "id": "theming",
+      "path": "skills/theming",
+      "required": false,
+      "description": "Visual customization and branding",
+      "depends_on": ["core"]
+    }
+  ]
+}
