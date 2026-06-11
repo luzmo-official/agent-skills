@@ -34,6 +34,7 @@ export function mcpServersBlock(config: PluginConfig): Record<string, unknown> {
   const host = config.mcp?.regions?.eu?.apiHost ?? 'https://api.luzmo.com';
   return {
     luzmo: {
+      type: 'http',
       url: `${host}/${version}/mcp`,
       headers: {
         'X-Luzmo-Key': '${LUZMO_KEY}',
