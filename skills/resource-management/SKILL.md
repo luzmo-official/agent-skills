@@ -1,6 +1,11 @@
 ---
 name: resource-management
-description: Server-side Luzmo resource operations — CRUD, automation, and bulk API scripts. Use for listing, searching, creating, or deleting dashboards, datasets, themes, users, groups. Triggers on: "list all dashboards", "delete dataset", "bulk update", "automate", "script", "find resources". Critical: all deletes are irreversible and require explicit user confirmation before execution. Not for embedding saved dashboards/charts (use core), auth setup (use core), or data ingestion (use data-integration).
+description: >-
+  Server-side Luzmo resource operations - CRUD, automation, and bulk API scripts.
+  Use for listing, searching, creating, or deleting dashboards, datasets, themes, users, groups.
+  Triggers on: "list all dashboards", "delete dataset", "bulk update", "automate", "script", "find resources".
+  Critical: all deletes are irreversible and require explicit user confirmation before execution.
+  Not for embedding saved dashboards/charts (use core), auth setup (use core), or data ingestion (use data-integration).
 metadata:
   author: Luzmo
   version: 0.1.0

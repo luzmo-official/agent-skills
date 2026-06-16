@@ -1,6 +1,12 @@
 ---
 name: core
-description: Core Luzmo setup — use whenever starting a new integration or hitting auth/API errors. Triggers on: API credentials (LUZMO_API_KEY, LUZMO_API_TOKEN), embed token generation (createAuthorization), SDK selection, 401/403 errors, REST-verb confusion, "how do I authenticate", "embed dashboard", "dashboardId", "dashboard not rendering". Essential starting point before any feature skill. Use eagerly for any auth or saved-dashboard/chart embedding question. Pair with domain skills for feature-specific work. Not for building charts in code (use data-visualization), data loading (use data-integration), or tenant isolation (use multitenancy).
+description: >-
+  Core Luzmo setup - use whenever starting a new integration or hitting auth/API errors.
+  Triggers on: API credentials (LUZMO_API_KEY, LUZMO_API_TOKEN), embed token generation (createAuthorization), SDK selection, 401/403 errors, REST-verb confusion, "how do I authenticate", "embed dashboard", "dashboardId", "dashboard not rendering".
+  Essential starting point before any feature skill.
+  Use eagerly for any auth or saved-dashboard/chart embedding question.
+  Pair with domain skills for feature-specific work.
+  Not for building charts in code (use data-visualization), data loading (use data-integration), or tenant isolation (use multitenancy).
 metadata:
   author: Luzmo
   version: 0.1.0

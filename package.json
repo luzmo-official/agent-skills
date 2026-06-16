@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "format": "node -e \"console.log('no formatter configured')\"",
+    "skills:validate": "node scripts/validate-skill-frontmatter.mjs",
     "typecheck": "npm -w @luzmo/agent-skills run typecheck && npm -w @luzmo/skills-plugin-builder run typecheck",
     "build": "npm -w @luzmo/agent-skills run build",
     "test": "npm -w @luzmo/agent-skills run test",

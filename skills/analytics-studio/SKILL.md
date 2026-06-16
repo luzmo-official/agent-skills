@@ -1,6 +1,12 @@
 ---
 name: analytics-studio
-description: Build a self-service analytics environment inside your application. Two approaches — out-of-the-box Embedded Dashboard Editor (editMode) or custom Analytics Components Kit (ACK). Use for letting end-users create/edit dashboards, white-label studios, editMode, designer/owner token roles, and ACK configuration. Triggers on: "self-service analytics", "let users edit dashboards", "embedded studio", "analytics components kit", "ACK", "designer role", "dashboard editor". Critical pattern: ACK configures → your app stores state → separate renderer displays. Not for view-only embedding of saved dashboards (use core), building charts in code (use data-visualization), data connection (use data-integration), or AI queries (use ai-analytics).
+description: >-
+  Build a self-service analytics environment inside your application.
+  Two approaches - out-of-the-box Embedded Dashboard Editor (editMode) or custom Analytics Components Kit (ACK).
+  Use for letting end-users create/edit dashboards, white-label studios, editMode, designer/owner token roles, and ACK configuration.
+  Triggers on: "self-service analytics", "let users edit dashboards", "embedded studio", "analytics components kit", "ACK", "designer role", "dashboard editor".
+  Critical pattern: ACK configures -> your app stores state -> separate renderer displays.
+  Not for view-only embedding of saved dashboards (use core), building charts in code (use data-visualization), data connection (use data-integration), or AI queries (use ai-analytics).
 metadata:
   author: Luzmo
   version: 0.1.0
