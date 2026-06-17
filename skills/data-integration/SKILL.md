@@ -1,6 +1,14 @@
 ---
 name: data-integration
-description: Getting data into Luzmo from any source. Use whenever connecting a database, pushing files, or modeling data. Triggers on: "connect PostgreSQL/MySQL/Snowflake/Salesforce", "upload CSV", "import data", "sync from database", "push data via API", "data not loading", createDataprovider. Provides ready-to-use scripts. Covers data modeling, Warp acceleration, and custom connectors. Use eagerly for any data-source or schema question. Essential before charts can display anything. Not for chart rendering (use data-visualization) or per-tenant access control (use multitenancy).
+description: >-
+  Getting data into Luzmo from any source.
+  Use whenever connecting a database, pushing files, or modeling data.
+  Triggers on: "connect data source", "upload CSV", "import data", "sync from database", "push data via API", "data not loading", createDataprovider.
+  Provides ready-to-use scripts.
+  Covers data modeling, Warp acceleration, and custom connectors.
+  Use eagerly for any data-source or schema question.
+  Essential before charts can display anything.
+  Not for chart rendering (use data-visualization) or per-tenant access control (use multitenancy).
 metadata:
   author: Luzmo
   version: 0.1.0
@@ -85,7 +93,7 @@ The output shows each account's `id`, `provider`, `name`, `host`, and `scope`. U
 
 **If the user's prompt names a specific data source, provider, or host**, check the list first and match against it. If a match is found, use `--account-id`; if none fits, proceed with creation.
 
-**Note on API terminology:** The script uses `--list-accounts` but under the hood calls the Luzmo API with `"action": "get"` (not `"action": "search"`). Documentation URLs like `searchAccount.md` describe the "get" action.
+**Note on API terminology:** The script uses `--list-accounts` but under the hood calls the Luzmo API with `"action": "get"` (not `"action": "search"`). Documentation URLs like `https://developer.luzmo.com/api/searchAccount.md` describe the "get" action.
 
 **Reuse an existing account:**
 
@@ -294,7 +302,7 @@ For connectors that support it (typical warehouse/database connectors — **not*
 Fetch before implementing:
 
 - `https://developer.luzmo.com/api/createDataprovider.md`
-- `https://developer.luzmo.com/api/searchDataprovider.md`
+- `https://developer.luzmo.com/api/getDataprovider.md`
 
 For single-tenant setups where each tenant has its own schema/database, views often pair with **connection overrides** — see `multitenancy` skill for more details.
 

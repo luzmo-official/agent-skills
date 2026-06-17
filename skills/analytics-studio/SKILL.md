@@ -1,6 +1,12 @@
 ---
 name: analytics-studio
-description: Build a self-service analytics environment inside your application. Two approaches — out-of-the-box Embedded Dashboard Editor (editMode) or custom Analytics Components Kit (ACK). Use for letting end-users create/edit dashboards, white-label studios, editMode, designer/owner token roles, and ACK configuration. Triggers on: "self-service analytics", "let users edit dashboards", "embedded studio", "analytics components kit", "ACK", "designer role", "dashboard editor". Critical pattern: ACK configures → your app stores state → separate renderer displays. Not for view-only embedding of saved dashboards (use core), building charts in code (use data-visualization), data connection (use data-integration), or AI queries (use ai-analytics).
+description: >-
+  Build a self-service analytics environment inside your application.
+  Two approaches - out-of-the-box Embedded Dashboard Editor (editMode) or custom Analytics Components Kit (ACK).
+  Use for letting end-users create/edit dashboards, white-label studios, editMode, designer/owner token roles, and ACK configuration.
+  Triggers on: "self-service analytics", "let users edit dashboards", "embedded studio", "analytics components kit", "ACK", "designer role", "dashboard editor".
+  Critical pattern: ACK configures -> your app stores state -> separate renderer displays.
+  Not for view-only embedding of saved dashboards (use core), building charts in code (use data-visualization), data connection (use data-integration), or AI queries (use ai-analytics).
 metadata:
   author: Luzmo
   version: 0.1.0
@@ -192,13 +198,13 @@ When building with ACK (Path B), these are the key components available:
 
 | User need | Component | Doc |
 |---|---|---|
-| Browse/drag dataset fields | `luzmo-data-field-panel` | `ack--components--data-fields.md` |
-| Assign fields (drag) | `luzmo-item-slot-drop-panel` | `ack--components--data-slots.md` |
-| Assign fields (dropdown) | `luzmo-item-slot-picker-panel` | `ack--components--data-picker.md` |
-| Chart appearance options | `luzmo-item-option-panel` | `ack--components--item-options.md` |
-| Add/edit filters | `luzmo-filters` | `ack--components--filters--luzmo-filters.md` |
-| Render one chart | `luzmo-embed-viz-item` | `ack--components--chart-rendering--luzmo-embed-viz-item.md` |
-| Multi-chart grid (renders) | `luzmo-item-grid` | `ack--components--chart-rendering--luzmo-item-grid.md` |
+| Browse/drag dataset fields | `luzmo-data-field-panel` | `https://developer.luzmo.com/guide/ack--components--data-fields.md` |
+| Assign fields (drag) | `luzmo-item-slot-drop-panel` | `https://developer.luzmo.com/guide/ack--components--data-slots.md` |
+| Assign fields (dropdown) | `luzmo-item-slot-picker-panel` | `https://developer.luzmo.com/guide/ack--components--data-picker--luzmo-item-slot-picker-panel.md` |
+| Chart appearance options | `luzmo-item-option-panel` | `https://developer.luzmo.com/guide/ack--components--item-options.md` |
+| Add/edit filters | `luzmo-filters` | `https://developer.luzmo.com/guide/ack--components--filters--luzmo-filters.md` |
+| Render one chart | `luzmo-embed-viz-item` | `https://developer.luzmo.com/guide/ack--components--chart-rendering--luzmo-embed-viz-item.md` |
+| Multi-chart grid (renders) | `luzmo-item-grid` | `https://developer.luzmo.com/guide/ack--components--chart-rendering--luzmo-item-grid.md` |
 
 Full component documentation: `references/embedded-editor.md`
 

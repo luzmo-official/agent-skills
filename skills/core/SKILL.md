@@ -1,6 +1,12 @@
 ---
 name: core
-description: Core Luzmo setup — use whenever starting a new integration or hitting auth/API errors. Triggers on: API credentials (LUZMO_API_KEY, LUZMO_API_TOKEN), embed token generation (createAuthorization), SDK selection, 401/403 errors, REST-verb confusion, "how do I authenticate", "embed dashboard", "dashboardId", "dashboard not rendering". Essential starting point before any feature skill. Use eagerly for any auth or saved-dashboard/chart embedding question. Pair with domain skills for feature-specific work. Not for building charts in code (use data-visualization), data loading (use data-integration), or tenant isolation (use multitenancy).
+description: >-
+  Core Luzmo setup - use whenever starting a new integration or hitting auth/API errors.
+  Triggers on: API credentials (LUZMO_API_KEY, LUZMO_API_TOKEN), embed token generation (createAuthorization), SDK selection, 401/403 errors, REST-verb confusion, "how do I authenticate", "embed dashboard", "dashboardId", "dashboard not rendering".
+  Essential starting point before any feature skill.
+  Use eagerly for any auth or saved-dashboard/chart embedding question.
+  Pair with domain skills for feature-specific work.
+  Not for building charts in code (use data-visualization), data loading (use data-integration), or tenant isolation (use multitenancy).
 metadata:
   author: Luzmo
   version: 0.1.0
@@ -181,7 +187,7 @@ You may also reference `https://developer.luzmo.com/AGENTS.md` for high-level in
 
 **Note on documentation URLs:** Pages at `developer.luzmo.com` are available with a `.md` suffix for markdown format. Always prefer fetching the `.md` version when available.
 
-**Note on `search{Resource}` naming:** Documentation URLs like `searchDashboard.md` or `searchDataset.md` describe "search/list" operations, but the actual HTTP request body uses `"action": "get"` (not `"action": "search"` which doesn't exist). The "search" in the URL is a documentation convention only.
+**Note on `search{Resource}` naming:** Documentation URLs like `https://developer.luzmo.com/api/searchDashboard.md` or `https://developer.luzmo.com/api/searchDataset.md` describe "search/list" operations, but the actual HTTP request body uses `"action": "get"` (not `"action": "search"` which doesn't exist). The "search" in the URL is a documentation convention only.
 
 ### API Base URLs and Version
 

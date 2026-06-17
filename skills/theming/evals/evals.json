@@ -42,7 +42,7 @@
       "expectations": [
         "States that the dashboard Theme API does NOT control ACK component styling",
         "Directs the user to the ACK theming guide",
-        "References `https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--theming.md`",
+        "References `https://developer.luzmo.com/guide/ack--patterns.md`",
         "Explains that ACK and Luzmo Embed are separate component libraries with separate theming"
       ]
     },

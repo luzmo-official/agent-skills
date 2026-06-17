@@ -1,6 +1,11 @@
 ---
 name: ai-analytics
-description: AI-powered analytics with Luzmo — /aiprompt API and IQ embed components. Use for natural language data queries, chart generation, agentic workflows (agent analyst|item, tasks), IQ Chat/Answer embedding (luzmo-iq-embed-chat, LuzmoIQChatComponent), "AI not working", wrong answers, quality optimization. Requires AI/IQ addon license. Use eagerly for any natural-language analytics feature. Not for standard chart embedding (use core for saved dashboards, data-visualization for Flex) or React Native (IQ embed components are web-only).
+description: >-
+  AI-powered analytics with Luzmo - /aiprompt API and IQ embed components.
+  Use for natural language data queries, chart generation, agentic workflows (agent analyst|item, tasks), IQ Chat/Answer embedding (luzmo-iq-embed-chat, LuzmoIQChatComponent), "AI not working", wrong answers, quality optimization.
+  Requires AI/IQ addon license.
+  Use eagerly for any natural-language analytics feature.
+  Not for standard chart embedding (use core for saved dashboards, data-visualization for Flex) or React Native (IQ embed components are web-only).
 metadata:
   author: Luzmo
   version: 0.1.0
@@ -139,7 +144,7 @@ https://developer.luzmo.com/guide/iq--answer-component-api.md
 | Web (vanilla JS) | `<luzmo-iq-embed-answer>` |
 | React | `LuzmoIQAnswerComponent` |
 
-The Answer component accepts `messages` following the `IQMessage` structure. Fetch the API doc for the exact shape.
+The Answer component accepts `messages` following the `AIPrompt` structure. Fetch the API doc for the exact shape.
 
 ---
 
@@ -161,7 +166,7 @@ Content-Type: application/json
 Accept: text/event-stream   # required when stream: true
 ```
 
-Fetch `createAIPrompt.md` for the full body. Minimal teaching example:
+Fetch `https://developer.luzmo.com/api/createAIPrompt.md` for the full body. Minimal teaching example:
 
 ```javascript
 {
@@ -195,7 +200,7 @@ Fetch `createAIPrompt.md` for the full body. Minimal teaching example:
 | `item` | Generate, suggest, or describe a single visualization item | `task`: `generate` \| `suggest` \| `describe` |
 | `analyst` | IQ-backed natural-language Q&A (text and/or chart) | `task`: `generate` only; requires IQ addon |
 
-Always fetch `createAIPrompt.md` for the full `agent` × `task` matrix, response schema, and streaming event payloads.
+Always fetch `https://developer.luzmo.com/api/createAIPrompt.md` for the full `agent` × `task` matrix, response schema, and streaming event payloads.
 
 ### `input` types
 
@@ -211,7 +216,7 @@ Exactly one `{ type: "text", text: "..." }` is required. Optional inputs (fetch 
 
 Set `stream: true` and `Accept: text/event-stream`. The API emits JSON events in order: `start` → `progress` (optional) → `text_start` / `text_delta` / `text_end` → `asset_start` / `asset_delta` / `asset_end` → `finish` (final result) — or `error` on failure. Ends with `data: [DONE]`.
 
-Fetch `createAIPrompt.md` for exact event payloads. Socket.IO clients on a connected socket receive the same events on the `aiprompt` channel.
+Fetch `https://developer.luzmo.com/api/createAIPrompt.md` for exact event payloads. Socket.IO clients on a connected socket receive the same events on the `aiprompt` channel.
 
 ### Persisted conversations and assets
 
@@ -222,6 +227,9 @@ Fetch `createAIPrompt.md` for exact event payloads. Socket.IO clients on a conne
 | `aiconversation` | Pre-create a titled thread, or manage conversation metadata | `createAIConversation.md` |
 | `aimessage` | List/replay messages in a thread (`include: AIMessageAsset`) | `searchAIMessage.md` |
 | `aimessageasset` | Fetch persisted item asset JSON by asset id | `searchAIMessageAsset.md` |
+| `aiconversation` | Pre-create a titled thread, or manage conversation metadata | `https://developer.luzmo.com/api/createAIConversation.md` |
+| `aimessage` | List/replay messages in a thread (`include: AIMessageAsset`) | `https://developer.luzmo.com/api/searchAIMessage.md` |
+| `aimessageasset` | Fetch persisted item/dashboard JSON by asset id | `https://developer.luzmo.com/api/searchAIMessageAsset.md` |
 
 Multi-turn: pass `conversation_id` from the previous `/aiprompt` response (or from `createAIConversation`) on the next call.
 
@@ -245,7 +253,7 @@ Use when an LLM agent needs to answer analytics questions by calling Luzmo data 
 2. Parse the response (text, item asset, or mixed per `response_mode`); use `conversation_id` for follow-ups.
 3. **Hosted MCP** (Cursor, Claude, LangChain, OpenAI Agents SDK): `https://api.<region>.luzmo.com/0.1.0/mcp` — default tools: `search_datasets`, `answer_question`, `create_chart`. See `references/mcp-server.md` and `https://developer.luzmo.com/guide/mcp--introduction.md`.
 
-Fetch: `https://developer.luzmo.com/guide/guides--adding-luzmo-iq-to-agentic-workflow.md` — prefer `createAIPrompt.md` for request shapes.
+Fetch: `https://developer.luzmo.com/guide/guides--adding-luzmo-iq-to-agentic-workflow.md` — prefer `https://developer.luzmo.com/api/createAIPrompt.md` for request shapes.
 
 See also `references/agentic-integration.md`.
 
@@ -319,7 +327,7 @@ Fetch `https://developer.luzmo.com/api/createAIPrompt.md` — do not implement a
 
 - Index: `https://developer.luzmo.com/llms.txt`, `https://developer.luzmo.com/llms-full.txt`
 - `/aiprompt`: `https://developer.luzmo.com/api/createAIPrompt.md`
-- AI resources: `createAIConversation.md`, `searchAIMessage.md`, `searchAIMessageAsset.md` (CamelCase filenames)
+- AI resources: `https://developer.luzmo.com/api/createAIConversation.md`, `https://developer.luzmo.com/api/searchAIMessage.md`, `https://developer.luzmo.com/api/searchAIMessageAsset.md` (CamelCase filenames)
 - MCP: `https://developer.luzmo.com/guide/mcp--introduction.md`
 - IQ Chat/Answer: `https://developer.luzmo.com/guide/iq--chat-component-api.md`, `https://developer.luzmo.com/guide/iq--answer-component-api.md`
 - Call forms (HTML): `https://developer.luzmo.com/api/{action}{Resource}/call/{lang}`

@@ -1,6 +1,11 @@
 ---
 name: theming
-description: Visual customization and branding for Luzmo surfaces. Use for custom colors, white-labeling, dark/light modes, and per-tenant themes. Triggers on: "change colors", "brand styling", "dark mode", "white-label", "custom theme", "IQ Chat styling", "ACK theming". Routes to the correct mechanism per surface: Theme API for dashboards, CSS variables for IQ Answer, IQChatOptions for IQ Chat, Flex runtime theme. Not for chart data or slots (use data-visualization) or data security (use multitenancy).
+description: >-
+  Visual customization and branding for Luzmo surfaces.
+  Use for custom colors, white-labeling, dark/light modes, and per-tenant themes.
+  Triggers on: "change colors", "brand styling", "dark mode", "white-label", "custom theme", "IQ Chat styling", "ACK theming".
+  Routes to the correct mechanism per surface: Theme API for dashboards, CSS variables for IQ Answer, IQChatOptions for IQ Chat, Flex runtime theme.
+  Not for chart data or slots (use data-visualization) or data security (use multitenancy).
 metadata:
   author: Luzmo
   version: 0.1.0
@@ -54,7 +59,7 @@ Academy: `https://academy.luzmo.com/article/d73314lu`
 Built-in theme IDs (can be used by Flex/ACK components where a theme id prop is supported):
 `default`, `default_dark`, `vivid`, `seasonal`, `orion`, `royale`, `urban`, `pinky`, `bliss`, `radiant`, `classic`, `classic_dark`
 
-Custom themes are JSON theme objects — fetch `createTheme.md` for the full schema before generating one. When created via API, they can also be specified as `theme_id` in Flex/ACK components (alternatively pass along the full theme JSON object to the components).
+Custom themes are JSON theme objects — fetch `https://developer.luzmo.com/api/createTheme.md` for the full schema before generating one. When created via API, they can also be specified as `theme_id` in Flex/ACK components (alternatively pass along the full theme JSON object to the components).
 
 ---
 
@@ -66,7 +71,7 @@ Academy: `https://academy.luzmo.com/article/hmvy5pwz`, `https://academy.luzmo.co
 
 - Add inline `theme` JSON or `css` to the `createAuthorization` request body to apply styling per token.
 - Useful for white-labeling or per-tenant visual customization.
-- Fetch `createAuthorization.md` for exact field shapes.
+- Fetch `https://developer.luzmo.com/api/createAuthorization.md` for exact field shapes.
 
 **Dark theme note:** When using a dark theme, set a dark background on the container element explicitly — chart content adapts to the theme but the container background does not. Two approaches:
 1. CSS: `background-color: #1a1a2e` on the container element
@@ -102,7 +107,7 @@ https://developer.luzmo.com/guide/iq--answer-component-api--css-variables.md
 
 Docs:
 ```
-https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--theming.md
+https://developer.luzmo.com/guide/ack--patterns.md
 ```
 
 - ACK components (from `@luzmo/analytics-components-kit`) have their own theming approach separate from the dashboard Theme API.
