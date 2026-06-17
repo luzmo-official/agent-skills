@@ -12,7 +12,7 @@ ACK (`@luzmo/analytics-components-kit`) and Luzmo Embed components inherit **Luc
 
 ## Common token families
 
-Fetch the full list from `https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--theming.md` before quoting names in production code. Typical families:
+Fetch the full list from `https://developer.luzmo.com/guide/ack--patterns.md` before quoting names in production code. Typical families:
 
 | Family | Purpose |
 |---|---|
@@ -45,4 +45,4 @@ Fetch the full list from `https://developer.luzmo.com/guide/guides--building-a-d
 npm install @luzmo/analytics-components-kit
 ```
 
-ACK overview: `https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--overview.md`
+ACK overview: `https://developer.luzmo.com/guide/ack--overview.md`

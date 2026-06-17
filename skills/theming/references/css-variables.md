@@ -12,7 +12,7 @@ Quick map of which Luzmo surface uses which styling mechanism. For exact CSS var
 | Flex chart runtime | Per-chart `theme` prop / runtime example | `https://developer.luzmo.com/flex/examples/apply-custom-theme.md` |
 | IQ Chat component | `IQChatOptions` + `--luzmo-*` CSS variables | `https://developer.luzmo.com/guide/iq--chat-component-api--customization.md` |
 | IQ Answer component | `--luzmo-*` CSS custom properties | `https://developer.luzmo.com/guide/iq--answer-component-api--css-variables.md` |
-| ACK editor components | Lucero tokens + ACK globals | `references/lucero-tokens.md`, `https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--theming.md` |
+| ACK editor components | Lucero tokens + ACK globals | `references/lucero-tokens.md`, `https://developer.luzmo.com/guide/ack--patterns.md` |
 | Authorization `css` field | Free-form CSS targeting Luzmo-rendered classes | `https://developer.luzmo.com/api/createAuthorization.md` |
 
 ## How to Use CSS Variables

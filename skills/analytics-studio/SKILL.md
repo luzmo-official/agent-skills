@@ -186,13 +186,13 @@ When building with ACK (Path B), these are the key components available:
 
 | User need | Component | Doc |
 |---|---|---|
-| Browse/drag dataset fields | `luzmo-data-field-panel` | `ack--components--data-fields.md` |
-| Assign fields (drag) | `luzmo-item-slot-drop-panel` | `ack--components--data-slots.md` |
-| Assign fields (dropdown) | `luzmo-item-slot-picker-panel` | `ack--components--data-picker.md` |
-| Chart appearance options | `luzmo-item-option-panel` | `ack--components--item-options.md` |
-| Add/edit filters | `luzmo-filters` | `ack--components--filters--luzmo-filters.md` |
-| Render one chart | `luzmo-embed-viz-item` | `ack--components--chart-rendering--luzmo-embed-viz-item.md` |
-| Multi-chart grid (renders) | `luzmo-item-grid` | `ack--components--chart-rendering--luzmo-item-grid.md` |
+| Browse/drag dataset fields | `luzmo-data-field-panel` | `https://developer.luzmo.com/guide/ack--components--data-fields.md` |
+| Assign fields (drag) | `luzmo-item-slot-drop-panel` | `https://developer.luzmo.com/guide/ack--components--data-slots.md` |
+| Assign fields (dropdown) | `luzmo-item-slot-picker-panel` | `https://developer.luzmo.com/guide/ack--components--data-picker--luzmo-item-slot-picker-panel.md` |
+| Chart appearance options | `luzmo-item-option-panel` | `https://developer.luzmo.com/guide/ack--components--item-options.md` |
+| Add/edit filters | `luzmo-filters` | `https://developer.luzmo.com/guide/ack--components--filters--luzmo-filters.md` |
+| Render one chart | `luzmo-embed-viz-item` | `https://developer.luzmo.com/guide/ack--components--chart-rendering--luzmo-embed-viz-item.md` |
+| Multi-chart grid (renders) | `luzmo-item-grid` | `https://developer.luzmo.com/guide/ack--components--chart-rendering--luzmo-item-grid.md` |
 
 Full component documentation: `references/embedded-editor.md`
 
