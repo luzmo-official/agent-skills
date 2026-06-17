@@ -40,6 +40,10 @@
     "should_trigger": true
   },
   {
+    "query": "Standalone Flex viz-item ignores theme=\"default_dark\". How do I theme an individual Luzmo chart?",
+    "should_trigger": true
+  },
+  {
     "query": "Multi-tenant SaaS — each tenant must only see their own rows. Pattern 1 vs Pattern 2?",
     "should_trigger": false
   },

@@ -390,6 +390,7 @@ For deeper, focused guidance, read these files only when relevant:
 - `references/typescript-examples.md` — Type-safe TypeScript interfaces for authorization tokens, slot configs, and API responses
 - `references/common-mistakes.md` — Detailed anti-patterns with error messages, root causes, and fixes
 - `references/dashboard-embedding.md` — Saved dashboard/chart embedding by id. Covers component setup, `dashboardId` vs `dashboardSlug`, sizing, `editMode`, roles, events, and runtime control.
+- `references/local-development-proxy.md` — Localhost CORS/realtime recipe for Flex, web-component dashboards, and IQ-rendered charts. Covers same-origin proxying for `/0.1.0` and `/realtime`, and why `appServer` must stay pointed at the Luzmo app host.
 
 ## Implementation Documentation
 

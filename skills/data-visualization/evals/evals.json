@@ -43,6 +43,18 @@
         "Does not attempt to fully answer dashboard embedding without referencing core",
         "May briefly mention server-side token generation as context"
       ]
+    },
+    {
+      "id": 5,
+      "prompt": "My local React app renders a Luzmo Flex chart but the browser console floods with reconnecting /realtime socket errors and the chart eventually shows Query failed. apiHost points directly at https://api.luzmo.com.",
+      "expected_output": "Identify the local-development CORS/realtime issue. The answer should direct the user to proxy `/0.1.0` and `/realtime` through the local app origin, set Flex `apiHost` to the local app origin, and keep `appServer` pointed directly at the Luzmo app host. It should not suggest proxying appServer under a sub-path.",
+      "expectations": [
+        "Identifies the reconnecting `/realtime` socket as a local-development CORS/realtime issue",
+        "Recommends proxying `/0.1.0` and `/realtime` through the local app origin",
+        "Says to set Flex `apiHost` to the local app origin",
+        "Says to keep `appServer` pointed directly at the Luzmo app host",
+        "Does NOT recommend proxying or rewriting `appServer` under a sub-path"
+      ]
     }
   ]
 }

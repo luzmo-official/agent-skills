@@ -40,6 +40,10 @@
     "should_trigger": true
   },
   {
+    "query": "Embed token has the dataset in access.datasets but the Flex chart says 403 no access to the analytics dataset.",
+    "should_trigger": true
+  },
+  {
     "query": "Setting up a brand-new Luzmo integration from scratch. Where do I start with auth and the SDK?",
     "should_trigger": false
   },

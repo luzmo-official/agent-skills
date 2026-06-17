@@ -216,7 +216,7 @@ Full component documentation: `references/embedded-editor.md`
 - Keep ACK `item-type` and rendering component `type` synchronized.
 - Dashboard `contents` is **always fully replaced** on update — retrieve first, then patch, then send.
 - All user-facing text fields (`title`, `label`, etc.) must be localized objects: `{ "en": "..." }`.
-- **CORS — same-domain requirement:** For web component dashboards in embed mode, Flex charts, and IQ widgets, `appServer` and `apiHost` must be on the **same domain** as the parent application, not just the correct Luzmo region URL. If same-domain hosting is not possible, the user can contact `support@luzmo.com` to arrange a CNAME (e.g. `analytics.example.com` → Luzmo app server, `analytics-api.example.com` → Luzmo API). EU and US also use different base URLs that cannot be mixed.
+- **CORS — API/realtime origin:** For web component dashboards in embed mode, Flex charts, and IQ widgets, browser calls to the Luzmo API/realtime host must be routed through a host configured for the parent application. In local development, use the same-origin proxy in `core/references/local-development-proxy.md`: set `apiHost` to the app origin and keep `appServer` pointed directly at the Luzmo app host. In production, contact `support@luzmo.com` to arrange CNAMEs when custom domains are needed. EU and US base URLs cannot be mixed.
 
 ## Common Mistakes
 
@@ -271,13 +271,14 @@ const slots = ref([])
 <luzmo-embed-viz-item type="bar-chart" :slots="slots" />
 ```
 
-**❌ CORS errors because `appServer`/`apiHost` are not on the same domain as the app:**
+**❌ CORS errors because API/realtime requests are cross-origin from the app:**
 
 You'll see: dashboard or chart fails to load, browser console shows CORS errors even though region URLs look correct.
-**Why this fails:** Web component dashboards in embed mode, Flex charts, and IQ widgets require `appServer` and `apiHost` to be on the same domain as the parent application — not just the correct Luzmo region URL (e.g. `app.luzmo.com` will cause CORS if the parent is on `app.example.com`).
+**Why this fails:** Flex, web component dashboards, and IQ-rendered charts open browser requests to the Luzmo API/realtime host. If those requests are not same-origin or configured for the app domain, the browser blocks them.
 **✅ Solutions:**
-1. Host your app and configure `appServer`/`apiHost` to point to the correct same-domain URLs.
-2. If that's not possible, contact `support@luzmo.com` to set up a CNAME — they can map a subdomain you own (e.g. `analytics.example.com`) to the Luzmo app server, and `analytics-api.example.com` to the Luzmo API. EU and US have different base URLs; never mix them.
+1. Local development: use `core/references/local-development-proxy.md`, set `apiHost` to the local app origin, and keep `appServer` direct (`https://app.luzmo.com`, `https://app.us.luzmo.com`, or VPC app host).
+2. Production: contact `support@luzmo.com` to set up CNAMEs when custom domains are needed. EU and US have different base URLs; never mix them.
+3. Never proxy or rewrite `appServer` under a sub-path; Flex/dashboard bundles load from `appServer`.
 
 **❌ Using viewer token for Embedded Dashboard Editor (EDE) (⚠️ COMMON):**
 ```javascript

@@ -9,7 +9,7 @@ Quick map of which Luzmo surface uses which styling mechanism. For exact CSS var
 | Surface | Mechanism | Doc to Fetch |
 |---|---|---|
 | Dashboard embedding | Theme API / token `theme` JSON | `https://developer.luzmo.com/api/createTheme.md` |
-| Flex chart runtime | Per-chart `theme` prop / runtime example | `https://developer.luzmo.com/flex/examples/apply-custom-theme.md` |
+| Standalone Flex chart runtime | Per-chart `options` object (`options.theme`, `options.color`, chart-specific styling fields) | `https://developer.luzmo.com/flex/examples/apply-custom-theme.md` |
 | IQ Chat component | `IQChatOptions` + `--luzmo-*` CSS variables | `https://developer.luzmo.com/guide/iq--chat-component-api--customization.md` |
 | IQ Answer component | `--luzmo-*` CSS custom properties | `https://developer.luzmo.com/guide/iq--answer-component-api--css-variables.md` |
 | ACK editor components | Lucero tokens + ACK globals | `references/lucero-tokens.md`, `https://developer.luzmo.com/guide/ack--patterns.md` |
@@ -72,7 +72,8 @@ CRITICAL: Sanitize tenant-supplied CSS before injecting — see the Security Che
 ## When to Use What
 
 - **Brand colors that apply to all dashboards** → Theme API (`createTheme`) + reference by id in tokens.
-- **Per-tenant colors** → inline `theme` JSON or `css` in `createAuthorization` (sanitize!).
+- **Per-tenant dashboard colors** → inline `theme` JSON or `css` in `createAuthorization` (sanitize!).
+- **Standalone Flex chart colors** → item `options` object; do not pass a top-level `theme` prop.
 - **IQ Chat / Answer look-and-feel** → `IQChatOptions` + `--luzmo-*` on the container.
 - **ACK editor styling** → Lucero tokens (see `lucero-tokens.md`).
 - **One-off pixel fixes** → token-level `css` injection.

@@ -43,7 +43,11 @@ Decision trees for each major symptom category. Use this file when the SKILL.md 
                  → Token hasn't expired (default 24h)
               4. Does the token's `access` include this resource?
                  → e.g. securables list contains this dashboardId
-              5. Does the token's `role` permit the action?
+              5. For dataset 403s, can the API-token account grant this dataset?
+                 → If the dataset id is in `access.datasets` but the embed still says
+                   "no access to the analytics dataset", verify the dataset is owned by
+                   or shared to the account that minted the embed token.
+              6. Does the token's `role` permit the action?
                  → viewer cannot edit; cannot use ACK
                  → designer/owner needed for editor scenarios
 ```

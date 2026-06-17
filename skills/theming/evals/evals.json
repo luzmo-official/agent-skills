@@ -68,6 +68,18 @@
         "Does NOT claim they conflict or that one cancels the other",
         "References `https://developer.luzmo.com/api/createAuthorization.md` for the exact field shapes"
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "I'm rendering standalone Luzmo Flex charts with <luzmo-embed-viz-item> and passing theme=\"default_dark\", but the colors don't change. Is the theme prop broken?",
+      "expected_output": "Explain that standalone Flex viz-items do not expose a `theme` prop, so the prop is ignored. For standalone Flex charts, theme via the item `options` object (`options.theme`, `options.color`, and chart-specific styling fields) and set wrapper/container CSS for the area around the chart. Token-level `theme` is for dashboard embed theming, not the primary mechanism for standalone viz-items.",
+      "expectations": [
+        "States that standalone Flex viz-items do not have a `theme` prop",
+        "Explains that styling standalone Flex charts should be done through the `options` object",
+        "Mentions `options.theme` or `options.color`",
+        "Mentions setting wrapper/container background separately when needed",
+        "Does NOT recommend passing `theme` directly to `<luzmo-embed-viz-item>`"
+      ]
     }
   ]
 }
