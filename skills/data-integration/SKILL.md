@@ -1,6 +1,14 @@
 ---
 name: data-integration
-description: Getting data into Luzmo from any source. Use whenever connecting a database, pushing files, or modeling data. Triggers on: "connect PostgreSQL/MySQL/Snowflake/Salesforce", "upload CSV", "import data", "sync from database", "push data via API", "data not loading", createDataprovider. Provides ready-to-use scripts. Covers data modeling, Warp acceleration, and custom connectors. Use eagerly for any data-source or schema question. Essential before charts can display anything. Not for chart rendering (use data-visualization) or per-tenant access control (use multitenancy).
+description: >-
+  Getting data into Luzmo from any source.
+  Use whenever connecting a database, pushing files, or modeling data.
+  Triggers on: "connect data source", "upload CSV", "import data", "sync from database", "push data via API", "data not loading", createDataprovider.
+  Provides ready-to-use scripts.
+  Covers data modeling, Warp acceleration, and custom connectors.
+  Use eagerly for any data-source or schema question.
+  Essential before charts can display anything.
+  Not for chart rendering (use data-visualization) or per-tenant access control (use multitenancy).
 metadata:
   author: Luzmo
   version: 0.1.0

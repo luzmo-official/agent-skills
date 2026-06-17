@@ -1,6 +1,11 @@
 ---
 name: ai-analytics
-description: AI-powered analytics with Luzmo — /aiprompt API and IQ embed components. Use for natural language data queries, chart generation, agentic workflows (agent analyst|item, tasks), IQ Chat/Answer embedding (luzmo-iq-embed-chat, LuzmoIQChatComponent), "AI not working", wrong answers, quality optimization. Requires AI/IQ addon license. Use eagerly for any natural-language analytics feature. Not for standard chart embedding (use core for saved dashboards, data-visualization for Flex) or React Native (IQ embed components are web-only).
+description: >-
+  AI-powered analytics with Luzmo - /aiprompt API and IQ embed components.
+  Use for natural language data queries, chart generation, agentic workflows (agent analyst|item, tasks), IQ Chat/Answer embedding (luzmo-iq-embed-chat, LuzmoIQChatComponent), "AI not working", wrong answers, quality optimization.
+  Requires AI/IQ addon license.
+  Use eagerly for any natural-language analytics feature.
+  Not for standard chart embedding (use core for saved dashboards, data-visualization for Flex) or React Native (IQ embed components are web-only).
 metadata:
   author: Luzmo
   version: 0.1.0

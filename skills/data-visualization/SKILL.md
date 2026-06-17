@@ -1,6 +1,11 @@
 ---
 name: data-visualization
-description: Build charts in code with Luzmo Flex — ad-hoc, code-first visualizations with full slot/options control. Triggers on: "Flex chart", "build a chart", "chart not rendering", "0 height", "wrong component name", slot errors, slot configuration. Covers Flex sizing, framework-specific component names, unique contextId, localized strings. Use eagerly for building Flex charts in code. Not for custom chart development (use custom-charts), embedding saved dashboards/charts by id (use core), chart editors (use analytics-studio), data connection (use data-integration), AI queries (use ai-analytics), or visual theming (use theming).
+description: >-
+  Build charts in code with Luzmo Flex - ad-hoc, code-first visualizations with full slot/options control.
+  Triggers on: "Flex chart", "build a chart", "chart not rendering", "0 height", "wrong component name", slot errors, slot configuration.
+  Covers Flex sizing, framework-specific component names, unique contextId, localized strings.
+  Use eagerly for building Flex charts in code.
+  Not for custom chart development (use custom-charts), embedding saved dashboards/charts by id (use core), chart editors (use analytics-studio), data connection (use data-integration), AI queries (use ai-analytics), or visual theming (use theming).
 metadata:
   author: Luzmo
   version: 0.1.0

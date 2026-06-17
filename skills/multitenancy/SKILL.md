@@ -1,6 +1,12 @@
 ---
 name: multitenancy
-description: Multi-tenant data isolation — critical security skill for SaaS applications. Use whenever each user or customer must see only their own data. Triggers on: row-level security, tenant isolation, "users see each other's data", "data leak", per-customer filtering, designer/owner access with data isolation. Covers three isolation patterns with tradeoffs. Use eagerly — wrong isolation is a security breach, not a bug. Pair with foundation for token generation and data-integration for connection-level overrides.
+description: >-
+  Multi-tenant data isolation - critical security skill for SaaS applications.
+  Use whenever each user or customer must see only their own data.
+  Triggers on: row-level security, tenant isolation, "users see each other's data", "data leak", per-customer filtering, designer/owner access with data isolation.
+  Covers three isolation patterns with tradeoffs.
+  Use eagerly - wrong isolation is a security breach, not a bug.
+  Pair with foundation for token generation and data-integration for connection-level overrides.
 metadata:
   author: Luzmo
   version: 0.1.0

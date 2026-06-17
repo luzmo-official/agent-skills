@@ -1,6 +1,12 @@
 ---
 name: troubleshooting
-description: Triage router for all Luzmo problems. Use first whenever anything is broken, not working, or behaving unexpectedly. Triggers on: "not working", "broken", "why is X failing", "debug", chart "0 height", "chart not loading", "wrong data showing", API errors. Diagnoses root cause by symptom and routes to the right implementation skill. Does NOT implement fixes. Use this skill first — even if you think you know the fix — for any Luzmo error, rendering failure, data anomaly, or unexpected behavior.
+description: >-
+  Triage router for all Luzmo problems.
+  Use first whenever anything is broken, not working, or behaving unexpectedly.
+  Triggers on: "not working", "broken", "why is X failing", "debug", chart "0 height", "chart not loading", "wrong data showing", API errors.
+  Diagnoses root cause by symptom and routes to the right implementation skill.
+  Does NOT implement fixes.
+  Use this skill first - even if you think you know the fix - for any Luzmo error, rendering failure, data anomaly, or unexpected behavior.
 metadata:
   author: Luzmo
   version: 0.1.0

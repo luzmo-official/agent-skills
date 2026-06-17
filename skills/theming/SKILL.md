@@ -1,6 +1,11 @@
 ---
 name: theming
-description: Visual customization and branding for Luzmo surfaces. Use for custom colors, white-labeling, dark/light modes, and per-tenant themes. Triggers on: "change colors", "brand styling", "dark mode", "white-label", "custom theme", "IQ Chat styling", "ACK theming". Routes to the correct mechanism per surface: Theme API for dashboards, CSS variables for IQ Answer, IQChatOptions for IQ Chat, Flex runtime theme. Not for chart data or slots (use data-visualization) or data security (use multitenancy).
+description: >-
+  Visual customization and branding for Luzmo surfaces.
+  Use for custom colors, white-labeling, dark/light modes, and per-tenant themes.
+  Triggers on: "change colors", "brand styling", "dark mode", "white-label", "custom theme", "IQ Chat styling", "ACK theming".
+  Routes to the correct mechanism per surface: Theme API for dashboards, CSS variables for IQ Answer, IQChatOptions for IQ Chat, Flex runtime theme.
+  Not for chart data or slots (use data-visualization) or data security (use multitenancy).
 metadata:
   author: Luzmo
   version: 0.1.0

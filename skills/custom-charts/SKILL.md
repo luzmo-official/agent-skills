@@ -1,6 +1,10 @@
 ---
 name: custom-charts
-description: Build a brand-new Luzmo chart component when no built-in chart type (and Flex) is sufficient. Triggers on: "custom chart", "build a custom chart", "no built-in chart type fits", "chart plugin", "manifest", "render/resize/buildQuery", "custom chart not in picker", "upload custom chart", "org release". Rare advanced path (~95% of users never need this). Not for Flex charts with built-in types (use data-visualization), embedding saved dashboards (use core), self-service chart editors (use analytics-studio), or auth setup (use core).
+description: >-
+  Build a brand-new Luzmo chart component when no built-in chart type (and Flex) is sufficient.
+  Triggers on: "custom chart", "build a custom chart", "no built-in chart type fits", "chart plugin", "manifest", "render/resize/buildQuery", "custom chart not in picker", "upload custom chart", "org release".
+  Rare advanced path (~95% of users never need this).
+  Not for Flex charts with built-in types (use data-visualization), embedding saved dashboards (use core), self-service chart editors (use analytics-studio), or auth setup (use core).
 metadata:
   author: Luzmo
   version: 0.1.0
