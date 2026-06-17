@@ -16,6 +16,8 @@
  *   --dataset-id    Existing dataset UUID (omit to create a new dataset)
  *   --name          Dataset name for new datasets (default: filename)
  *   --batch-size    Rows per batch (default: 10000, max: 10000)
+ *   --confirm-replace yes  Required when replacing rows in an existing dataset
+ *   --update-metadata yes  Update existing dataset metadata/header on first batch
  *
  * Required env vars: LUZMO_API_KEY, LUZMO_API_TOKEN
  * Optional env var:  LUZMO_API_HOST (default: https://api.luzmo.com)
@@ -124,16 +126,19 @@ function parseJson(filePath) {
   return raw;
 }
 
-async function pushBatch(datasetId, rows, mode) {
+async function pushBatch(datasetId, rows, mode, options) {
   const body = {
     action: "create",
     properties: {
-      content: { data: rows },
-      options: { mode },
+      type: mode,
+      data: rows,
     },
   };
   if (datasetId) {
-    body.find = { id: datasetId };
+    body.properties.securable_id = datasetId;
+  }
+  if (options) {
+    body.properties.options = options;
   }
   return post("data", body);
 }
@@ -153,6 +158,10 @@ Options:
   --dataset-id    Existing dataset UUID (omit to create a new dataset)
   --name          Dataset name for new datasets (default: filename)
   --batch-size    Rows per batch (default/max: 10000)
+  --confirm-replace yes
+                 Required with --dataset-id --mode replace
+  --update-metadata yes
+                 Update existing dataset metadata/header on first batch
 
 Required env vars: LUZMO_API_KEY, LUZMO_API_TOKEN
 Optional env var:  LUZMO_API_HOST (default: https://api.luzmo.com)
@@ -175,29 +184,52 @@ Optional env var:  LUZMO_API_HOST (default: https://api.luzmo.com)
     process.exit(1);
   }
 
+  args.mode = (args.mode || "replace").toLowerCase();
+  if (!["replace", "append"].includes(args.mode)) {
+    console.error(`Unsupported mode: ${args.mode}. Use replace or append.`);
+    process.exit(1);
+  }
+
+  const datasetIdArg = args["dataset-id"] || null;
+  const replacingExistingDataset = Boolean(datasetIdArg) && args.mode === "replace";
+  if (replacingExistingDataset && args["confirm-replace"] !== "yes") {
+    console.error("Refusing to replace an existing dataset without --confirm-replace yes.");
+    console.error("Use --mode append to add rows without truncating existing data.");
+    process.exit(1);
+  }
+
   const batchSize = Math.min(parseInt(args["batch-size"]) || BATCH_SIZE, BATCH_SIZE);
   const header = rows[0];
   const dataRows = rows.slice(1);
   const totalRows = dataRows.length;
   const batches = Math.ceil(totalRows / batchSize);
 
+  const firstBatchMode = datasetIdArg ? args.mode : "create";
   console.log(`\nFile: ${args.file}`);
-  console.log(`Rows: ${totalRows} (excl. header) | Batches: ${batches} | Mode: ${args.mode}`);
+  console.log(`Rows: ${totalRows} (excl. header) | Batches: ${batches} | First batch mode: ${firstBatchMode}`);
 
-  let datasetId = args["dataset-id"] || null;
-  const isFirstBatch = true;
-
+  let datasetId = datasetIdArg;
+  const creatingDataset = !datasetId;
   for (let i = 0; i < batches; i++) {
     const batchRows = dataRows.slice(i * batchSize, (i + 1) * batchSize);
-    const payload = i === 0 ? [header, ...batchRows] : [header, ...batchRows];
-    const batchMode = i === 0 ? args.mode : "append";
+    const batchMode = i === 0 ? (datasetId ? args.mode : "create") : "append";
+    const shouldUpdateMetadata = creatingDataset || args["update-metadata"] === "yes";
+    const metadataOptions = i === 0 && shouldUpdateMetadata
+      ? {
+          update_metadata: true,
+          header,
+          ...(creatingDataset
+            ? { name: { en: args.name || path.basename(args.file, path.extname(args.file)) } }
+            : {}),
+        }
+      : undefined;
 
     process.stdout.write(`  Batch ${i + 1}/${batches} (${batchRows.length} rows)... `);
 
-    const result = await pushBatch(datasetId, payload, batchMode);
+    const result = await pushBatch(datasetId, batchRows, batchMode, metadataOptions);
 
     if (i === 0 && !datasetId) {
-      datasetId = result.id || (result.data && result.data[0] && result.data[0].id);
+      datasetId = result.id || (result.rows && result.rows[0] && result.rows[0].id);
       if (datasetId) {
         console.log(`created dataset ${datasetId}`);
       } else {

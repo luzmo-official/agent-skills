@@ -21,10 +21,12 @@ The embed token's `access.datasets` controls which datasets IQ can see for that 
 **Pattern:** Generate domain-specific tokens. A finance user gets a token scoped to finance datasets; a marketing user gets a token scoped to marketing datasets. Don't dump everything into one token.
 
 ```javascript
+// Example: Finance user gets a token scoped to finance datasets
 const auth = await client.create('authorization', {
+  type: 'embed',
   username: user.id,
   access: {
-    datasets: financeDatasetIds,  // 5–10 datasets, not all 47
+    datasets: financeDatasetIds.map((id) => ({ id, rights: 'use' })),
   },
 });
 ```

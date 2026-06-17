@@ -1,13 +1,13 @@
 # IQ as a Tool for LLM Agents
 
-Use this reference when an LLM agent (Claude, OpenAI, custom) needs to answer analytics questions by calling Luzmo IQ as a tool / function.
+Use this reference when an LLM agent (Claude, OpenAI, custom) needs to answer analytics questions by calling Luzmo IQ as a tool or function.
 
 ## Docs
 
-- `https://developer.luzmo.com/api/createAIPrompt.md` (canonical — replaces legacy IQ Backend API)
+- `https://developer.luzmo.com/api/createAIPrompt.md` (canonical; replaces legacy IQ Backend API)
 - `https://developer.luzmo.com/guide/guides--adding-luzmo-iq-to-agentic-workflow.md`
-- `https://developer.luzmo.com/guide/mcp--introduction.md` (hosted MCP — alternative to direct `/aiprompt` calls)
-- `references/mcp-server.md` — MCP tools, auth, and themes (this repo)
+- `https://developer.luzmo.com/guide/mcp--introduction.md` (hosted MCP; alternative to direct `/aiprompt` calls)
+- `references/mcp-server.md` - MCP tools, auth, and themes (this directory)
 
 Fetch these and any guides they reference before generating production code.
 
@@ -15,14 +15,11 @@ Fetch these and any guides they reference before generating production code.
 
 LLM agents already run server-side, so they can call **`POST /0.1.0/aiprompt`** directly. The critical requirement is to use a **per-user embed token** — not broad API credentials — so that IQ automatically enforces the correct context: which datasets are accessible, which securables the user can see, and any tenant-level filters.
 
-```
-┌─────────┐        ┌──────────────────────────────────────────────┐
-│  User   │  ────► │  LLM Agent (server-side: Claude/GPT/custom)  │
-│         │        │                                               │
-└─────────┘        │  1. Generate per-user embed token             │
-                   │  2. POST /aiprompt with agent: "analyst"      │
-                   │     → IQ respects token scope automatically   │
-                   └──────────────────────────────────────────────┘
+```text
+User -> LLM agent server
+  1. Generate an Embed Authorization token for the logged-in user/tenant with the correct dataset scope.
+  2. POST /aiprompt with agent: "analyst" and only those dataset inputs.
+  3. Return the answer, conversation_id, and any generated item assets.
 ```
 
 The embed token's `access.datasets`, `parameter_overrides`, and `filters` determine exactly what data IQ can see — making token scoping the primary security and accuracy control.
@@ -44,7 +41,7 @@ The embed token's `access.datasets`, `parameter_overrides`, and `filters` determ
       },
       "conversation_id": {
         "type": "string",
-        "description": "Optional. AIConversation id for multi-turn follow-ups (from a previous /aiprompt response)."
+        "description": "Optional. AIConversation id for multi-turn follow-ups (i.e. to continue a conversation from a previous /aiprompt response)."
       }
     },
     "required": ["question"]
@@ -57,31 +54,47 @@ The embed token's `access.datasets`, `parameter_overrides`, and `filters` determ
 Fetch `https://developer.luzmo.com/api/createAIPrompt.md` for the full request/response schema. Example pattern:
 
 ```javascript
-// Your backend exposes the tool to the agent
+import Luzmo from '@luzmo/nodejs-sdk';
+
+// Your backend exposes the tool to the agent.
 async function askLuzmoIQ({ question, conversation_id, user }) {
+  const luzmoAdminClient = new Luzmo({
+    host: process.env.LUZMO_API_HOST,
+    api_key: process.env.LUZMO_API_KEY,
+    api_token: process.env.LUZMO_API_TOKEN,
+  });
+
+  const accessibleDatasetIds = user.accessible_dataset_ids;
+  if (!Array.isArray(accessibleDatasetIds) || accessibleDatasetIds.length === 0) {
+    throw new Error('No datasets are scoped for this user.');
+  }
+
   // 1. Build/refresh a per-user embed token scoped to this user's datasets
-  const auth = await luzmoClient.create('authorization', {
+  const auth = await luzmoAdminClient.create('authorization', {
     type: 'embed',
     username: user.id,
-    access: { datasets: user.relevant_dataset_ids },
+    access: { datasets: accessibleDatasetIds.map((id) => ({ id, rights: 'use' })), },
     parameter_overrides: { tenant_id: user.tenant_id },
   });
 
-  // 2. Call /aiprompt (server-side) — fetch createAIPrompt.md for exact fields
-  const resp = await luzmoClient.create('aiprompt', {
+  // 2. Call /aiprompt (server-side) — fetch https://developer.luzmo.com/api/createAIPrompt.md for exact fields
+  const luzmoEmbedClient = new Luzmo({
+    host: process.env.LUZMO_API_HOST,
+    api_key: auth.id,
+    api_token: auth.token,
+  });
+  const resp = await luzmoEmbedClient.create('aiprompt', {
     agent: 'analyst',
     task: 'generate',
     conversation_id,
     response_mode: 'mixed',
     input: [
       { type: 'text', text: question },
-      // optional: { type: 'dataset', id: '<uuid>' } to pin datasets
+      // optional: { type: 'dataset', id: '<uuid>' } to limit the question to e.g. a specific dataset
     ],
-    // Use embed credentials when calling on behalf of a user:
-    // key: auth.id, token: auth.token — see API doc for auth patterns
   });
 
-  // 3. Return structured answer the agent can interpret
+  // 3. Return structured output the agent can interpret.
   return {
     answer: resp.assistant_message?.message,
     conversation_id: resp.conversation_id,
@@ -90,7 +103,7 @@ async function askLuzmoIQ({ question, conversation_id, user }) {
 }
 ```
 
-For chart-only generation from a prompt, use `agent: 'item'` with `task: 'generate'`. Fetch `createAIPrompt.md` for the full `agent` × `task` matrix.
+For chart-only generation from a prompt, use `agent: 'item'` with `task: 'generate'`. Fetch `createAIPrompt.md` for the full agent/task matrix.
 
 ## Multi-Turn Conversations
 
@@ -99,6 +112,7 @@ Pass `conversation_id` from a previous `/aiprompt` response (or from `createAICo
 ```javascript
 // Turn 1
 const r1 = await askLuzmoIQ({ question: 'What was our revenue last quarter?', user });
+
 // Turn 2 — agent passes r1.conversation_id back
 const r2 = await askLuzmoIQ({
   question: 'Break it down by region',
@@ -113,7 +127,7 @@ To list prior messages or assets: `https://developer.luzmo.com/api/searchAIMessa
 
 - Embed tokens generated per-call should be scoped to the LOGGED-IN USER'S allowed datasets and tenant context — not a generic shared token.
 - Apply tenant filters (`parameter_overrides` / `filters`) in the embed token so the agent can never query other tenants' data, even if the LLM rewrites the user's question.
-- Validate `conversation_id` belongs to the same user — don't let one user pick up another user's conversation by id-guessing.
+- Validate that `conversation_id` belongs to the same logged-in user before continuing multi-turn threads.
 - Rate-limit calls per user to control IQ usage costs.
 
 ## Quality Considerations

@@ -28,7 +28,7 @@
     "should_trigger": true
   },
   {
-    "query": "createDataexport returned an id but no file. Where does the exported XLSX actually go?",
+    "query": "Can you help me download all rows from a Luzmo dataset into a CSV file?",
     "should_trigger": true
   },
   {

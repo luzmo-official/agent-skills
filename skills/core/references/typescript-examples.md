@@ -20,7 +20,7 @@ const auth: LuzmoAuthorizationToken = await client.create('authorization', {
   name: user.name,
   email: user.email,
   access: {
-    dashboards: [{ id: dashboardId, rights: ['read'] }],
+    dashboards: [{ id: dashboardId, rights: 'read' }],
   },
 });
 ```
@@ -29,9 +29,9 @@ const auth: LuzmoAuthorizationToken = await client.create('authorization', {
 
 ```typescript
 interface AccessControl {
-  dashboards?: Array<{ id: string; rights: string[]; inheritRights?: string[] }>;
-  datasets?: Array<{ id: string; rights: string[]; inheritRights?: string[] }>;
-  collections?: Array<{ id: string; rights: string[]; inheritRights?: string[] }>;
+  dashboards?: Array<{ id: string; rights: 'read' | 'use' | 'modify' | 'own' }>;
+  datasets?: Array<{ id: string; rights: 'read' | 'use' | 'modify' | 'own' }>;
+  collections?: Array<{ id: string; inheritRights: 'read' | 'use' | 'modify' | 'own' }>;
 }
 
 interface CreateAuthorizationParams {
@@ -52,42 +52,28 @@ interface CreateAuthorizationParams {
     expression: string;
     value: any;
   }>;
-  account_overrides?: Array<{
-    account_id: string;
-    properties: Record<string, any>;
-  }>;
+  account_overrides?: Record<string, Record<string, any>>;
   iq?: {
     context?: string;
   };
-  environment?: string;
+  environment?: 'production' | 'acceptance' | 'development' | 'qa' | null;
   hidden_columns?: string[];
-  feature_overrides?: Record<string, boolean>;
+  feature_overrides?: string[];
 }
 ```
 
 ## Flex Chart Slot Configuration
 
 ```typescript
-type SlotType = 'hierarchy' | 'numeric' | 'datetime';
-
-interface SlotContent {
-  datasetId: string;
-  label: Record<string, string>;  // { en: "Label" }
-  columnId?: string;
-  formulaId?: string;
-  type?: SlotType;
-  aggregationFunc?: 'sum' | 'average' | 'count' | 'distinctcount' | 'min' | 'max' | 
-                     'median' | 'stddev' | 'cumulativesum' | 'histogram' | 'rate' | 'weightedaverage';
-  level?: number;  // For datetime/hierarchy
-  bins?: { enabled: boolean; number?: number };  // For numeric dimensions
-  subtype?: 'coordinates' | 'currency' | 'duration' | 'hierarchy_element_expression' | 
-            'ip_address' | 'topography';
-}
+// These can also be imported from the framework-specific packages: @luzmo/react-embed, @luzmo/ngx-embed, @luzmo/vue-embed
+import { VizItemType, VizItemSlot, VizItemOptions } from '@luzmo/embed';
 
 interface ChartConfig {
-  type: string;
-  slots: Record<string, SlotContent[]>;
-  options?: Record<string, any>;
+  type: VizItemType;
+  // Fetch https://developer.luzmo.com/flex/charts/{chart-type}.md before
+  // narrowing slots & options: slot containers and names are chart-specific.
+  slots: VizItemSlot[];
+  options?: VizItemOptions;
 }
 ```
 

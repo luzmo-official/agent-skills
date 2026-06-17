@@ -20,6 +20,54 @@ Examples (HTML, no `.md` suffix):
 
 Always fetch the resource-specific `.md` spec **and** the call form for the user's language before generating production scripts.
 
+## Base API Clients
+
+Use these as the base for resource management scripts. They keep credentials server-side, use the POST-only API shape, and leave resource-specific `action` payloads to the generated workflow.
+
+### JavaScript
+
+```javascript
+// Server-side only - never expose API credentials in the frontend.
+const API_BASE = process.env.LUZMO_API_HOST || "https://api.luzmo.com";
+const API_KEY = process.env.LUZMO_API_KEY;
+const API_TOKEN = process.env.LUZMO_API_TOKEN;
+
+async function luzmoPost(resource, body) {
+  const res = await fetch(`${API_BASE}/${resource}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ key: API_KEY, token: API_TOKEN, version: "0.1.0", ...body }),
+  });
+  if (!res.ok) {
+    const err = new Error(`Luzmo API error ${res.status}: ${await res.text()}`);
+    err.status = res.status;
+    throw err;
+  }
+  return res.json();
+}
+```
+
+### Python
+
+```python
+import os
+
+import requests
+
+API_BASE = os.getenv("LUZMO_API_HOST", "https://api.luzmo.com")
+API_KEY = os.environ["LUZMO_API_KEY"]
+API_TOKEN = os.environ["LUZMO_API_TOKEN"]
+
+def luzmo_post(resource: str, body: dict) -> dict:
+    resp = requests.post(
+        f"{API_BASE}/{resource}",
+        json={"key": API_KEY, "token": API_TOKEN, "version": "0.1.0", **body},
+        timeout=60,
+    )
+    resp.raise_for_status()
+    return resp.json()
+```
+
 ## Pagination (orchestration — not on call forms)
 
 The API supports `limit` and `offset` in `find`. Use a loop for large result sets:
@@ -76,7 +124,7 @@ async function luzmoPostWithRetry(resource, body, { maxRetries = 3, baseDelayMs 
 
 ## CRITICAL — Deletion
 
-All deletion scripts MUST go through the two-step search → confirm → delete flow defined in `references/deletion-safety.md`. Do not embed `action: 'delete'` calls without a confirmation prompt.
+All deletion scripts MUST go through the search -> preview -> explicit confirmation flow defined in `references/deletion-policy.md`. For generated scripts, use the guard patterns in `references/delete-script-patterns.md`. Do not embed delete calls without a confirmation prompt.
 
 Fetch delete call forms when implementing: `https://developer.luzmo.com/api/delete{Resource}/call/{lang}`
 

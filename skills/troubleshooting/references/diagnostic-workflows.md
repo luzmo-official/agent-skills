@@ -57,13 +57,12 @@ Decision trees for each major symptom category. Use this file when the SKILL.md 
 2. Multi-tenant: user seeing other tenant's data?  (SECURITY INCIDENT)
    → Determine which pattern is in use:
      - Dashboard-level filters? → BYPASSABLE by editors — switch to Pattern 1
-     - Token-level filters (Pattern 2)? → BYPASSABLE if user has designer/owner — switch to Pattern 1
-     - Dataset-level EmbedFilterGroup (Pattern 1)? → Verify parameter_overrides
+     - Token-level filters (Pattern 2)? → verify `filters` cover every queried dataset that needs tenant isolation in the Embed Authorization request
+     - Dataset-level EmbedFilterGroup (Pattern 1)? → Verify parameterized filters on the queried dataset(s) and the specified `parameter_overrides` in the Embed Authorization request
        is set in the embed token AND the filter group is associated to all relevant datasets
-     - Connection overrides (Pattern 3)? → Verify account_overrides
-       targets the correct account_id and properties for this tenant
-   → IMMEDIATELY rotate any tokens that may have leaked data, then fix the pattern.
-   → Escalate to multitenancy for full pattern guidance.
+     - Connection overrides (Pattern 3)? → Verify that the connection ID(s) of the queried dataset(s) are targeted by the specified `account_overrides` in the Embed Authorization request (and that the specified credentials are correct)
+   → IMMEDIATELY rotate any tokens that may have leaked data (use deleteAuthorization to rotate or escalate to support@luzmo.com), then fix the pattern.
+   → Escalate to `multitenancy` skill for full pattern guidance.
 
 3. Filters not updating after a UI change?
    → contextId may be cached. Vary it or call the component's refresh API.

@@ -1,6 +1,6 @@
 ---
 name: multitenancy
-description: Multi-tenant data isolation — critical security skill for SaaS applications. Use whenever each user or customer must see only their own data. Triggers on: row-level security, tenant isolation, "users see each other's data", "data leak", per-customer filtering, designer/owner access with data isolation. Covers three isolation patterns with tradeoffs. Use eagerly — wrong isolation is a security breach, not a bug. Pair with foundation for token generation and data-integration for connection-level overrides.
+description: Multi-tenant data isolation — critical security skill for SaaS applications. Use whenever each user or customer must see only their own data. Triggers on: row-level security, tenant isolation, "users see each other's data", "data leak", per-customer filtering, designer/owner access with data isolation. Covers three isolation patterns with tradeoffs. Use eagerly — wrong isolation is a security breach, not a bug. Pair with core for token generation and data-integration for connection-level overrides.
 metadata:
   author: Luzmo
   version: 0.1.0
@@ -19,28 +19,28 @@ Entry-point for multi-tenant embedding and data isolation. Security-critical - u
 
 For full auth/embed-token guidance, see `core`.
 
-### Pattern Security Levels
+### Pattern Comparison
 
-Understanding the security implications of each pattern is essential:
+Understanding enforcement and operational tradeoffs is essential:
 
 ```
-Security Level Comparison
+Isolation Pattern Comparison
 ─────────────────────────────────────────────────────────────────────────
 
-Pattern 1: Dataset-Level EmbedFilterGroup     [STRONGEST]
- ├─ Enforced at the dataset itself
- ├─ Editors (designer/owner) CANNOT bypass
- └─ One group per Luzmo org
+Pattern 1: Parameterized EmbedFilterGroup      [SECURE, LESS VERBOSE]
+ ├─ Filter definitions are configured on dataset associations
+ ├─ Tokens pass tenant values through parameter_overrides
+ └─ One parameter can drive filters across one or more datasets
 
 Pattern 3: Connection Overrides                [STRONGEST]
  ├─ Physical/logical infra isolation
  ├─ Each tenant queries its own DB/schema
  └─ Override account credentials per token
 
-Pattern 2: Token-Level filters                 [WEAKER]
- ├─ Enforced at query time via the token
- ├─ Editors CAN potentially bypass
- └─ Only safe for strictly viewer-role users
+Pattern 2: Token-Level filters                 [SECURE, MORE VERBOSE]
+ ├─ Filters are specified directly in the token
+ ├─ Must include a filter for every dataset that needs isolation
+ └─ Must be extended whenever token access adds more datasets
 
 Dashboard-Level Filters                        [INSECURE — DO NOT USE]
  ├─ Live in dashboard JSON
@@ -48,17 +48,17 @@ Dashboard-Level Filters                        [INSECURE — DO NOT USE]
  └─ DO NOT use for tenant isolation
 ```
 
-**Pattern 1 (Dataset-Level EmbedFilterGroup)** — **STRONGEST**
-- Filter is enforced at the dataset level, part of the data model itself
-- Users with `designer` or `owner` roles **CANNOT bypass** it
-- Applies to all queries against the dataset, regardless of where it's used
-- **Use this when:** Users have editor access OR security is paramount
+**Pattern 1 (Parameterized EmbedFilterGroup)** — **SECURE, LESS VERBOSE**
+- Filter definitions are configured once on each dataset association
+- Tokens only pass tenant-specific values through `parameter_overrides`
+- One parameter can override a set of parameterized filters on one or more datasets
+- **Use this when:** Multiple datasets need the same tenant parameter OR dataset access may expand over time
 
-**Pattern 2 (Token-Level `filters`)** — **WEAKER**
-- Filter is enforced at query time via the embed token
-- Editors with designer/owner roles CAN potentially bypass these filters
-- Only appropriate for view-only scenarios
-- **Use this when:** All users are strictly view-only (`viewer` role)
+**Pattern 2 (Token-Level `filters`)** — **SECURE, MORE VERBOSE**
+- Filters are specified directly in the embed token
+- Security is equivalent when every accessible dataset that needs tenant isolation has a matching token filter
+- Operational risk: forgetting to add filters when granting access to additional datasets
+- **Use this when:** A small, explicit dataset set is scoped in the token and direct per-dataset filters are simpler than configuring parameterized filters
 
 **Pattern 3 (Connection Overrides)** — **STRONGEST** (by infrastructure isolation)
 - Complete data infrastructure separation per tenant
@@ -69,9 +69,9 @@ Dashboard-Level Filters                        [INSECURE — DO NOT USE]
 
 ```
 Do your tenants share the same database tables?
-├─ YES: Do users have editor access (designer/owner roles)?
-│   ├─ YES: Use Pattern 1 (Dataset-Level EmbedFilterGroup) - STRONGEST
-│   └─ NO: Can use Pattern 2 (Token filters) - but Pattern 1 is still safer
+├─ YES: Will multiple datasets share the same tenant parameter?
+│   ├─ YES: Prefer Pattern 1 (Parameterized EmbedFilterGroup)
+│   └─ NO: Pattern 2 (Token filters) is fine when every accessible dataset is filtered
 │
 └─ NO: Each tenant has separate database/schema?
     └─ YES: Use Pattern 3 (Connection Overrides)
@@ -79,24 +79,22 @@ Do your tenants share the same database tables?
 
 ## Choose the Right Pattern
 
-| Data model | Pattern | Detailed reference |
-|---|---|---|
-| All tenants share the same tables, filtered by a column | **Pattern 1 — Parameter filtering (STRONGEST)** | `references/pattern1-dataset-level.md` |
-| Token-level filter enforcement without a dataset-level filter group | **Pattern 2 — Token filters (WEAKER)** | `references/pattern2-token-filters.md` |
-| Each tenant has a separate database, schema, or connection | **Pattern 3 — Connection overrides (`account_overrides`) (STRONGEST via infra)** | `references/pattern3-connection-overrides.md` |
-
-Read only the reference file for the chosen pattern.
+| Data model | Pattern |
+|---|---|
+| Row-level security for shared datasets with parameterized embed filters (multi-tenant data sources) | **Pattern 1 — Parameterized embed filters** |
+| Row-level security via static token-level filters for specified datasets (multi-tenant data sources) | **Pattern 2 — Static token filters** |
+| Each tenant has a separate database, schema, or connection (single-tenant data sources) | **Pattern 3 — Connection overrides (`account_overrides`)** |
 
 ---
 
-## Pattern 1 — Dataset-Level Parameter Filtering (RECOMMENDED for shared datasets)
+## Pattern 1 — Parameterized EmbedFilterGroup (recommended for shared parameters)
 
-This is the **strongest protection**: the filter is enforced at the dataset level, so even users with editor access cannot remove it.
+This is the most maintainable pattern when one tenant parameter should apply to one or more dataset-level filters.
 
-**Why this is strongest:**
-- Filter is part of the dataset itself, not just the dashboard
-- Users with `designer` or `owner` role cannot bypass it
-- Applies to all queries against the dataset, regardless of where it's used
+**Why this is usually preferred:**
+- Filter definitions are configured on dataset associations, not repeated in every token
+- One `parameter_overrides` value can drive filters across multiple datasets
+- Adding another dataset means associating/configuring the parameterized filter for that dataset, not rebuilding every token filter list
 
 Docs:
 ```
@@ -107,17 +105,59 @@ https://developer.luzmo.com/api/createAuthorization.md
 ```
 
 Steps:
-1. Create an `EmbedFilterGroup` that defines the filter expression with a parameter placeholder.
-2. Associate the filter group to the dataset (`associateEmbedFilterGroup`).
-3. When generating the embed token (`createAuthorization`), pass `parameter_overrides` with the tenant-specific value.
+1. [One-off setup] Create the single organization-level `EmbedFilterGroup`.
+2. [One-off setup] Associate the filter group to each dataset (`associateEmbedFilterGroup`) and put the parameterized filter definitions on that association.
+3. For each Embed Authorization token request (`createAuthorization`), pass `parameter_overrides` with the tenant-specific value.
 
-**Critical limitation:** `EmbedFilterGroup` is limited to **one group per organization**. Plan your filter structure carefully.
+**Setup example:**
+```javascript
+const group = await client.create('embedfiltergroup', {});
+
+await client.associate(
+  'embedfiltergroup',
+  group.id,
+  { role: 'Securables', id: datasetId },
+  {
+    filters: [
+      {
+        clause: 'where',
+        origin: 'global',
+        securable_id: datasetId,
+        column_id: tenantColumnId,
+        expression: '? in ?',
+        value: {
+          parameter: 'metadata.tenant_id',
+          type: 'array[hierarchy]',
+          value: [defaultTenantId],
+        },
+      },
+    ],
+  }
+);
+```
+
+**Token example:**
+```javascript
+const auth = await client.create('authorization', {
+  type: 'embed',
+  role: 'designer',
+  username: user.id,
+  access: {
+    datasets: [{ id: datasetId, rights: 'use' }],
+  },
+  parameter_overrides: {
+    tenant_id: [user.tenant_id],
+  },
+});
+```
+
+**Critical limitation:** `EmbedFilterGroup` is limited to **one group per organization**. Each dataset needs to be associated with the same group with one or more (parameterized) filters.
 
 **Key facts:**
 - One `EmbedFilterGroup` per Luzmo organization (not per dataset)
 - Can associate the same filter group to multiple datasets
-- `parameter_overrides` can also clear a parameter: `{ "clear": true }`
-- Prefer this over dashboard-level filters for any editor scenario
+- `parameter_overrides` can also clear a parameter: `{ "clear": true }` (useful to e.g. only apply a subset of the filters for specific users)
+- Prefer this over dashboard-level filters; dashboard-level filters are editable and not an isolation boundary
 
 ---
 
@@ -125,7 +165,7 @@ Steps:
 
 Use when you want the embed token itself to enforce query-level filters without a dataset-level filter group.
 
-**⚠️ Security note:** This pattern is weaker than Pattern 1. Users with `designer` or `owner` roles may be able to bypass token-level filters. Only use this for strictly view-only scenarios.
+**Important operational note:** Token filters are equally secure when complete, but more verbose than Pattern 1. Specify a filter for every dataset in the token's `access.datasets` that needs tenant isolation, and extend the filter list whenever you grant access to more datasets.
 
 Docs: `https://developer.luzmo.com/api/createAuthorization.md`
 
@@ -136,20 +176,18 @@ const token = await client.create('authorization', {
   username: 'user@example.com',
   name: 'John Doe',
   email: 'user@example.com',
-  access: { datasets: ['<dataset-id>'] },
-  role: 'viewer',  // Important - only safe for viewer role
+  access: {
+    datasets: [{ id: '<dataset-id>', rights: 'use' }],
+  },
+  role: 'viewer',
   filters: [
     {
-      condition: 'and',
-      rules: [
-        {
-          expression: '? = ?',
-          parameters: [
-            { columnId: '<tenant-column-id>', datasetId: '<dataset-id>' },
-            'tenant-123'
-          ]
-        }
-      ]
+      clause: 'where',
+      origin: 'global',
+      securable_id: '<dataset-id>',
+      column_id: '<tenant-column-id>',
+      expression: '? = ?',
+      value: 'tenant-123',
     }
   ]
 })
@@ -181,6 +219,36 @@ Configuration differences:
 - **Standard database connections**: Override host, database, schema, credentials
 - **Plugin connections**: Override plugin-specific configuration (API keys, account IDs, etc.)
 
+**Database connection example:**
+```javascript
+const auth = await client.create('authorization', {
+  type: 'embed',
+  username: user.id,
+  access: {
+    datasets: [{ id: datasetId, rights: 'use' }],
+  },
+  account_overrides: {
+    '<base-connection-uuid>': {
+      host: tenant.db_host,
+      database: tenant.db_name,
+      schema: tenant.db_schema,
+    },
+  },
+});
+```
+
+**Plugin connection example:**
+```javascript
+account_overrides: {
+  '<plugin-connection-uuid>': {
+    properties: {
+      instance_url: tenant.sf_instance,
+      access_token: tenant.sf_token,
+    },
+  },
+}
+```
+
 Always fetch both the connection overrides guide AND the specific plugin documentation before configuring overrides.
 
 ---
@@ -188,8 +256,8 @@ Always fetch both the connection overrides guide AND the specific plugin documen
 ## Important Facts
 
 - All multi-tenant logic lives in the server-side `createAuthorization` call.
-- Dataset-level filtering (Pattern 1) is the recommended approach when users must not be able to bypass the filter.
-- Dashboard-level filters are weaker — an editor can remove them. Use dataset-level instead.
+- Parameterized filtering (Pattern 1) is the recommended approach when one tenant parameter should apply across one or more datasets.
+- Dashboard-level filters are weak and insecure — an editor can remove them. Use dataset-level filtering instead (either parameterized embed filters or static token filters).
 - `account_overrides` is the documented property name (not `connectionOverrides` or similar).
 - Plugin-specific overrides: fetch the plugin docs too.
 
@@ -199,7 +267,7 @@ Always fetch both the connection overrides guide AND the specific plugin documen
 
 - WHEN the user needs full auth/embed-token setup or SDK choice → use `core`
 - WHEN the user is ready to embed a dashboard/chart after isolation is configured → use `core` (saved dashboards) or `data-visualization` (Flex)
-- WHEN the user is building a self-service editor with ACK (editors can bypass weak filters!) → use `analytics-studio`
+- WHEN the user is building a self-service editor with ACK → use `analytics-studio`
 - WHEN each tenant has its own data source/database/schema → also use `data-integration` for connection setup
 - WHEN per-tenant theming is needed alongside data isolation → use `theming`
 - WHEN IQ tokens need per-tenant scoping → also use `ai-analytics`
@@ -223,9 +291,9 @@ dashboard.filters = [{ expression: "tenant_id = '123'" }]
 ```
 You'll see: users with `designer`/`owner` roles successfully removing or modifying the filter and viewing other tenants' rows. No error appears.
 **Why this fails:** Dashboard-level filters live in the dashboard JSON. Anyone with edit permission on the dashboard can change them. This is a data-breach-in-waiting whenever editor roles are exposed.
-**✅ Use dataset-level EmbedFilterGroup instead:**
+**✅ Use server-side token/query enforcement instead:**
 ```javascript
-// Correct - enforced at dataset level, cannot be bypassed
+// Correct - Pattern 1 centralizes the tenant filter definition
 await client.create('embedfiltergroup', {
   expression: 'tenant_id = ?',
   parameters: [{ name: 'tenant_id' }]
@@ -284,15 +352,40 @@ parameter_overrides: {
 }
 ```
 
-**❌ Forgetting that Pattern 2 is weaker than Pattern 1:**
+**❌ Forgetting to extend Pattern 2 filters when dataset access expands:**
 ```javascript
-// Pattern 2 (token filters) - editors CAN bypass this
-token.filters = [{ expression: "tenant_id = '123'" }]
+// Wrong - token grants two datasets but filters only one
+access: { datasets: [{ id: ordersDatasetId, rights: 'use' }, { id: invoicesDatasetId, rights: 'use' }] },
+filters: [{
+  clause: 'where',
+  origin: 'global',
+  securable_id: ordersDatasetId,
+  column_id: ordersTenantColumnId,
+  expression: '? = ?',
+  value: 'tenant-123',
+}]
 ```
-**✅ Understand security implications:**
+**✅ Keep Pattern 2 filters complete:**
 ```javascript
-// Pattern 1 (dataset-level) - editors CANNOT bypass
-// Use Pattern 1 when users have designer/owner roles
+// Correct - every tenant-scoped dataset in access has a matching token filter
+filters: [
+  {
+    clause: 'where',
+    origin: 'global',
+    securable_id: ordersDatasetId,
+    column_id: ordersTenantColumnId,
+    expression: '? = ?',
+    value: 'tenant-123',
+  },
+  {
+    clause: 'where',
+    origin: 'global',
+    securable_id: invoicesDatasetId,
+    column_id: invoicesTenantColumnId,
+    expression: '? = ?',
+    value: 'tenant-123',
+  },
+]
 ```
 
 ## Avoid

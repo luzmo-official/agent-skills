@@ -36,7 +36,7 @@
         "States that `createData` is the correct API for pushing data",
         "States that `createDataset` should not be the default for data-push use cases",
         "References `https://developer.luzmo.com/api/createData.md`",
-        "Explains that `createData` can automatically create the dataset if no `dataset_id` is provided"
+        "Explains that `createData` can automatically create the dataset when no `securable_id` is provided and `type: \"create\"` is used"
       ]
     },
     {

@@ -241,10 +241,11 @@ If same-domain co-hosting is not possible, contact **support@luzmo.com** to arra
 1. **Are users seeing other tenants' data?**
    - Critical security issue → Check tenant filtering immediately
 
-2. **What filtering pattern are you using?**
-   - Dataset-level (EmbedFilterGroup) → Check `parameter_overrides`
-   - Token-level (`filters`) → Check filter expression
-   - Connection overrides (`account_overrides`) → Check override structure
+2. **What tenant-isolation setup is in use?**
+See `multitenancy` skill for the different patterns and how to check them.
+ - Dataset-level (EmbedFilterGroup) → Check `parameter_overrides`
+ - Token-level (`filters`) → Check filter expression
+ - Connection overrides (`account_overrides`) → Check override structure
 
 ### Common Causes and Route To
 

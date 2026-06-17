@@ -81,7 +81,7 @@ Visualization-capable tools: `answer_question` (when a chart is returned), `crea
 | Approach | Prefer when |
 |---|---|
 | **MCP** | Quick agent integration; Cursor/Codex; you want default IQ tools without custom HTTP |
-| **`/aiprompt` API** | Full control over agents (`dashboard`), streaming SSE, custom orchestration, or non-MCP hosts |
+| **`/aiprompt` API** | Full control over `analyst` / `item` agents, streaming SSE, custom orchestration, or non-MCP hosts |
 
 See `references/agentic-integration.md` for direct `/aiprompt` tool patterns.
 
