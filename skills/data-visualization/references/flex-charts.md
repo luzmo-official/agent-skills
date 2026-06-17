@@ -13,7 +13,8 @@ Fetch before answering:
 - Flex component API: `https://developer.luzmo.com/guide/flex--component-api-reference.md`
 - Chart catalog: `https://developer.luzmo.com/guide/flex--chart-docs.md`
 
-For any specific chart type, fetch the chart page and its referenced documentation before answering:
+For any specific chart type, fetch the chart page and its referenced schema before answering:
+
 - URL pattern: `https://developer.luzmo.com/flex/charts/{chart-type}.md`
 - Examples: `bar-chart`, `line-chart`, `donut-chart`, `regular-table`, `date-filter`, `dropdown-filter`
 
@@ -32,67 +33,56 @@ For any specific chart type, fetch the chart page and its referenced documentati
 
 ## Slot Content Fields
 
+The chart-specific page/schema defines the exact slot container, slot names, required slots, and options. Do not invent slot names from memory.
+
 | Field | Required? | Notes |
 |---|---|---|
 | `datasetId` | Yes | Dataset UUID |
-| `type` | Yes | Type of the column |
+| `type` | Yes for column-based slots | Column type: `hierarchy`, `numeric`, or `datetime` |
 | `label` | Recommended | Localized object: `{ en: "Label" }` |
 | `level` | For datetime/hierarchy | 1=year, 2=quarter, 3=month, 4=week, 5=day, 6=hour, 7=min, 8=sec, 9=ms |
-| `columnId` | No | Column UUID - required if not using a formula |
-| `formulaId` | No | Formula UUID, use for measures only. When specified, do not include `columnId`, `type`, nor `aggregationFunc` |
-| `aggregationFunc` | No | Use for measures only (if not using a formula), one of: `sum`, `average`, `count`, `distinctcount`, `min`, `max`, `median`, `stddev`, `cumulativesum`, `histogram`, `rate`, `weightedaverage` |
+| `columnId` | If not using a formula | Column UUID |
+| `formulaId` | For formula measures | When specified, do not include `columnId`, `type`, or `aggregationFunc` |
+| `aggregationFunc` | For aggregated measures | For numeric measures, use `sum`, `average`, `count`, `distinctcount`, `min`, `max`, `median`, `stddev`, `cumulativesum`, `histogram`, `rate`, `weightedaverage`. For datetime & hierarchy measures, use `count` or `distinctcount` |
 
 ## Slot Configuration Checklist
 
-Before configuring any Flex chart, ensure each slot has:
+Before configuring any Flex chart:
 
-**Required fields:**
-- ✅ `datasetId` - UUID of the dataset
-- ✅ `label` - Localized object: `{ en: "Label Text" }`
+- Fetch the specific chart docs/schema.
+- Confirm the chart's exact slot names and required slots.
+- Include `datasetId` for every data-backed slot.
+- Use `columnId` + `type` for column-backed slots.
+- Use `formulaId` alone for formula measures.
+- Localize user-facing labels: `{ en: "Revenue" }`.
 
-**Optional fields:**
-- `columnId` - Column UUID - required if not using a formula
-- `type` - One of: `hierarchy`, `numeric`, `datetime` - required if not using a formula
-- `formulaId` - Formula UUID, use for measures only. When specified, do not include `columnId`, `type`, nor `aggregationFunc`
-- `aggregationFunc` - Use for measures only, when not using a formula. One of the following values: `sum`, `average`, `count`, `distinctcount`, `min`, `max`, `median`, `stddev`, `cumulativesum`, `histogram`, `rate`, `weightedaverage`
+Type-specific reminders:
 
-**Type-specific requirements:**
-
-For `numeric` when used in a measure slot:
-- ✅ `aggregationFunc` - Required: `sum`, `average`, `count`, `distinctcount`, `min`, `max`, `median`, `stddev`, `cumulativesum`, `histogram`, `rate`, `weightedaverage`
-
-For `numeric` when used in a dimension slot:
-- ✅ `bins` - Required: `{ enabled: true, number: 10 }` for binning with size 10, `{ enabled: false }` to disable binning
-
-For `datetime` (time dimensions):
-- ✅ `level` - Required: 1=year, 2=quarter, 3=month, 4=week, 5=day, 6=hour, 7=minute, 8=second, 9=millisecond
-
-For `hierarchy` (categorical dimensions):
-- ✅ `level` - Required for drill-down: 1=top level, 2=second level, etc.
-
-**Optional but recommended:**
-- `subtype` - If column has one: `coordinates`, `currency`, `duration`, `hierarchy_element_expression`, `ip_address`, `topography`
+- Numeric measure slots need an `aggregationFunc`.
+- Numeric dimension slots may need `bins` depending on the chart/schema.
+- Datetime and hierarchy dimension slots need `level`.
+- `rate` and `weightedaverage` require an `aggregationWeight` field.
+- `subtype` is recommended when the column has one, such as `currency`, `duration`, `coordinates`, `ip_address`, or `topography`.
 
 ## Rules
 
-- Fetch the specific chart pages before writing `slots` or `options` for any chart type — do not invent fields.
+- Fetch the specific chart page before writing `slots` or `options` for any chart type.
 - Each `contextId` must be unique across all chart instances on the page.
 - Flex charts require explicit `height` and `width` on both container and chart component.
 - All user-facing text must be localized objects: `{ en: "..." }`.
-- Use embed tokens from the backend — never API credentials client-side.
+- Use embed tokens from the backend; never API credentials client-side.
 - Do not use outdated names like `LuzmoFlex`.
 
 ## Troubleshooting Common Issues
 
 | Problem | Cause | Solution |
 |---|---|---|
-| Chart is invisible (0 height) | Missing dimensions | Set `height` and `width` on BOTH the container and the component |
+| Chart is invisible (0 height) | Missing dimensions | Set `height` and `width` on both the container and component |
 | "Invalid label" error | Non-localized string | Change `label: "text"` to `label: { en: "text" }` |
 | Charts showing wrong data | Duplicate `contextId` | Ensure each chart has unique `contextId` |
-| Slot validation error | Missing `type` or `aggregationFunc` | Review slot configuration checklist above |
-| Dark theme looks wrong | Missing container background | Set `background-color: #1a1a2e` on container |
+| Slot validation error | Missing chart-specific slot field | Fetch the chart page/schema and compare the slot config |
 
-## Chart Type Catalog (partial — fetch full catalog from docs)
+## Chart Type Catalog (partial; fetch full catalog from docs)
 
 | Category | Types |
 |---|---|
@@ -104,5 +94,3 @@ For `hierarchy` (categorical dimensions):
 | Filters | `date-filter`, `dropdown-filter`, `slicer-filter`, `slider-filter`, `search-filter` |
 | Maps | `choropleth-map`, `marker-map`, `hexbin-map`, `symbol-map` |
 | Other | `scatter-plot`, `treemap-chart`, `sankey-diagram`, `funnel-chart`, `text`, `image` |
-
-Full schemas: `https://developer.luzmo.com/flex/charts/{chart-type}.md`

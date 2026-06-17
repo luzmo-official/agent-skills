@@ -59,8 +59,7 @@ const newChart = {
 const desktopView = response.data[0].contents.views.find(v => v.screenModus === 'desktop')
 desktopView.items.push(newChart)
 
-await client.update('securable', {
-  id: dashboardId,
+await client.update('securable', dashboardId, {
   contents: response.data[0].contents
 })
 ```
@@ -79,9 +78,8 @@ desktopView.items = desktopView.items.filter(
   chart => chart.id !== chartIdToRemove
 )
 
-await client.update('securable', {
-  id: dashboardId,
-  contents: contents
+await client.update('securable', dashboardId, {
+  contents
 })
 ```
 
@@ -103,13 +101,12 @@ if (chartIndex !== -1) {
   desktopView.items[chartIndex].options.title = { en: "New Title" }
 }
 
-await client.update('securable', {
-  id: dashboardId,
-  contents: contents
+await client.update('securable', dashboardId, {
+  contents
 })
 ```
 
-### Add a Dashboard-Level Filter
+### Add a Filter Item to a Dashboard
 
 ```javascript
 const response = await client.get('securable', {
@@ -123,15 +120,12 @@ const newFilter = {
   options: {...}
 }
 
-if (!response.data[0].contents.filters) {
-  response.data[0].contents.filters = []
-}
+const contents = response.data[0].contents
+const desktopView = contents.views.find(v => v.screenModus === 'desktop')
+desktopView.items.push(newFilter)
 
-response.data[0].contents.filters.push(newFilter)
-
-await client.update('securable', {
-  id: dashboardId,
-  contents: response.data[0].contents
+await client.update('securable', dashboardId, {
+  contents
 })
 ```
 

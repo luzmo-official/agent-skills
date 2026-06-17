@@ -74,117 +74,29 @@ Then fetch exact resource docs:
 | dissociate / unlink | `dissociate{Resource}` |
 | delete / remove | `delete{Resource}` — **see deletion safety rule below** |
 
-## ⚠ Deletion Safety Rule
+## Deletion Safety Rule
 
-**Deleting a resource is irreversible.** All deletions follow a mandatory two-step process that cannot be skipped, regardless of how casually the user phrases the request ("delete", "remove", "clean up", "drop", "wipe"):
+Deleting a resource is irreversible. Treat delete requests as an agent-owned approval workflow, not something delegated to generated script code.
 
-1. **List/search first** — call the appropriate API with `"action": "get"` (documented in `search{Resource}.md` files) and display name, id, and any other identifying fields.
-2. **Require explicit confirmation** — present the result and ask: *"This will permanently delete [resource name] (`<id>`). Type 'yes' to confirm or press Ctrl-C to cancel."*
-3. **Only call `delete{Resource}` after the user explicitly confirms.**
+For any delete request, even casually phrased requests such as "clean up", "drop", or "remove old stuff":
 
-When generating delete scripts:
-- The delete call must be **behind a confirmation prompt** — never execute automatically.
-- Include a prominent `# IRREVERSIBLE — confirm before proceeding` comment near the delete call.
+1. Search/list first with the relevant `"action": "get"` call and show name, id, and other identifying fields.
+2. **Require explicit confirmation:** Ask for explicit user confirmation after showing the exact resources. Require the word `yes`.
+3. Do NOT execute `delete{Resource}` until the user explicitly confirms.
 
-**For detailed deletion workflow and examples:** See `references/deletion-safety.md`
+When generating delete scripts, include script-level guardrails because the script may run later outside the agent conversation. Use dry-run defaults and explicit non-interactive opt-in flags or environment variables, and clearly mark the irreversible call.
+
+Read `references/deletion-policy.md` before handling delete requests. Read `references/delete-script-patterns.md` when generating a reusable delete script.
 
 ## Bundled References
 
 - `references/script-examples.md` — Comprehensive search/create/update/associate templates, pagination, retry/backoff, bulk patterns
-- `references/deletion-safety.md` — The MANDATORY two-step search → show → confirm → delete workflow with Node and Python templates
+- `references/deletion-policy.md` — Agent-owned preview, confirmation, and execution workflow for irreversible deletes
+- `references/delete-script-patterns.md` — Script-level dry-run and confirmation guardrails for generated delete scripts
 
 ## Script Templates
 
-Use these as the base for all resource management scripts. For additional examples, see `references/script-examples.md`.
-
-### JavaScript
-
-```javascript
-// Server-side only — never expose API credentials in the frontend.
-const API_BASE = process.env.LUZMO_API_HOST || "https://api.luzmo.com";
-const API_KEY = process.env.LUZMO_API_KEY;
-const API_TOKEN = process.env.LUZMO_API_TOKEN;
-
-async function luzmoPost(resource, body) {
-  const res = await fetch(`${API_BASE}/${resource}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ key: API_KEY, token: API_TOKEN, version: "0.1.0", ...body }),
-  });
-  if (!res.ok) {
-    const err = new Error(`Luzmo API error ${res.status}: ${await res.text()}`);
-    err.status = res.status;
-    throw err;
-  }
-  return res.json();
-}
-
-// Example: search then delete with confirmation
-async function deleteWithConfirmation(resourceType, findPayload) {
-  // Step 1: search
-  const results = await luzmoPost(resourceType, { action: "get", find: findPayload });
-  const items = results.data || [];
-  if (items.length === 0) { console.log("No matching resources found."); return; }
-
-  console.log("Resources that will be PERMANENTLY deleted:");
-  items.forEach(r => console.log(`  ${r.name || "(no name)"} — ${r.id}`));
-
-  // Step 2: confirmation (Node.js readline)
-  const readline = require("readline").createInterface({ input: process.stdin, output: process.stdout });
-  const answer = await new Promise(resolve => readline.question('\nType "yes" to confirm deletion: ', resolve));
-  readline.close();
-
-  if (answer.trim().toLowerCase() !== "yes") { console.log("Cancelled."); return; }
-
-  // IRREVERSIBLE — only runs after explicit user confirmation above
-  for (const item of items) {
-    await luzmoPost(resourceType, { action: "delete", find: { id: item.id } });
-    console.log(`Deleted: ${item.id}`);
-  }
-}
-```
-
-### Python
-
-```python
-import os, requests
-
-API_BASE = os.getenv("LUZMO_API_HOST", "https://api.luzmo.com")
-API_KEY = os.environ["LUZMO_API_KEY"]
-API_TOKEN = os.environ["LUZMO_API_TOKEN"]
-
-def luzmo_post(resource: str, body: dict) -> dict:
-    resp = requests.post(
-        f"{API_BASE}/{resource}",
-        json={"key": API_KEY, "token": API_TOKEN, "version": "0.1.0", **body},
-        timeout=60,
-    )
-    resp.raise_for_status()
-    return resp.json()
-
-def delete_with_confirmation(resource_type: str, find_payload: dict):
-    # Step 1: search
-    results = luzmo_post(resource_type, {"action": "get", "find": find_payload})
-    items = results.get("data", [])
-    if not items:
-        print("No matching resources found.")
-        return
-
-    print("Resources that will be PERMANENTLY deleted:")
-    for r in items:
-        print(f"  {r.get('name', '(no name)')} — {r['id']}")
-
-    # Step 2: confirmation
-    answer = input('\nType "yes" to confirm deletion: ')
-    if answer.strip().lower() != "yes":
-        print("Cancelled.")
-        return
-
-    # IRREVERSIBLE — only runs after explicit user confirmation above
-    for item in items:
-        luzmo_post(resource_type, {"action": "delete", "find": {"id": item["id"]}})
-        print(f"Deleted: {item['id']}")
-```
+Use `references/script-examples.md` for reusable JavaScript and Python API client templates. For deletion scripts, combine those base clients with the guardrails in `references/delete-script-patterns.md`.
 
 ## Association Flows
 
@@ -230,7 +142,7 @@ Each pitfall below includes a frequency marker, the symptom you'll see, why it f
 
 **❌ Exposing API key/token in client-side code (⚠️ COMMON — SECURITY CRITICAL):** Leaked credentials = full org compromise. Resource-management scripts must run server-side. See `core` for the security checkpoint.
 
-**❌ Calling `delete{Resource}` without first showing the user what will be deleted (⚠️ COMMON — IRREVERSIBLE):** No symptom — data just disappears. Every delete script MUST use the two-step search → show → confirm → delete flow defined in `references/deletion-safety.md`. NEVER skip even when the user phrases it casually.
+**❌ Calling `delete{Resource}` without first showing the user what will be deleted (⚠️ COMMON — IRREVERSIBLE):** No symptom — data just disappears. The agent must own the search -> show -> confirm -> delete workflow defined in `references/deletion-policy.md`. Generated scripts need their own guardrails from `references/delete-script-patterns.md` because they may be run later outside the agent.
 
 ## Canonical Sources
 

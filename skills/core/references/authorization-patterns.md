@@ -15,7 +15,7 @@ const auth = await client.create('authorization', {
   name: user.name,
   email: user.email,
   access: {
-    dashboards: [{ id: dashboardId, rights: ['read'] }],
+    dashboards: [{ id: dashboardId, rights: 'read' }],
   },
 });
 
@@ -34,47 +34,15 @@ const auth = await client.create('authorization', {
   name: user.name,
   email: user.email,
   access: {
-    dashboards: [{ id: dashboardId, rights: ['use', 'modify'] }],
-    datasets: [{ id: datasetId, rights: ['use'] }],
+    dashboards: [{ id: dashboardId, rights: 'modify' }],
+    datasets: [{ id: datasetId, rights: 'use' }],
   },
 });
 ```
 
-## Multi-Tenant Token (Pattern 1: parameter_overrides)
+## Multi-Tenant Data Isolation
 
-Use with a dataset-level `EmbedFilterGroup`. See `multitenancy` for the full pattern.
-
-```javascript
-const auth = await client.create('authorization', {
-  type: 'embed',
-  role: 'viewer',
-  username: user.id,
-  parameter_overrides: {
-    tenant_id: user.tenant_id,
-    region: user.region,
-  },
-});
-```
-
-## Multi-Tenant Token (Pattern 2: token filters)
-
-Weaker — editors can bypass. See `multitenancy`.
-
-```javascript
-filters: [
-  { expression: '? = ?', parameters: [{ column_id: '...' }, user.tenant_id] }
-]
-```
-
-## Multi-Tenant Token (Pattern 3: account_overrides)
-
-For per-tenant connection swaps. See `multitenancy`.
-
-```javascript
-account_overrides: [
-  { account_id: '<account-uuid>', properties: { database: user.tenant_db } },
-]
-```
+If each customer or tenant must only see their own data, use the `multitenancy` skill. It is the single source of truth for tenant-isolation patterns and implementation details.
 
 ## Suborganization Scoping
 
@@ -110,7 +78,7 @@ iq: {
 Pin to a specific dashboard version:
 
 ```javascript
-environment: '<environment-uuid>'  // Dashboard version/environment
+environment: 'production' // one of: production, acceptance, development, qa
 ```
 
 ### Hidden Columns
@@ -126,18 +94,17 @@ hidden_columns: ['<column-uuid-1>', '<column-uuid-2>']
 Enable/disable specific features:
 
 ```javascript
-feature_overrides: {
-  export: false,
-  share: false
-}
+feature_overrides: ['!flag_export']
 ```
+
+Fetch `createAuthorization.md` and the linked Academy feature-flags article before choosing flag names.
 
 ### Inactivity Interval
 
 Auto-expire the session after inactivity:
 
 ```javascript
-inactivity_interval: '1h'  // RFC 3339 duration
+inactivity_interval: 3600  // seconds; minimum 120 when specified; default is 0 (no inactivity timeout)
 ```
 
 ### Advanced Parameter Overrides

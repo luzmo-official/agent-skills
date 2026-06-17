@@ -161,15 +161,17 @@ node skills/data-integration/scripts/push-data.js --file data.csv --format csv -
 # Push into an existing dataset, append rows
 node skills/data-integration/scripts/push-data.js --dataset-id "<uuid>" --file data.xlsx --format xlsx --mode append
 
-# Push a JSON file (array of arrays, first row = column names)
-node skills/data-integration/scripts/push-data.js --dataset-id "<uuid>" --file data.json --format json --mode replace
+# Replace rows in an existing dataset (destructive; requires confirmation)
+node skills/data-integration/scripts/push-data.js --dataset-id "<uuid>" --file data.json --format json --mode replace --confirm-replace yes
 ```
 
 Fetch: `https://developer.luzmo.com/api/createData.md` — call forms: `https://developer.luzmo.com/api/createData/call/{lang}`.
 
 Key facts:
-- `createData` can create a new dataset automatically (omit `dataset_id`).
-- Modes: `replace` truncates first; `append` adds rows.
+- `createData` can create a new dataset automatically (omit `securable_id` and use `type: "create"`).
+- Existing datasets use `securable_id` plus `type: "append"` or `type: "replace"`.
+- `--mode` only matters when `--dataset-id` is provided; new datasets always use `type: "create"` for the first batch.
+- Column names belong in `options.header`; do not include the header row in `data`.
 - `createData` also works with embed tokens (token context is applied).
 
 ---
@@ -209,7 +211,8 @@ For deeper guidance on specific data integration topics:
 
 - `createDataset` docs advise: use `createData` for data-push datasets and `createDataprovider` for database/plugin connections. Do not default to `createDataset`.
 - `searchDataset` supports `include` for related resources: `Column`, `Account`, `Acceleration`, and linked dashboards.
-- `createDataexport` schedules an async CSV/XLSX export emailed to the creating user — it is not an immediate file download.
+- For ad-hoc row-level data exports, query `/data` with `client.get('data', { queries: [...] })`; use `options.rollup_data: false`, `order`, and `limit`/`offset` to batch rows, then write CSV/XLSX in the app. Fetch `https://developer.luzmo.com/api/getData.md` first.
+- For dashboard/chart/Flex exports, use the `/export` service (`createExport`) instead: sync file response, async email, or scheduled email. Fetch `https://developer.luzmo.com/api/createExport.md`.
 - Fewer, wider tables in data-push datasets generally perform better than many narrow linked tables.
 
 ## Common Mistakes
@@ -224,7 +227,11 @@ await client.create('dataset', { name: "My Data", ... })
 **✅ Use createData for data-push or createDataprovider for connections:**
 ```javascript
 // Correct for data-push
-await client.create('data', { data: [...], ... })  // Auto-creates dataset
+await client.create('data', {
+  type: 'create',
+  data: rows,
+  options: { update_metadata: true, header: columnNames, name: { en: 'My Data' } }
+})
 
 // Correct for database connections
 await client.create('dataprovider', { account_id: "...", ... })
@@ -246,7 +253,7 @@ node skills/data-integration/scripts/connect-datasource.js --account-id <uuid> -
 **❌ Exceeding 10,000 row limit in single createData call (⚠️ VERY COMMON for bulk loads):**
 ```javascript
 // Wrong - will fail with large datasets
-await client.create('data', { data: hugeArray })  // 50,000 rows
+await client.create('data', { type: 'append', securable_id: datasetId, data: hugeArray })  // 50,000 rows
 ```
 You'll see: `Rows exceed 10,000` error, or partial loads.
 **Why this fails:** Luzmo caps `createData` at 10k rows per call to keep the ingest path bounded. Bulk loads must be batched.
@@ -256,20 +263,23 @@ You'll see: `Rows exceed 10,000` error, or partial loads.
 node skills/data-integration/scripts/push-data.js --file large-file.csv  # Any size
 ```
 
-**❌ Using createDataexport expecting immediate download:**
+**❌ Expecting `/export` or another export task to page arbitrary rows:**
 ```javascript
-// Wrong - this schedules an async export, doesn't return file
-const export = await client.create('dataexport', {...})
-// File is NOT in the response
+// Wrong - dashboard/chart export service, not a row pagination API
+await client.create('export', { securable_id, chart_id, type: 'csv' })
 ```
-**✅ Understand it's async and emailed:**
+**✅ Page row-level data through `/data`, then write the file yourself:**
 ```javascript
-// Correct - schedule export, user receives email with link
-await client.create('dataexport', {
-  dataset_id: "...",
-  format: "xlsx"
+const page = await client.get('data', {
+  queries: [{
+    dimensions: [{ dataset_id, column_id }],
+    where: [],
+    order: [{ dataset_id, column_id, order: 'asc' }],
+    limit: { by: 10000, offset: 0 },
+    options: { rollup_data: false, locale_id: 'en', timezone_id: 'Etc/UTC' }
+  }]
 })
-// File will be emailed to creating user
+// Repeat with offset += 10000 until page.data is empty; stream rows to CSV/XLSX.
 ```
 
 ## SQL views (connector-supported warehouses)
@@ -294,7 +304,7 @@ Fetch before implementing:
 - `https://developer.luzmo.com/api/createDataprovider.md`
 - `https://developer.luzmo.com/api/getDataprovider.md`
 
-For multi-tenant setups where each tenant has its own schema/database, views often pair with **connection overrides** — see `multitenancy`.
+For single-tenant setups where each tenant has its own schema/database, views often pair with **connection overrides** — see `multitenancy` skill for more details.
 
 ## Avoid
 
@@ -309,7 +319,7 @@ For multi-tenant setups where each tenant has its own schema/database, views oft
 
 - WHEN the user mentions API credentials, SDK setup, or POST/action architecture → use `core`
 - WHEN data is loaded and the user is ready to display it → use `data-visualization`
-- WHEN each tenant has its own database/schema (Pattern 3 connection overrides) → use `multitenancy` (SECURITY CRITICAL)
+- WHEN each tenant has its own database/schema → use `multitenancy` (SECURITY CRITICAL)
 - WHEN the user wants self-service chart editing on top of these datasets → use `analytics-studio`
 - WHEN the user wants AI/natural-language data Q&A — data modeling fixes here directly improve IQ accuracy → use `ai-analytics`
 - WHEN the user writes scripts to bulk-manage datasets/accounts (search, delete, associate) → use `resource-management`

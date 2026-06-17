@@ -39,13 +39,13 @@ A suite of modular web components for building a fully custom chart configuratio
 
 ### Installation
 
-Install ACK and the appropriate rendering package:
+Install ACK first:
 
 ```bash
 npm install @luzmo/analytics-components-kit
 ```
 
-Then install the rendering package for your framework:
+For standalone Flex chart rendering, also install the rendering package for your framework. You do not need a separate embed package when using ACK's `luzmo-item-grid` / `LuzmoItemGrid` for multi-chart grid rendering.
 
 ```bash
 npm install @luzmo/embed           # Web components (vanilla JS)
@@ -58,20 +58,22 @@ npm install @luzmo/vue-embed       # Vue
 
 **ACK Configuration Components:**
 - **Web Components (vanilla JS)**: Native support — use `<luzmo-*>` tags directly
-- **React**: Official wrappers available via `@luzmo/react-embed` — use `<Luzmo*Component>` pattern
+- **React**: Official wrappers available via `@luzmo/analytics-components-kit/react` — use ACK wrapper names such as `<LuzmoDataFieldPanel>` and `<LuzmoItemSlotDropPanel>`
 - **Vue & Angular**: No official wrappers yet — use web components directly with framework's web component integration
 
 **Rendering Components** (for displaying configured charts):
 - All frameworks fully supported: React, Angular, Vue, Web Components
+- Standalone Flex chart rendering comes from the framework embed package: `@luzmo/embed`, `@luzmo/react-embed`, `@luzmo/ngx-embed`, or `@luzmo/vue-embed`.
+- Multi-chart grid rendering uses ACK's `luzmo-item-grid` / `LuzmoItemGrid`, imported from `@luzmo/analytics-components-kit` (or a subpath) / `@luzmo/analytics-components-kit/react`.
 
 **Example usage patterns:**
 
 | Framework | ACK Config Components | Rendering Components |
 |-----------|----------------------|---------------------|
 | Vanilla JS | `<luzmo-data-field-panel>` | `<luzmo-embed-viz-item>` |
-| React | `<LuzmoDataFieldPanelComponent>` | `<LuzmoVizItemComponent>` |
-| Angular | `<luzmo-data-field-panel>` (web component) | `<luzmo-viz-item>` |
-| Vue | `<luzmo-data-field-panel>` (web component) | `<luzmo-viz-item>` |
+| React | `<LuzmoDataFieldPanel>` | `<LuzmoVizItemComponent>` for a single Flex chart; `<LuzmoItemGrid>` for ACK grid rendering |
+| Angular | `<luzmo-data-field-panel>` (web component) | `<luzmo-viz-item>` from `@luzmo/ngx-embed`; `<luzmo-item-grid>` from ACK |
+| Vue | `<luzmo-data-field-panel>` (web component) | `<luzmo-viz-item>` from `@luzmo/vue-embed`; `<luzmo-item-grid>` from ACK |
 
 ### Core Docs
 
@@ -112,7 +114,7 @@ https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--theming.m
 2. **Store** — Your application captures those events and owns the state: `slotsContents`, `options`, `filters`.
 3. **Render** — Pass stored state into `luzmo-embed-viz-item` (single chart) or `luzmo-item-grid` (multi-chart).
 
-ACK does not render charts — it only produces configuration.
+Individual ACK configuration components do not render charts; they only produce configuration. Use the Flex embed component for a single-chart preview, or ACK's `luzmo-item-grid` / `LuzmoItemGrid` for multi-chart grid rendering.
 
 ### Component Map (fetch only what's needed)
 
@@ -151,8 +153,8 @@ ACK components that fetch Luzmo data require an embed token (`role: "designer"`)
 
 - Your app is the **single source of truth** for `slotsContents`, `options`, and `filters`.
 - Keep `item-type` on ACK components in sync with the `type` on the rendering component.
-- Use `loadDataFieldsForDatasets` utility to fetch component-ready fields.
-- Use `switchItem` utility to remap slots when the user changes chart type.
+- Use `loadDataFieldsForDatasets` from `@luzmo/analytics-components-kit/utils` to fetch component-ready fields.
+- Use `switchItem` from `@luzmo/analytics-components-kit/utils` to remap slots when the user changes chart type.
 - Persist configuration: `https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--persisting-a-chart-configuration.md`
 
 ### Package Dependencies & Imports
@@ -161,23 +163,37 @@ ACK components that fetch Luzmo data require an embed token (`role: "designer"`)
 ```javascript
 // ACK components (React wrappers)
 import {
-  LuzmoDataFieldPanelComponent,
-  LuzmoItemSlotDropPanelComponent,
-  LuzmoItemOptionPanelComponent,
-  LuzmoFiltersComponent
-} from '@luzmo/react-embed';
+  LuzmoDataFieldPanel,
+  LuzmoItemSlotDropPanel,
+  LuzmoItemSlotPickerPanel,
+  LuzmoEditFilters,
+  LuzmoItemGrid,
+  LuzmoItemOptionPanel
+} from '@luzmo/analytics-components-kit/react';
 
-// Rendering components (React wrappers)
-import { LuzmoVizItemComponent, LuzmoItemGridComponent } from '@luzmo/react-embed';
+// Standalone Flex chart renderer (React wrapper)
+import { LuzmoVizItemComponent } from '@luzmo/react-embed';
 
 // Utilities
-import { loadDataFieldsForDatasets, switchItem } from '@luzmo/analytics-components-kit';
+import { loadDataFieldsForDatasets, switchItem } from '@luzmo/analytics-components-kit/utils';
 ```
 
 **For Vue/Angular projects:**
 ```javascript
-// Utilities only (ACK components used as web components)
-import { loadDataFieldsForDatasets, switchItem } from '@luzmo/analytics-components-kit';
+// ACK components used as web components; import only what you need, or import the package root.
+import '@luzmo/analytics-components-kit/data-field-panel';
+import '@luzmo/analytics-components-kit/item-slot-drop-panel';
+import '@luzmo/analytics-components-kit/item-slot-picker-panel';
+import '@luzmo/analytics-components-kit/filters';
+import '@luzmo/analytics-components-kit/item-option-panel';
+import '@luzmo/analytics-components-kit/item-grid';
+
+// Utilities
+import { loadDataFieldsForDatasets, switchItem } from '@luzmo/analytics-components-kit/utils';
+
+// Flex rendering component:
+// Angular: import types/components from '@luzmo/ngx-embed' and render <luzmo-viz-item>.
+// Vue: install/use '@luzmo/vue-embed' and render <luzmo-viz-item>.
 
 // Register web components in your framework's component registration
 // Vue: Configure vue.config.js to ignore custom elements
@@ -191,7 +207,7 @@ import '@luzmo/analytics-components-kit';
 import '@luzmo/embed';
 
 // Utilities
-import { loadDataFieldsForDatasets, switchItem } from '@luzmo/analytics-components-kit';
+import { loadDataFieldsForDatasets, switchItem } from '@luzmo/analytics-components-kit/utils';
 ```
 
 ### Important Notes

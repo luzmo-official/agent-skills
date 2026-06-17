@@ -44,7 +44,9 @@ const token = await client.create('authorization', {
   username: 'user@example.com',
   name: 'John Doe',
   email: 'user@example.com',
-  access: { datasets: relevantDatasetIds },
+  access: {
+    datasets: relevantDatasetIds.map((id) => ({ id, rights: 'use' })),
+  },
   iq: {
     context: "You are a sales analytics assistant. Always prioritize revenue metrics and use sales terminology. Be concise and actionable."
   }
@@ -173,19 +175,19 @@ Fetch `https://developer.luzmo.com/api/createAIPrompt.md` for the full body. Min
   key: API_KEY,
   token: API_TOKEN,
   properties: {
-    agent: 'item',              // 'analyst' | 'item' | 'dashboard'
+    agent: 'item',              // 'analyst' | 'item'
     task: 'generate',           // varies per agent — see API doc
     conversation_id: '<uuid>',  // optional — multi-turn
     locale_id: 'en',
     timezone_id: 'UTC',
     text_format: 'plain',       // 'plain' | 'markdown'
     stream: false,
-    response_mode: 'mixed',     // 'mixed' | 'text' | 'chart'
+    response_mode: 'mixed',     // 'mixed' | 'text' | 'asset'
     generated_asset_locale_ids: ['fr'],
     input: [
       { type: 'text', text: 'Create a chart with sum of revenue' },
       { type: 'dataset', id: '<dataset-uuid>' }
-      // also: { type: 'item', ... }, { type: 'dashboard', ... } — see API doc
+      // also: { type: 'item', value: { ... } } for refine/describe flows
     ]
   }
 }
@@ -197,7 +199,6 @@ Fetch `https://developer.luzmo.com/api/createAIPrompt.md` for the full body. Min
 |---|---|---|
 | `item` | Generate, suggest, or describe a single visualization item | `task`: `generate` \| `suggest` \| `describe` |
 | `analyst` | IQ-backed natural-language Q&A (text and/or chart) | `task`: `generate` only; requires IQ addon |
-| `dashboard` | Generate or edit multi-view dashboards | `task`: `generate` only; no `response_mode: "text"` |
 
 Always fetch `https://developer.luzmo.com/api/createAIPrompt.md` for the full `agent` × `task` matrix, response schema, and streaming event payloads.
 
@@ -210,7 +211,6 @@ Exactly one `{ type: "text", text: "..." }` is required. Optional inputs (fetch 
 | `text` | User prompt (required) |
 | `dataset` | Pin dataset scope for this prompt |
 | `item` | Pass existing item JSON for refine/describe flows |
-| `dashboard` | Pass current dashboard state for dashboard-agent edits |
 
 ### Streaming (SSE)
 
@@ -220,10 +220,13 @@ Fetch `https://developer.luzmo.com/api/createAIPrompt.md` for exact event payloa
 
 ### Persisted conversations and assets
 
-`/aiprompt` auto-creates an **AIConversation** when `conversation_id` is omitted and persists user/assistant turns as **AIMessage** records. Generated charts/dashboards are stored as **AIMessageAsset** (`type: "item"` or `"dashboard"`).
+`/aiprompt` auto-creates an **AIConversation** when `conversation_id` is omitted and persists user/assistant turns as **AIMessage** records. Generated charts are stored as **AIMessageAsset** records with `type: "item"`.
 
 | Resource | When to use | Doc |
 |---|---|---|
+| `aiconversation` | Pre-create a titled thread, or manage conversation metadata | `createAIConversation.md` |
+| `aimessage` | List/replay messages in a thread (`include: AIMessageAsset`) | `searchAIMessage.md` |
+| `aimessageasset` | Fetch persisted item asset JSON by asset id | `searchAIMessageAsset.md` |
 | `aiconversation` | Pre-create a titled thread, or manage conversation metadata | `https://developer.luzmo.com/api/createAIConversation.md` |
 | `aimessage` | List/replay messages in a thread (`include: AIMessageAsset`) | `https://developer.luzmo.com/api/searchAIMessage.md` |
 | `aimessageasset` | Fetch persisted item/dashboard JSON by asset id | `https://developer.luzmo.com/api/searchAIMessageAsset.md` |
@@ -232,8 +235,8 @@ Multi-turn: pass `conversation_id` from the previous `/aiprompt` response (or fr
 
 ### Auth and scoping
 
-- **Server-side:** use API `key` + `token` in the request body (never expose in browser code).
-- **Per-user / per-tenant:** prefer embed tokens with scoped `access.datasets` and tenant filters (see `multitenancy`) — same scoping rules as IQ embed components.
+- **Org API credentials:** use API `key` + `token` server-side only to mint scoped embed tokens; never expose them in browser code.
+- **Per-user `/aiprompt`:** call with the user's embed token (`id`/`token`) that is scoped to `access.datasets` with tenant filters (see `multitenancy`) — same scoping rules as IQ embed components.
 - **Streaming:** set `stream: true` and `Accept: text/event-stream` for SSE responses.
 
 ### Regions
@@ -247,7 +250,7 @@ Pin the host to your deployment: `https://api.luzmo.com`, `https://api.us.luzmo.
 Use when an LLM agent needs to answer analytics questions by calling Luzmo data programmatically.
 
 1. Register a tool that POSTs to `/aiprompt` (`agent: "analyst"`) with the user's scoped embed token — or use the **hosted MCP server** (simpler; see below).
-2. Parse the response (text, chart config, or mixed per `response_mode`); use `conversation_id` for follow-ups.
+2. Parse the response (text, item asset, or mixed per `response_mode`); use `conversation_id` for follow-ups.
 3. **Hosted MCP** (Cursor, Claude, LangChain, OpenAI Agents SDK): `https://api.<region>.luzmo.com/0.1.0/mcp` — default tools: `search_datasets`, `answer_question`, `create_chart`. See `references/mcp-server.md` and `https://developer.luzmo.com/guide/mcp--introduction.md`.
 
 Fetch: `https://developer.luzmo.com/guide/guides--adding-luzmo-iq-to-agentic-workflow.md` — prefer `https://developer.luzmo.com/api/createAIPrompt.md` for request shapes.
@@ -314,7 +317,7 @@ The legacy **IQMessage** / IQ Backend API is replaced by **`POST /0.1.0/aiprompt
 | IQMessage resource | `properties.agent` + `properties.task` + `properties.input` |
 | IQConversation | `conversation_id` on `/aiprompt`; persisted as `aiconversation` |
 | Message history | `searchAIMessage` (include `AIMessageAsset` for charts) |
-| Generated charts | `aimessageasset` (`type: "item"` or `"dashboard"`) |
+| Generated charts | `aimessageasset` (`type: "item"`) |
 | Prompt text | `{ type: "text", text: "..." }` in `input` array |
 | Dataset scope | `{ type: "dataset", id: "..." }` in `input` + token `access.datasets` |
 

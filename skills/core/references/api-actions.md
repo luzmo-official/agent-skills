@@ -10,7 +10,7 @@ The Luzmo API uses POST-only with an `action` field in the body — never REST v
 | `get` | Search/retrieve resources | Replaces "search" — `action: "search"` does NOT exist |
 | `update` | Modify an existing resource | Most resources are partially updatable via `find` + properties |
 | `delete` | Remove a resource | IRREVERSIBLE — always show & confirm first |
-| `associate` | Link two resources (e.g. dashboard → dataset) | |
+| `associate` | Link two resources (e.g. securable → collection) | |
 | `dissociate` | Unlink two resources | |
 
 ## Common Shape
@@ -34,7 +34,8 @@ await client.get('securable', { find: { where: { id: '...' } } });
 ## `create`
 
 ```javascript
-await client.create('dashboard', {
+await client.create('securable', {
+  type: 'dashboard',
   name: { en: 'My Dashboard' },
 });
 ```
@@ -76,9 +77,8 @@ Response property naming — included models are returned as lowercase plural:
 ## `update`
 
 ```javascript
-await client.update('dashboard', {
-  id: dashboardId,
-  properties: { name: { en: 'New name' } },
+await client.update('securable', dashboardId, {
+  name: { en: 'New name' },
 });
 ```
 
@@ -87,9 +87,7 @@ For resources with a `contents` JSON (dashboards), `contents` is fully REPLACED 
 ## `delete`
 
 ```javascript
-await client.delete('dashboard', {
-  find: { where: { id: dashboardId } },
-});
+await client.delete('securable', dashboardId);
 ```
 
 ALWAYS show what will be deleted and require explicit confirmation before calling. See `resource-management` for the mandatory two-step deletion safety pattern.
@@ -97,11 +95,14 @@ ALWAYS show what will be deleted and require explicit confirmation before callin
 ## `associate` / `dissociate`
 
 ```javascript
-await client.associate('securable', {
-  id: dashboardId,
-  resource: { model: 'Dataset', id: datasetId },
-});
+await client.associate(
+  'securable',
+  dashboardId,
+  { role: 'Collections', id: collectionId }
+);
 ```
+
+Collection inheritance is the usual embed-access pattern (scales more naturally with the number of datasets/dashboards); fetch `createAuthorization.md` when deciding whether tokens should use collection access or direct `datasets` / `dashboards` entries.
 
 Each resource has its own associate/dissociate docs — fetch `https://developer.luzmo.com/api/associate{Resource}.md`.
 

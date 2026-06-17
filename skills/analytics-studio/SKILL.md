@@ -126,19 +126,25 @@ ACK `item-type` MUST match rendering component `type`:
 
 **Example flow:**
 ```javascript
-import { switchItem, loadDataFieldsForDatasets } from '@luzmo/analytics-components-kit';
+import { switchItem, loadDataFieldsForDatasets } from '@luzmo/analytics-components-kit/utils';
 
 // User selects new chart type
-function handleChartTypeChange(newType) {
+async function handleChartTypeChange(newType) {
   // 1. Update ACK item-type
   setAckItemType(newType)
   
   // 2. Remap existing slots for new chart type
-  const remappedSlots = switchItem(currentSlots, currentType, newType)
+  const next = await switchItem({
+    oldItemType: currentType,
+    newItemType: newType,
+    slots: currentSlots,
+    options: currentOptions
+  })
   
   // 3. Update state
-  setChartType(newType)
-  setSlots(remappedSlots)
+  setChartType(next.type)
+  setSlots(next.slots)
+  setOptions(next.options || {})
   
   // 4. Rendering component automatically updates via state
 }
@@ -273,20 +279,22 @@ You'll see: dashboard or chart fails to load, browser console shows CORS errors 
 1. Host your app and configure `appServer`/`apiHost` to point to the correct same-domain URLs.
 2. If that's not possible, contact `support@luzmo.com` to set up a CNAME — they can map a subdomain you own (e.g. `analytics.example.com`) to the Luzmo app server, and `analytics-api.example.com` to the Luzmo API. EU and US have different base URLs; never mix them.
 
-**❌ Using viewer token for ACK (⚠️ COMMON):**
+**❌ Using viewer token for Embedded Dashboard Editor (EDE) (⚠️ COMMON):**
 ```javascript
-// Wrong - viewer cannot configure charts
+// Wrong - viewer cannot use EDE
 const token = await client.create('authorization', {
-  role: 'viewer'  // ❌ Cannot use ACK
+  type: 'embed',
+  role: 'viewer', // cannot use EDE
 })
 ```
-You'll see: 403 Forbidden when ACK tries to fetch dataset fields, or ACK UI loads but interactions silently no-op.
-**Why this fails:** ACK requires the editing-capable roles `designer` or `owner`. Viewer is intentionally restricted to read-only.
+You'll see: 403 Forbidden when the dashboard component tries to load the editor UI (EDE) when the token has role: 'viewer'. This is not enforced for custom editor experiences built with ACK components.
+**Why this fails:** EDE requires the editing-capable roles `designer` or `owner`. Viewer is intentionally restricted to read-only.
 **✅ Use designer or owner role:**
 ```javascript
-// Correct - designer can configure charts
+// Correct - designer can use EDE
 const token = await client.create('authorization', {
-  role: 'designer'  // ✅ Can use ACK
+  type: 'embed',
+  role: 'designer', // can use EDE
 })
 ```
 
@@ -310,7 +318,7 @@ For deeper, focused guidance on specific paths:
 
 - WHEN the user only wants to VIEW a dashboard (no editing) → use `core`
 - WHEN the user asks about embed tokens, roles, or auth setup → use `core`
-- WHEN the editor is exposed to multiple tenants → use `multitenancy` (SECURITY CRITICAL — editors can bypass weak filter patterns)
+- WHEN the editor is exposed to multiple tenants → use `multitenancy` (SECURITY CRITICAL — tenant filters must be enforced server-side)
 - WHEN the user wants to brand/style the editor or charts → use `theming`
 - WHEN the user needs to ingest or model data first → use `data-integration`
 - WHEN the user wants AI/natural-language data Q&A inside the studio → use `ai-analytics`

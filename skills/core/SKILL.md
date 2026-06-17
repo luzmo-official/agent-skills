@@ -56,7 +56,7 @@ const embedToken = await client.create('authorization', {...})
 If the user needs each tenant/customer to see only **their own rows** in a **shared dataset**
 (row-level / data-level isolation), STOP. Do not build the filter pattern from core.
 
-- This is `multitenancy` skill territory (EmbedFilterGroup, parameter_overrides, Pattern 1/2/3).
+- This is `multitenancy` skill territory.
 - You may briefly name `parameter_overrides` and `EmbedFilterGroup` as the relevant concepts,
   then route to `multitenancy` for the full implementation.
 - NOTE: user-pool scoping via `suborganization` (who can see whom) IS a core topic — answer that here.
@@ -143,10 +143,10 @@ Official SDKs abstract the POST-only pattern:
 
 ```javascript
 // Node.js SDK
-await client.create('dashboard', {...})
-await client.get('dashboard', { find: {...} })
-await client.update('dashboard', {...})
-await client.delete('dashboard', {...})
+await client.create('securable', { type: 'dashboard', ...properties })
+await client.get('securable', { find: { where: { type: 'dashboard' } } })
+await client.update('securable', dashboardId, properties)
+await client.delete('securable', dashboardId)
 ```
 
 ## API Documentation Patterns
@@ -385,7 +385,7 @@ For self-service editing (Embedded Dashboard Editor or ACK), see `analytics-stud
 For deeper, focused guidance, read these files only when relevant:
 
 - `references/sdk-setup.md` — Per-language backend SDK install + per-framework frontend SDK install, with code samples
-- `references/authorization-patterns.md` — Common `createAuthorization` shapes (viewer, designer, multi-tenant, suborganization, theme/css, expiry, advanced properties)
+- `references/authorization-patterns.md` — Common `createAuthorization` shapes (viewer, designer, suborganization, theme/css, expiry, advanced properties). Multi-tenant isolation is covered only by `multitenancy`.
 - `references/api-actions.md` — Full reference for the POST + `action` model, including `include`/pagination shapes and lowercase-plural response naming
 - `references/typescript-examples.md` — Type-safe TypeScript interfaces for authorization tokens, slot configs, and API responses
 - `references/common-mistakes.md` — Detailed anti-patterns with error messages, root causes, and fixes

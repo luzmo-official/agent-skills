@@ -56,10 +56,10 @@ https://developer.luzmo.com/api/searchTheme.md
 
 Academy: `https://academy.luzmo.com/article/d73314lu`
 
-Built-in theme IDs (can be used without creating a custom theme):
+Built-in theme IDs (can be used by Flex/ACK components where a theme id prop is supported):
 `default`, `default_dark`, `vivid`, `seasonal`, `orion`, `royale`, `urban`, `pinky`, `bliss`, `radiant`, `classic`, `classic_dark`
 
-Custom themes are JSON theme objects — fetch `https://developer.luzmo.com/api/createTheme.md` for the full schema before generating one.
+Custom themes are JSON theme objects — fetch `https://developer.luzmo.com/api/createTheme.md` for the full schema before generating one. When created via API, they can also be specified as `theme_id` in Flex/ACK components (alternatively pass along the full theme JSON object to the components).
 
 ---
 
@@ -69,7 +69,7 @@ Docs: `https://developer.luzmo.com/api/createAuthorization.md`
 
 Academy: `https://academy.luzmo.com/article/hmvy5pwz`, `https://academy.luzmo.com/article/7zclnkrk`, `https://academy.luzmo.com/article/q3n82ib1`
 
-- Add `theme` or `css` to the `createAuthorization` request body to apply styling per token.
+- Add inline `theme` JSON or `css` to the `createAuthorization` request body to apply styling per token.
 - Useful for white-labeling or per-tenant visual customization.
 - Fetch `https://developer.luzmo.com/api/createAuthorization.md` for exact field shapes.
 
@@ -172,7 +172,7 @@ const theme = await client.get('theme', {...});
 // 1. Theme API: Create reusable themes in your org
 await client.create('theme', {...})
 
-// 2. Token theme override: Apply theme per embed
+// 2. Token theme override: Apply inline theme JSON per embed
 await client.create('authorization', { theme: {...} })
 ```
 

@@ -175,7 +175,9 @@ Every Flex chart slot must follow these rules:
 
 **Always required:**
 - `datasetId` (UUID of the dataset)
-- `label` (localized object: `{ en: "Label" }`)
+
+**Recommended:**
+- `label` (localized object: `{ en: "Label" }`) - any user-facing label you provide must be localized
 
 **Column-based slots (dimensions and measures using columns):**
 - `columnId` (UUID of the column)
@@ -235,11 +237,15 @@ Example:
 </div>
 ```
 
-Or in authorization token:
+Or with inline theme JSON in the authorization token:
 ```javascript
 {
-  theme: "default_dark",
-  // Set itemsBackground in your container styling
+  theme: {
+    type: "custom",
+    background: "#1a1a2e",
+    itemsBackground: "#1a1a2e"
+  },
+  // Still set a matching background on the host container.
 }
 ```
 

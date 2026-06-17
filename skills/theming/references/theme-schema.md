@@ -1,49 +1,56 @@
 # Theme JSON Schema Reference
 
-Reference for the theme JSON object used by both the Theme API (`createTheme`) and the per-token `theme` override on `createAuthorization`. Always fetch `https://developer.luzmo.com/api/createTheme.md` and any guides it references for the canonical, up-to-date schema.
+Reference for theme JSON used by the Theme API (`createTheme` / `updateTheme`) and inline per-token `theme` overrides on `createAuthorization`. Always fetch `https://developer.luzmo.com/api/createTheme.md` and `https://developer.luzmo.com/api/createAuthorization.md` before generating production theme JSON.
 
 ## High-Level Shape
 
+The canonical schema currently nests visual settings under a `theme` object for Theme API calls:
+
 ```jsonc
 {
-  // Colors
-  "mainColor": "#0F172A",
-  "secondaryColor": "#64748B",
-  "axis": { "color": "#94A3B8" },
-  "background": "#FFFFFF",
-  "itemsBackground": "#FFFFFF",
-
-  // Typography
-  "font": "Inter, sans-serif",
-  "titleFont": "Inter, sans-serif",
-
-  // Item-level styling
-  "itemSpecific": {
-    "borderRadius": 8,
-    "padding": 12
-  },
-
-  // Color palettes (for series)
-  "colors": ["#0F172A", "#3B82F6", "#10B981", "#F59E0B", "#EF4444"],
-
-  // Legends, tooltips, etc.
-  "legend": { "position": "bottom" },
-  "tooltip": { "background": "#0F172A", "color": "#FFFFFF" }
+  "name": { "en": "Acme Brand" },
+  "theme": {
+    "type": "custom",
+    "background": "#FFFFFF",
+    "itemsBackground": "#FFFFFF",
+    "mainColor": "#0F172A",
+    "colors": ["#0F172A", "#3B82F6", "#10B981"],
+    "font": {
+      "fontFamily": "Inter",
+      "fontSize": 14
+    },
+    "title": {
+      "align": "left",
+      "bold": false,
+      "italic": false,
+      "underline": false,
+      "border": false
+    },
+    "borders": {
+      "border-style": "solid",
+      "border-color": "#E2E8F0",
+      "border-radius": "8px"
+    },
+    "boxShadow": {
+      "size": "none",
+      "color": "rgb(0,0,0)"
+    }
+  }
 }
 ```
 
-Field names and supported keys evolve — confirm against `createTheme.md` before generating production themes.
+Field names and supported keys evolve. Confirm against `createTheme.md` before generating production themes.
 
 ## Built-In Theme IDs
 
-If a built-in theme suffices, reference it by id instead of creating a custom theme:
+Built-in theme ids can be used where the ACK/Flex component API accepts a theme id:
 
 `default`, `default_dark`, `vivid`, `seasonal`, `orion`, `royale`, `urban`, `pinky`, `bliss`, `radiant`, `classic`, `classic_dark`
 
-```javascript
-const auth = await client.create('authorization', {
-  theme: 'default_dark',   // built-in id
-});
+When a theme is created (via UI or API), it is assigned a unique id that can be used instead of the built-in id.
+
+```html
+<luzmo-embed-viz-item options='{"theme": {"id": "default_dark"}}' type="bar-chart" ...></luzmo-embed-viz-item>
 ```
 
 ## Custom Theme via API
@@ -51,27 +58,49 @@ const auth = await client.create('authorization', {
 ```javascript
 const theme = await client.create('theme', {
   name: { en: 'Acme Brand' },
-  properties: {
+  theme: {
+    type: 'custom',
     mainColor: '#0F172A',
-    font: 'Inter, sans-serif',
+    font: {
+      fontFamily: 'Inter',
+      fontSize: 14,
+    },
     colors: ['#0F172A', '#3B82F6', '#10B981'],
   },
 });
+```
 
-// Reference the custom theme by id later:
-await client.create('authorization', { theme: theme.id });
+Update an existing theme by id:
+
+```javascript
+await client.update('theme', theme.id, {
+  name: { en: 'Acme Brand' },
+  theme: {
+    type: 'custom',
+    mainColor: '#0F172A',
+    colors: ['#0F172A', '#3B82F6', '#10B981'],
+  },
+});
 ```
 
 ## Per-Tenant Theme (Without Creating a Theme Resource)
 
-If theming is highly dynamic (e.g. each reseller picks their colors), pass the theme JSON directly in the authorization request:
+If theming is highly dynamic, pass the theme JSON directly in the authorization request:
 
 ```javascript
 const auth = await client.create('authorization', {
+  type: 'embed',
   username: user.id,
+  access: {
+    dashboards: [{ id: dashboardId, rights: 'read' }],
+  },
   theme: {
+    type: 'custom',
     mainColor: tenant.primary_color,
-    font: tenant.font_family,
+    font: {
+      fontFamily: tenant.font_family,
+      fontSize: 14,
+    },
     colors: tenant.palette,
   },
 });
@@ -79,10 +108,15 @@ const auth = await client.create('authorization', {
 
 ## CSS Override (Token-Level)
 
-For pixel-level control beyond the theme JSON, use `css`:
+For pixel-level control beyond theme JSON, use `css` in the authorization request:
 
 ```javascript
 const auth = await client.create('authorization', {
+  type: 'embed',
+  username: user.id,
+  access: {
+    dashboards: [{ id: dashboardId, rights: 'read' }],
+  },
   css: `
     .luzmo-item-title { font-weight: 600; }
     .luzmo-axis-label { font-size: 12px; }
@@ -90,26 +124,26 @@ const auth = await client.create('authorization', {
 });
 ```
 
-CRITICAL: sanitize any tenant-supplied strings before injecting into `css` — see the Security Checkpoint in SKILL.md.
+CRITICAL: sanitize any tenant-supplied strings before injecting into `css`; see the Security Checkpoint in `SKILL.md`.
 
 ## Dark Theme Container Requirement
 
-Theme JSON colors apply to chart content. The CONTAINER background of your embedding element is YOUR responsibility:
+Theme JSON colors apply to chart/dashboard content. The container background of your embedding element is your responsibility:
 
 ```html
-<div style="background-color: #0F172A;">  <!-- match the theme background -->
+<div style="background-color: #0F172A;">
   <luzmo-embed-dashboard theme="default_dark" ...></luzmo-embed-dashboard>
 </div>
 ```
 
-Without this, a dark theme leaves a white halo around the dashboard.
+Without this, a dark theme can leave a light wrapper background around the embedded surface.
 
-## Theming Surfaces That Are NOT Controlled by This Schema
+## Theming Surfaces Not Controlled by This Schema
 
-- IQ Chat → uses `IQChatOptions` and its own CSS variables
-- IQ Answer → uses CSS custom properties
-- ACK editor components → uses ACK theming guide
-- Flex runtime → uses Flex's runtime theme example
+- IQ Chat uses `IQChatOptions` and its documented CSS variables.
+- IQ Answer uses CSS custom properties.
+- ACK editor components use the ACK theming guide.
+- Flex runtime theming uses the Flex runtime theme example and component-level props/options.
 
 See SKILL.md for the per-surface mechanism table.
 

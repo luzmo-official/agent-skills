@@ -41,11 +41,11 @@ Quick lookup for common Luzmo error messages and HTTP status codes, plus the mos
 
 ### `Only one EmbedFilterGroup allowed`
 - **Cause:** Trying to create a second `EmbedFilterGroup` in the same organization.
-- **Fix:** One group per org — combine all parameters into the existing group. See `multitenancy/references/pattern1-dataset-level.md`.
+- **Fix:** One group per org — combine all parameters into the existing group. See the `multitenancy` skill.
 
 ### `account_overrides not applied` (silent — no error but data unchanged)
 - **Cause:** Property name wrong (`connectionOverrides`/`connection_overrides`/`accountOverrides`).
-- **Fix:** Use `account_overrides` exactly. See `multitenancy/references/pattern3-connection-overrides.md`.
+- **Fix:** Use `account_overrides` exactly. See the `multitenancy` skill.
 
 ### `Invalid host` / CORS error
 - **Cause:** Wrong region/tenancy host (`apiHost` / `appServer`).
@@ -62,10 +62,6 @@ Quick lookup for common Luzmo error messages and HTTP status codes, plus the mos
 ### `Rows exceed 10,000`
 - **Cause:** Single `createData` call exceeded 10k rows.
 - **Fix:** Batch — use the bundled `scripts/push-data.{js,py}` from `data-integration`.
-
-### `dataexport email not received` (not an error per se)
-- **Cause:** `createDataexport` is ASYNC — it schedules an export emailed to the creating user. It does NOT return a downloadable file.
-- **Fix:** Wait for the email; verify the email address on the user that created the export.
 
 ## When the Error Isn't Listed
 
