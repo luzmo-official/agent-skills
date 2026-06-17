@@ -93,7 +93,7 @@ The output shows each account's `id`, `provider`, `name`, `host`, and `scope`. U
 
 **If the user's prompt names a specific data source, provider, or host**, check the list first and match against it. If a match is found, use `--account-id`; if none fits, proceed with creation.
 
-**Note on API terminology:** The script uses `--list-accounts` but under the hood calls the Luzmo API with `"action": "get"` (not `"action": "search"`). Documentation URLs like `searchAccount.md` describe the "get" action.
+**Note on API terminology:** The script uses `--list-accounts` but under the hood calls the Luzmo API with `"action": "get"` (not `"action": "search"`). Documentation URLs like `https://developer.luzmo.com/api/searchAccount.md` describe the "get" action.
 
 **Reuse an existing account:**
 
@@ -292,7 +292,7 @@ For connectors that support it (typical warehouse/database connectors — **not*
 Fetch before implementing:
 
 - `https://developer.luzmo.com/api/createDataprovider.md`
-- `https://developer.luzmo.com/api/searchDataprovider.md`
+- `https://developer.luzmo.com/api/getDataprovider.md`
 
 For multi-tenant setups where each tenant has its own schema/database, views often pair with **connection overrides** — see `multitenancy`.
 

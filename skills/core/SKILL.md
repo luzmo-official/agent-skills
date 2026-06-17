@@ -187,7 +187,7 @@ You may also reference `https://developer.luzmo.com/AGENTS.md` for high-level in
 
 **Note on documentation URLs:** Pages at `developer.luzmo.com` are available with a `.md` suffix for markdown format. Always prefer fetching the `.md` version when available.
 
-**Note on `search{Resource}` naming:** Documentation URLs like `searchDashboard.md` or `searchDataset.md` describe "search/list" operations, but the actual HTTP request body uses `"action": "get"` (not `"action": "search"` which doesn't exist). The "search" in the URL is a documentation convention only.
+**Note on `search{Resource}` naming:** Documentation URLs like `https://developer.luzmo.com/api/searchDashboard.md` or `https://developer.luzmo.com/api/searchDataset.md` describe "search/list" operations, but the actual HTTP request body uses `"action": "get"` (not `"action": "search"` which doesn't exist). The "search" in the URL is a documentation convention only.
 
 ### API Base URLs and Version
 

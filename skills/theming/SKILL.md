@@ -59,7 +59,7 @@ Academy: `https://academy.luzmo.com/article/d73314lu`
 Built-in theme IDs (can be used without creating a custom theme):
 `default`, `default_dark`, `vivid`, `seasonal`, `orion`, `royale`, `urban`, `pinky`, `bliss`, `radiant`, `classic`, `classic_dark`
 
-Custom themes are JSON theme objects — fetch `createTheme.md` for the full schema before generating one.
+Custom themes are JSON theme objects — fetch `https://developer.luzmo.com/api/createTheme.md` for the full schema before generating one.
 
 ---
 
@@ -71,7 +71,7 @@ Academy: `https://academy.luzmo.com/article/hmvy5pwz`, `https://academy.luzmo.co
 
 - Add `theme` or `css` to the `createAuthorization` request body to apply styling per token.
 - Useful for white-labeling or per-tenant visual customization.
-- Fetch `createAuthorization.md` for exact field shapes.
+- Fetch `https://developer.luzmo.com/api/createAuthorization.md` for exact field shapes.
 
 **Dark theme note:** When using a dark theme, set a dark background on the container element explicitly — chart content adapts to the theme but the container background does not. Two approaches:
 1. CSS: `background-color: #1a1a2e` on the container element
@@ -107,7 +107,7 @@ https://developer.luzmo.com/guide/iq--answer-component-api--css-variables.md
 
 Docs:
 ```
-https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--theming.md
+https://developer.luzmo.com/guide/ack--patterns.md
 ```
 
 - ACK components (from `@luzmo/analytics-components-kit`) have their own theming approach separate from the dashboard Theme API.
