@@ -102,14 +102,14 @@ await client.associate(
 );
 ```
 
-Collection inheritance is the usual embed-access pattern (scales more naturally with the number of datasets/dashboards); fetch `createAuthorization.md` when deciding whether tokens should use collection access or direct `datasets` / `dashboards` entries.
+Collection inheritance is the usual embed-access pattern (scales more naturally with the number of datasets/dashboards); consult `https://developer.luzmo.com/api/createAuthorization.md` when deciding whether tokens should use collection access or direct `datasets` / `dashboards` entries.
 
-Each resource has its own associate/dissociate docs — fetch `https://developer.luzmo.com/api/associate{Resource}.md`.
+Each resource has its own associate/dissociate docs — consult `https://developer.luzmo.com/api/associate{Resource}.md`.
 
 ## When in Doubt
 
-Fetch the action+resource-specific doc:
+Consult the action+resource-specific doc:
 - Pattern: `https://developer.luzmo.com/api/{action}{Resource}.md`
-- Examples: `createAuthorization.md`, `searchDataset.md` (despite the URL name, action is still `get`), `updateDashboard.md`, `deleteDataprovider.md`
+- Examples: `https://developer.luzmo.com/api/createAuthorization.md`, `https://developer.luzmo.com/api/searchDataset.md` (despite the URL name, action is still `get`), `https://developer.luzmo.com/api/updateDashboard.md`, `https://developer.luzmo.com/api/deleteDataprovider.md`
 
 **IMPORTANT:** Always read the resources those docs reference inline — the canonical field shape often lives in a linked guide rather than the action doc itself.

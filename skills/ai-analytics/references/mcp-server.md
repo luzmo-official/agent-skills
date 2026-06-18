@@ -2,7 +2,7 @@
 
 Hosted Model Context Protocol server for Luzmo IQ and chart generation in agent frameworks (Claude Agent SDK, LangChain, OpenAI Agents SDK, Cursor, Codex).
 
-**Canonical spec:** `https://developer.luzmo.com/guide/mcp--introduction.md` — fetch before implementing; do not duplicate the full tool catalog here.
+**Canonical spec:** `https://developer.luzmo.com/guide/mcp--introduction.md` — consult before implementing; do not duplicate the full tool catalog here.
 
 ## URL
 

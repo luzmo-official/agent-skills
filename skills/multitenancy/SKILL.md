@@ -19,9 +19,9 @@ Entry-point for multi-tenant embedding and data isolation. Security-critical - u
 
 ## Doc Retrieval
 
-- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
-- If it is an index/overview, follow the relevant links to the concrete API, provider, schema, or example page.
-- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+- `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
+- Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
 ## Core Principles (Non-Negotiable)
 
@@ -205,7 +205,7 @@ const token = await client.create('authorization', {
 })
 ```
 
-Fetch the `createAuthorization` doc for the complete filter expression shape and available operators.
+Consult the `createAuthorization` doc for the complete filter expression shape and available operators.
 
 ---
 
@@ -261,7 +261,7 @@ account_overrides: {
 }
 ```
 
-Always fetch both the connection overrides guide AND the specific plugin documentation before configuring overrides.
+Consult both the connection overrides guide and the specific plugin documentation before configuring overrides.
 
 ---
 
@@ -271,7 +271,7 @@ Always fetch both the connection overrides guide AND the specific plugin documen
 - Parameterized filtering (Pattern 1) is the recommended approach when one tenant parameter should apply across one or more datasets.
 - Dashboard-level filters are weak and insecure — an editor can remove them. Use dataset-level filtering instead (either parameterized embed filters or static token filters).
 - `account_overrides` is the documented property name (not `connectionOverrides` or similar).
-- Plugin-specific overrides: fetch the plugin docs too.
+- Plugin-specific overrides: consult the plugin docs too.
 
 ## Hand Off
 

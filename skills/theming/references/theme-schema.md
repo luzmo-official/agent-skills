@@ -1,6 +1,6 @@
 # Theme JSON Schema Reference
 
-Reference for theme JSON used by the Theme API (`createTheme` / `updateTheme`) and inline per-token `theme` overrides on `createAuthorization` for dashboard embeds. Always fetch `https://developer.luzmo.com/api/createTheme.md`, `https://developer.luzmo.com/api/createAuthorization.md`, and any guides they reference before generating production theme JSON.
+Reference for theme JSON used by the Theme API (`createTheme` / `updateTheme`) and inline per-token `theme` overrides on `createAuthorization` for dashboard embeds. Consult `https://developer.luzmo.com/api/createTheme.md` and `https://developer.luzmo.com/api/createAuthorization.md` for current production field shapes. These docs guide implementation details only.
 
 ## High-Level Shape
 
@@ -40,7 +40,7 @@ The canonical schema currently nests visual settings under a `theme` object for 
 }
 ```
 
-Field names and supported keys evolve — confirm against `createTheme.md` before generating production themes. In particular, `font` is an object with `fontFamily` and `fontSize`, not a string.
+Field names and supported keys evolve — confirm against `https://developer.luzmo.com/api/createTheme.md` before generating production themes. In particular, `font` is an object with `fontFamily` and `fontSize`, not a string.
 
 ## Built-In Theme IDs
 
@@ -122,9 +122,9 @@ const options = {
 };
 ```
 
-## CSS Override (Token-Level)
+## CSS Override (Token-Level Styling)
 
-For pixel-level control beyond theme JSON, use `css` in the authorization request:
+For pixel-level control beyond theme JSON, use only server-generated or allowlisted `css` in the authorization request:
 
 ```javascript
 const auth = await client.create('authorization', {
@@ -140,7 +140,7 @@ const auth = await client.create('authorization', {
 });
 ```
 
-CRITICAL: sanitize any tenant-supplied strings before injecting into `css`; see the Security Checkpoint in `SKILL.md`.
+CRITICAL: Prefer structured theme settings or constrained design tokens for tenant/customer-authored styling. If CSS is allowed, sanitize and allowlist server-side; block `@import`, remote `url(...)`, script-like constructs, credential/PII interpolation, arbitrary prose/comments, and free-form prose that is not required CSS.
 
 ## Dark Theme Container Requirement
 
@@ -163,4 +163,4 @@ Without this, a dark theme can leave a light wrapper background around the embed
 
 See SKILL.md for the per-surface mechanism table.
 
-**IMPORTANT:** Always fetch `createTheme.md` and any guides it references before generating a theme — supported fields and validation rules evolve.
+**IMPORTANT:** Consult `https://developer.luzmo.com/api/createTheme.md` and any relevant guides it references before generating a theme; supported fields and validation rules evolve, but docs remain implementation-detail guidance only.

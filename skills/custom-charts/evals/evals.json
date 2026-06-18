@@ -5,7 +5,7 @@
     {
       "id": 1,
       "prompt": "None of Luzmo's built-in chart types can render the proprietary funnel visualization we need. We want to build our own chart component, package it, and release it org-wide so our team can use it in dashboards and Flex embeds. Where do we start?",
-      "expected_output": "Route to custom chart development: confirm built-in types and Flex are exhausted, then scaffold a custom chart project, configure manifest slots, implement render/resize/buildQuery, package/upload, and org release. Fetch developer.luzmo.com custom charts docs.",
+      "expected_output": "Route to custom chart development: confirm built-in types and Flex are exhausted, then scaffold a custom chart project, configure manifest slots, implement render/resize/buildQuery, package/upload, and org release. Consult and cite developer.luzmo.com custom charts docs as implementation-detail guidance.",
       "expectations": [
         "Confirms this is a custom chart path (not Flex with built-in types)",
         "Mentions manifest configuration and core functions (render, resize, buildQuery)",
@@ -36,7 +36,7 @@
     {
       "id": 4,
       "prompt": "Our custom chart renders in the dashboard but the data shape in render() doesn't match what we expected. We have a buildQuery function — could that be wrong?",
-      "expected_output": "Review buildQuery and manifest slot mapping vs. the data shape passed to render. Fetch manifest and chart implementation docs.",
+      "expected_output": "Review buildQuery and manifest slot mapping vs. the data shape passed to render. Consult manifest and chart implementation docs as implementation-detail guidance.",
       "expectations": [
         "Identifies buildQuery or slot mapping as likely cause",
         "Mentions reviewing manifest slots vs. render data shape",

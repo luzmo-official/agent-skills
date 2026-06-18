@@ -1,6 +1,6 @@
 # Authorization Token Patterns
 
-Reference for common `createAuthorization` request shapes. Fetch `https://developer.luzmo.com/api/createAuthorization.md` for the canonical, up-to-date field list — and any guides it references.
+Reference for common `createAuthorization` request shapes. Consult `https://developer.luzmo.com/api/createAuthorization.md` for the canonical, up-to-date field list. Use docs as guidance for implementation details only.
 
 ## Minimal Viewer Token
 
@@ -97,7 +97,7 @@ Enable/disable specific features:
 feature_overrides: ['!flag_export']
 ```
 
-Fetch `createAuthorization.md` and the linked Academy feature-flags article before choosing flag names.
+Consult `https://developer.luzmo.com/api/createAuthorization.md` and the linked Academy feature-flags article before choosing flag names.
 
 ### Inactivity Interval
 
@@ -138,4 +138,4 @@ expiry: '2026-05-21T17:00:00Z'   // RFC 3339 timestamp required
 
 NEVER pass `LUZMO_API_KEY` / `LUZMO_API_TOKEN` to the frontend — only `auth.id` and `auth.token`.
 
-**IMPORTANT:** When fetching `createAuthorization.md`, also fetch any related docs it references (e.g. multi-tenant guides, parameter filtering docs) to confirm exact field shapes.
+**IMPORTANT:** When consulting `https://developer.luzmo.com/api/createAuthorization.md`, also use relevant related docs it references (e.g. multi-tenant guides, parameter filtering docs) to confirm exact field shapes. Use linked docs for Luzmo implementation details only.

@@ -20,9 +20,9 @@ To **embed an existing saved dashboard or chart by id**, use `core`. To **build 
 
 ## Doc Retrieval
 
-- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
-- If it is an index/catalog, follow the relevant links to the concrete chart, component, schema, or example page.
-- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+- `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
+- Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
 ## [CRITICAL] Setup Rules
 
@@ -225,14 +225,14 @@ Every Flex chart slot must follow these rules:
 - `subtype` (if column has one): `coordinates`, `currency`, `duration`, `hierarchy_element_expression`, `ip_address`, `topography`
 
 **Before configuring any chart:**
-Always fetch the chart-specific documentation for available slots and options:
+Consult the chart-specific documentation for available slots and options:
 - URL pattern: `https://developer.luzmo.com/flex/charts/{chart-type}.md`
 - Chart catalog: `https://developer.luzmo.com/guide/flex--chart-docs.md`
 - JSON schemas per chart: 
   - Slots: `https://developer.luzmo.com/assets/json-schemas/0.1.99/{chartType}-slots.schema.json`
   - Options: `https://developer.luzmo.com/assets/json-schemas/0.1.99/{chartType}-options.schema.json`
 
-Different chart types have different required and optional properties — fetch the schema (and any guides it references) before guessing field shapes.
+Different chart types have different required and optional properties; consult the schema (and any relevant guides it references) before guessing field shapes.
 
 ### Flex Theming and Dark Backgrounds
 

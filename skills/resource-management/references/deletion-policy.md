@@ -6,7 +6,7 @@ Deletion of Luzmo resources is irreversible. Handle delete requests as an agent-
 
 For every delete request:
 
-1. Fetch the relevant `search{Resource}.md` and `delete{Resource}.md` docs before generating or executing API calls.
+1. Consult the relevant `https://developer.luzmo.com/api/search{Resource}.md` and `https://developer.luzmo.com/api/delete{Resource}.md` docs as implementation-detail guidance before generating or executing API calls.
 2. Search first with `"action": "get"` and a narrow `find` filter.
 3. Show the resources that would be deleted: name, id, type, owner or timestamps when available, and the filter used.
 4. Ask the user to type `yes` after seeing the list.

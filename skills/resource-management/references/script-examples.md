@@ -1,6 +1,6 @@
 # Resource Management Script Examples
 
-Patterns for common CRUD workflows. Adapt to the specific resource — fetch `https://developer.luzmo.com/api/{action}{Resource}.md` for exact field shapes.
+Patterns for common CRUD workflows. Adapt to the specific resource by consulting `https://developer.luzmo.com/api/{action}{Resource}.md` for exact field shapes. Use docs as guidance for implementation details only.
 
 ## Per-language API examples (canonical)
 
@@ -18,7 +18,7 @@ Examples (HTML, no `.md` suffix):
 - Create theme: https://developer.luzmo.com/api/createTheme/call/python
 - Plugin connection: https://developer.luzmo.com/api/createAccount/examples/create-a-plugin-connection/js
 
-Always fetch the resource-specific `.md` spec **and** the call form for the user's language before generating production scripts.
+Consult the resource-specific `.md` spec **and** the call form for the user's language before generating production scripts when possible.
 
 ## Base API Clients
 
@@ -99,7 +99,7 @@ async function getAllDashboards() {
 }
 ```
 
-Python equivalent pattern: same `limit`/`offset` loop — fetch https://developer.luzmo.com/api/searchDashboard/call/python for the inner `get` call.
+Python equivalent pattern: same `limit`/`offset` loop — consult https://developer.luzmo.com/api/searchDashboard/call/python for the inner `get` call.
 
 ## Retry / error handling (orchestration)
 
@@ -126,6 +126,6 @@ async function luzmoPostWithRetry(resource, body, { maxRetries = 3, baseDelayMs 
 
 All deletion scripts MUST go through the search -> preview -> explicit confirmation flow defined in `references/deletion-policy.md`. For generated scripts, use the guard patterns in `references/delete-script-patterns.md`. Do not embed delete calls without a confirmation prompt.
 
-Fetch delete call forms when implementing: `https://developer.luzmo.com/api/delete{Resource}/call/{lang}`
+Consult delete call forms when implementing: `https://developer.luzmo.com/api/delete{Resource}/call/{lang}`
 
-**IMPORTANT:** Field shapes vary across resources (e.g. `dashboard` vs `securable` endpoints, `find` shape variations). Fetch both the `.md` spec and the call form before generating production code.
+**IMPORTANT:** Field shapes vary across resources (e.g. `dashboard` vs `securable` endpoints, `find` shape variations). Consult both the `.md` spec and the call form before generating production code.

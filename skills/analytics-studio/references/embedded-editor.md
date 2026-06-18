@@ -4,7 +4,7 @@
 
 An out-of-the-box editor embedded as a single component. End-users get Luzmo's native edit UI inside your application.
 
-### Docs to Fetch
+### Reference Docs
 
 ```
 https://developer.luzmo.com/guide/dashboard-embedding--embedded-dashboard-editor.md
@@ -25,11 +25,11 @@ Use `designer` for most cases. Use `owner` only when the favoriting capability i
 
 ### editMode
 
-Set `editMode` on the frontend component to activate the editor UI. Fetch the editMode docs above for the full list of accepted values and their effect.
+Set `editMode` on the frontend component to activate the editor UI. Consult the editMode docs above for the full list of accepted values and their effect.
 
 ### Events
 
-Listen to dashboard events to react to edits in your application. Fetch the capture-events doc above.
+Listen to dashboard events to react to edits in your application. Consult the capture-events doc above.
 
 ---
 

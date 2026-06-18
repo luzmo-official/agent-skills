@@ -70,7 +70,7 @@ import { VizItemType, VizItemSlot, VizItemOptions } from '@luzmo/embed';
 
 interface ChartConfig {
   type: VizItemType;
-  // Fetch https://developer.luzmo.com/flex/charts/{chart-type}.md before
+  // Consult https://developer.luzmo.com/flex/charts/{chart-type}.md before
   // narrowing slots & options: slot containers and names are chart-specific.
   slots: VizItemSlot[];
   options?: VizItemOptions;

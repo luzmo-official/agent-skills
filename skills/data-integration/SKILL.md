@@ -21,15 +21,15 @@ Entry-point for all data-side work: connecting sources, pushing data, modeling s
 
 ## Doc Retrieval
 
-- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
-- If it is an index/overview/provider page, follow the relevant links to the concrete API, provider, plugin, schema, or example page.
-- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+- `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
+- Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
 ## [CRITICAL] Security Checkpoint
 
 **BEFORE writing any data-integration code, verify:**
 - [ ] API credentials (`LUZMO_API_KEY`, `LUZMO_API_TOKEN`) live server-side ONLY (env vars, secrets manager)
-- [ ] Database/source credentials (DB passwords, plugin tokens, SaaS keys) are stored server-side, NEVER hardcoded in scripts that ship to a browser
+- [ ] Database/source credentials (DB passwords, plugin tokens, SaaS keys) are stored server-side, NEVER hardcoded in scripts, committed files, logs, or shell history
 - [ ] Push-data scripts (`createData`) and connect-datasource scripts run on a backend, not in client code
 - [ ] If end-users will trigger data pushes via embed tokens, the token's `securable` access is scoped to only the datasets they may write to
 
@@ -112,15 +112,25 @@ node skills/data-integration/scripts/connect-datasource.js --account-id <uuid> [
 **Create a new account (all connection flags required):**
 
 ```bash
+# macOS/Linux
+export DB_PASSWORD="..."
+
+# Windows PowerShell
+$env:DB_PASSWORD="..."
+
 node skills/data-integration/scripts/connect-datasource.js \
   --provider postgresql --host db.example.com \
-  --port 5432 --database mydb --user readonly --password secret \
+  --port 5432 --database mydb --user readonly --password-env DB_PASSWORD \
   --tables orders,customers
 ```
 
+Store the source password or token in a server-side environment variable such as `DB_PASSWORD`. Do not paste live database passwords, SaaS tokens, or plugin credentials directly into commands, scripts, logs, or committed files.
+
+When helping a user connect a source, provide the env-var setup and the script command for them to run. Do not ask them to share the source password with the agent, and do not run the connection command yourself if the password is not already available through a permitted environment variable.
+
 ### Step 1 — `createAccount`: Set up the connection
 
-Fetch: `https://developer.luzmo.com/api/createAccount.md`
+Docs: `https://developer.luzmo.com/api/createAccount.md`
 
 Examples (per provider/language): `https://developer.luzmo.com/api/createAccount/examples/{slug}/{js|python|java|dotnet|curl|php}` — e.g. [create-a-plugin-connection/python](https://developer.luzmo.com/api/createAccount/examples/create-a-plugin-connection/python). Call forms: `https://developer.luzmo.com/api/createAccount/call/{lang}`.
 
@@ -136,13 +146,13 @@ Use `action: "get"` with a `find` object. Filter by `provider`, `name`, `host`, 
 
 ### Step 2 — `getDataprovider`: List available tables and views
 
-Fetch: `https://developer.luzmo.com/api/getDataprovider.md`
+Docs: `https://developer.luzmo.com/api/getDataprovider.md`
 
 Requires the Account `id` and the `provider` name. Returns all tables/views available in the connection.
 
 ### Step 3 — `createDataprovider`: Register selected tables as Luzmo datasets
 
-Fetch: `https://developer.luzmo.com/api/createDataprovider.md`
+Docs: `https://developer.luzmo.com/api/createDataprovider.md`
 
 Call once per table/view to import. Returns a `dataset_id` for each. Do **not** use `createDataset` for database connections — use `createDataprovider`.
 
@@ -171,7 +181,7 @@ node skills/data-integration/scripts/push-data.js --dataset-id "<uuid>" --file d
 node skills/data-integration/scripts/push-data.js --dataset-id "<uuid>" --file data.json --format json --mode replace --confirm-replace yes
 ```
 
-Fetch: `https://developer.luzmo.com/api/createData.md` — call forms: `https://developer.luzmo.com/api/createData/call/{lang}`.
+Docs: `https://developer.luzmo.com/api/createData.md` — call forms: `https://developer.luzmo.com/api/createData/call/{lang}`.
 
 Key facts:
 - `createData` can create a new dataset automatically (omit `securable_id` and use `type: "create"`).
@@ -184,7 +194,7 @@ Key facts:
 
 ## Query Data
 
-Fetch: `https://developer.luzmo.com/api/getData.md` — call forms: `https://developer.luzmo.com/api/getData/call/{lang}`.
+Docs: `https://developer.luzmo.com/api/getData.md` — call forms: `https://developer.luzmo.com/api/getData/call/{lang}`.
 
 Guide: `https://developer.luzmo.com/guide/guides--querying-data.md`
 
@@ -217,8 +227,8 @@ For deeper guidance on specific data integration topics:
 
 - `createDataset` docs advise: use `createData` for data-push datasets and `createDataprovider` for database/plugin connections. Do not default to `createDataset`.
 - `searchDataset` supports `include` for related resources: `Column`, `Account`, `Acceleration`, and linked dashboards.
-- For ad-hoc row-level data exports, query `/data` with `client.get('data', { queries: [...] })`; use `options.rollup_data: false`, `order`, and `limit`/`offset` to batch rows, then write CSV/XLSX in the app. Fetch `https://developer.luzmo.com/api/getData.md` first.
-- For dashboard/chart/Flex exports, use the `/export` service (`createExport`) instead: sync file response, async email, or scheduled email. Fetch `https://developer.luzmo.com/api/createExport.md`.
+- For ad-hoc row-level data exports, query `/data` with `client.get('data', { queries: [...] })`; use `options.rollup_data: false`, `order`, and `limit`/`offset` to batch rows, then write CSV/XLSX in the app. Consult `https://developer.luzmo.com/api/getData.md` for current field shapes.
+- For dashboard/chart/Flex exports, use the `/export` service (`createExport`) instead: sync file response, async email, or scheduled email. Consult `https://developer.luzmo.com/api/createExport.md`.
 - Fewer, wider tables in data-push datasets generally perform better than many narrow linked tables.
 
 ## Common Mistakes
@@ -301,11 +311,11 @@ For connectors that support it (typical warehouse/database connectors — **not*
 
 ### Flow
 
-1. Confirm the connector supports view creation — fetch connector docs on `developer.luzmo.com`.
+1. Confirm the connector supports view creation — consult connector docs on `developer.luzmo.com` as implementation-detail guidance.
 2. Create the view in the source system (or via Luzmo's dataprovider/view APIs where documented).
 3. Register the view-backed dataset in Luzmo and associate it to dashboards.
 
-Fetch before implementing:
+Consult before implementing:
 
 - `https://developer.luzmo.com/api/createDataprovider.md`
 - `https://developer.luzmo.com/api/getDataprovider.md`

@@ -12,7 +12,7 @@ The Luzmo API is **not** traditional REST. Every call is a `POST` to `/:resource
 - **Body shape:** `{ key, token, version: "0.1.0", action, ...params }`. Prefer the official SDKs, which wrap this (`client.get('dashboard', { find })`, `client.create('dashboard', {...})`).
 - **Base URL includes the version path:** EU `https://api.luzmo.com/0.1.0` · US `https://api.us.luzmo.com/0.1.0` · VPC `https://{vpc}-api.luzmo.com/0.1.0`.
 - **Includes return lowercase-plural properties:** `include: [{ model: 'Column' }]` → response has `columns` (not `Columns`); `Securable` → `securables`; `Account` → `accounts`.
-- **Fetch the doc before coding:** `https://developer.luzmo.com/api/{action}{Resource}.md` (e.g. `createAuthorization.md`). Don't rely on cached shapes.
+- **Docs:** `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain; before starting implementation, you MUST consult `https://developer.luzmo.com/api/{action}{Resource}.md` and referenced URLs for implementation details.
 
 ```javascript
 // [OK] list dashboards (no "search" action)

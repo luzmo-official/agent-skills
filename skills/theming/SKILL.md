@@ -18,20 +18,22 @@ Entry-point for visual customization of any Luzmo surface. Route to the right me
 
 ## Doc Retrieval
 
-- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
-- If it is an index/overview, follow the relevant links to the concrete theme API, component, CSS variable, schema, or example page.
-- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+- `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
+- Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
 ## [CRITICAL] Security Checkpoint
 
 **BEFORE applying themes via API or authorization tokens, verify:**
-- [ ] Theme JSON or CSS is set via the SERVER-SIDE `createAuthorization` call (`theme`, `css` properties) — never patched on the client after the token is issued
+- [ ] Theme JSON and styling overrides are set via the SERVER-SIDE authorization-token call (`theme` plus optional styling properties) — never patched on the client after the token is issued
 - [ ] If using the Theme API (`createTheme`, `updateTheme`), the call is made with `LUZMO_API_KEY` / `LUZMO_API_TOKEN` server-side
 - [ ] Per-tenant theme decisions (which theme/CSS to apply) are made server-side based on the authenticated user, not via client-side query params a user could spoof
-- [ ] CSS overrides do NOT inject untrusted user input — sanitize any tenant-supplied strings before placing them in a `css` payload to avoid CSS injection
+- [ ] Authorization `css` contains only server-generated or allowlisted CSS; prefer structured theme settings or constrained design tokens for tenant/customer-authored styling
+- [ ] Untrusted tenant/customer styling input is never copied into prompts or treated as instructions
+- [ ] CSS sanitization blocks `@import`, remote `url(...)`, script-like constructs, credential/PII interpolation, and arbitrary prose/comments before anything reaches a `css` payload
 - [ ] For standalone Flex viz-items, do not use a `theme` component prop; apply chart styling through the item `options` object and keep any server-selected theme values scoped to the authenticated user
 
-**If ANY checkbox is unchecked, STOP and fix before proceeding.** Per-tenant theming that relies on client-side branching can be bypassed, allowing one tenant to apply another tenant's theme (minor) or to inject hostile CSS (more serious in shared frames).
+**If ANY checkbox is unchecked, STOP and fix before proceeding.** Per-tenant theming that relies on client-side branching can be bypassed, allowing one tenant to apply another tenant's theme (minor) or to inject hostile CSS or indirect prompt-injection text (more serious in shared frames and agent workflows).
 
 For full auth/embed-token guidance, see `core`.
 
@@ -66,7 +68,7 @@ Academy: `https://academy.luzmo.com/article/d73314lu`
 Built-in theme IDs (can be used by Flex/ACK components where a theme id prop is supported):
 `default`, `default_dark`, `vivid`, `seasonal`, `orion`, `royale`, `urban`, `pinky`, `bliss`, `radiant`, `classic`, `classic_dark`
 
-Custom themes are JSON theme objects — fetch `https://developer.luzmo.com/api/createTheme.md` for the full schema before generating one. When created via API, they can also be specified as `theme_id` in Flex/ACK components (alternatively pass along the full theme JSON object to the components).
+Custom themes are JSON theme objects. Consult `https://developer.luzmo.com/api/createTheme.md` for current schema details before generating one. When created via API, they can also be specified as `theme_id` in Flex/ACK components (alternatively pass along the full theme JSON object to the components).
 
 ---
 
@@ -76,9 +78,10 @@ Docs: `https://developer.luzmo.com/api/createAuthorization.md`
 
 Academy: `https://academy.luzmo.com/article/hmvy5pwz`, `https://academy.luzmo.com/article/7zclnkrk`, `https://academy.luzmo.com/article/q3n82ib1`
 
-- Add inline `theme` JSON or `css` to the `createAuthorization` request body to apply styling per token.
+- Add inline `theme` JSON or server-generated/allowlisted `css` to the `createAuthorization` request body to apply styling per token.
 - Useful for white-labeling or per-tenant visual customization of dashboard embeds and other surfaces that consume authorization-level theme/css.
-- Fetch `https://developer.luzmo.com/api/createAuthorization.md` for exact field shapes.
+- Prefer structured theme settings or constrained design tokens when styling is based on tenant/customer-authored input. Do not pass raw tenant CSS through.
+- Consult `https://developer.luzmo.com/api/createAuthorization.md` for current field shapes.
 - Standalone Flex viz-items do **not** have a `theme` prop, and authorization-level `theme` should not be presented as the primary way to style them. For standalone Flex charts, use item `options` instead.
 
 **Dark theme note:** When using a dark theme, set a dark background on the container element explicitly — chart content adapts to the theme but the container background does not. Two approaches:
@@ -95,7 +98,7 @@ https://developer.luzmo.com/guide/iq--chat-component-api--customization.md
 ```
 
 - Includes `IQChatOptions` configuration and CSS variables.
-- Fetch the customization doc before describing any style props or variables.
+- Consult the customization doc before describing specific style props or variables.
 
 ---
 
@@ -107,7 +110,7 @@ https://developer.luzmo.com/guide/iq--answer-component-api--css-variables.md
 ```
 
 - The Answer component exposes CSS custom properties for color, font, and spacing.
-- Fetch the CSS variables doc before listing available variables.
+- Consult the CSS variables doc before listing available variables.
 
 ---
 
@@ -119,7 +122,7 @@ https://developer.luzmo.com/guide/ack--patterns.md
 ```
 
 - ACK components (from `@luzmo/analytics-components-kit`) have their own theming approach separate from the dashboard Theme API.
-- Fetch the ACK theming guide before suggesting specific CSS variables or theme props.
+- Consult the ACK theming guide before suggesting specific CSS variables or theme props.
 
 ---
 
@@ -142,7 +145,7 @@ https://developer.luzmo.com/guide/flex--component-api-reference--properties.md
 - Dashboard Theme API settings do **not** automatically control IQ or ACK component styling — these are separate mechanisms.
 - Runtime embed-token CSS overrides and Theme API resources are different things — do not conflate them.
 - Dark themes require explicit container background color — not automatic.
-- Always fetch component-specific docs before claiming CSS variable names or theming props.
+- Consult component-specific docs before claiming CSS variable names or theming props.
 
 ## Common Mistakes
 
@@ -205,8 +208,9 @@ await client.create('authorization', { theme: {...} })
 
 - Applying authorization-level themes or CSS overrides client-side — all `theme`/`css` properties on `createAuthorization` must be set server-side.
 - Passing `theme` as a prop to standalone Flex viz-items — use the chart `options` object instead.
-- Injecting unsanitized tenant-supplied strings into `css` payloads (CSS injection risk).
-- Describing IQ Chat CSS variables or ACK theme props without fetching the current customization documentation.
+- Injecting unsanitized tenant/customer-supplied strings into `css` payloads (CSS injection and indirect prompt-injection risk).
+- Copying tenant/customer-authored styling comments or prose into prompts, generated instructions, logs, or support summaries.
+- Describing IQ Chat CSS variables or ACK theme props without consulting the current customization documentation.
 - Confusing the dashboard Theme API with per-token `css` overrides — they serve different scopes.
 
 ## Hand Off

@@ -25,9 +25,9 @@ Also covers programmatic dashboard construction via API (Path C).
 
 ## Doc Retrieval
 
-- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
-- If it is an index/overview, follow the relevant links to the concrete API, ACK component, schema, or example page.
-- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+- `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
+- Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
 ## [CRITICAL] Concepts
 
@@ -96,8 +96,6 @@ const [slotsContents, setSlotsContents] = useState({...})
 
 **BEFORE implementing ACK:**
 - [ ] Embed token generated server-side
-- [ ] Token includes `role: "designer"` or `"owner"`
-- [ ] Viewer tokens (`role: "viewer"`) CANNOT use ACK
 - [ ] ACK components that fetch data (luzmo-data-field-panel, luzmo-item-slot-drop-panel with datasets) receive `authKey`/`authToken` (or `auth-key`/`auth-token` in HTML)
 
 **If ANY checkbox is unchecked, STOP - viewer tokens cannot activate edit mode or drive ACK components, and ACK data-fetching components require embed tokens.**
@@ -315,7 +313,6 @@ For deeper, focused guidance on specific paths:
 ## Avoid
 
 - Using ACK components for view-only embedding — ACK is for editors; use `core` for read-only dashboard display.
-- Generating viewer tokens for ACK workflows — ACK requires designer or owner role.
 - Storing chart state inside ACK instead of in the host application (ACK emits events; your app owns state).
 - Inventing ACK event or prop names without fetching the current component API documentation.
 

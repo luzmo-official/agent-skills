@@ -5,18 +5,18 @@
     {
       "id": 1,
       "prompt": "I need to create a custom theme for our Luzmo dashboards that matches our brand colors (primary: #2563EB, background: #F8FAFC) and apply it org-wide so all dashboards use it by default.",
-      "expected_output": "A docs-first answer that guides the user to use the Theme API (createTheme) to create a reusable theme object, and then associate or apply it. Should fetch the createTheme docs before describing the JSON schema.",
+      "expected_output": "A docs-first answer that guides the user to use the Theme API (createTheme) to create a reusable theme object, and then associate or apply it. Should consult and cite the createTheme docs as implementation-detail guidance before describing the JSON schema.",
       "expectations": [
         "References `https://developer.luzmo.com/api/createTheme.md`",
         "Explains that the Theme API creates reusable org-wide themes",
-        "States the agent will fetch `createTheme.md` before generating the theme JSON schema",
-        "Does not invent theme JSON field names without fetching the docs"
+        "States the agent will consult `https://developer.luzmo.com/api/createTheme.md` before generating the theme JSON schema",
+        "Does not invent theme JSON field names without consulting the docs"
       ]
     },
     {
       "id": 2,
       "prompt": "We have a white-label product and each customer should see the embedded dashboard in their own brand colors. Can I apply different CSS styling per customer without creating a separate Luzmo theme for each one?",
-      "expected_output": "Direct the user to the runtime CSS override via the createAuthorization 'css' field. This allows per-embed-token CSS customization without creating separate Theme API resources.",
+      "expected_output": "Direct the user to the runtime styling override on the authorization token. This allows per-embed-token CSS customization without creating separate Theme API resources, but only for server-generated or allowlisted CSS.",
       "expectations": [
         "Mentions the `css` field in `createAuthorization` as the mechanism for per-embed styling",
         "References `https://developer.luzmo.com/api/createAuthorization.md`",
@@ -32,7 +32,7 @@
         "Explains that the container element background must be set explicitly in CSS",
         "Does not claim that the theme automatically sets the container background",
         "Provides an example CSS rule for the container (e.g. `background-color: #1a1a2e`)",
-        "References the theming docs or `createAuthorization.md` for the dark theme note"
+        "References the theming docs or `https://developer.luzmo.com/api/createAuthorization.md` for the dark theme note"
       ]
     },
     {
@@ -49,9 +49,9 @@
     {
       "id": 5,
       "prompt": "Our tenants can customize the dashboard CSS by typing raw CSS into our settings panel. I take that input and pass it directly into the `css` field of `createAuthorization`. Is there a security issue with this?",
-      "expected_output": "Flag the CSS injection risk. Untrusted tenant-supplied CSS can be used for tracking pixels, exfiltration via @import, and other abuse vectors. The css field must sanitize any tenant-supplied input server-side before injecting it.",
+      "expected_output": "Flag the CSS injection and indirect prompt-injection risk. Tenant/customer-authored CSS can be used for tracking pixels, exfiltration via @import, remote url(...) loads, and free-form prose/comments. Prefer structured theme settings or constrained design tokens; only server-generated or allowlisted CSS should reach the css field.",
       "expectations": [
-        "Explicitly warns about CSS injection risks when passing untrusted user input",
+        "Explicitly warns about CSS injection risks when passing tenant/customer-authored input",
         "Mentions that `background: url(...)` can be used as a tracking pixel",
         "Mentions that `@import` can exfiltrate data",
         "Recommends sanitizing or whitelisting the CSS server-side before placing it in the `css` payload",

@@ -18,9 +18,9 @@ Entry-point for Luzmo AI analytics: the **`/aiprompt`** API (canonical backend),
 
 ## Doc Retrieval
 
-- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
-- If it is an index/overview, follow the relevant links to the concrete API, component, schema, or example page.
-- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+- `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
+- Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
 ## [CRITICAL] Security Checkpoint
 
@@ -122,7 +122,7 @@ IQ answer quality depends heavily on how your data is modeled and named. For ful
 
 ## Path A — Chat Component
 
-Fetch:
+Docs:
 ```
 https://developer.luzmo.com/guide/iq--introduction--chat-component.md
 https://developer.luzmo.com/guide/iq--chat-component-api.md
@@ -133,13 +133,13 @@ https://developer.luzmo.com/guide/iq--chat-component-api.md
 | Web (vanilla JS) | `<luzmo-iq-embed-chat>` |
 | React | `LuzmoIQChatComponent` |
 
-Always fetch the component API doc before describing props, events, or customization options.
+Consult the component API doc before describing props, events, or customization options.
 
 ---
 
 ## Path B — Answer Component
 
-Fetch:
+Docs:
 ```
 https://developer.luzmo.com/guide/iq--introduction--answer-component.md
 https://developer.luzmo.com/guide/iq--answer-component-api.md
@@ -150,13 +150,13 @@ https://developer.luzmo.com/guide/iq--answer-component-api.md
 | Web (vanilla JS) | `<luzmo-iq-embed-answer>` |
 | React | `LuzmoIQAnswerComponent` |
 
-The Answer component accepts `messages` following the `AIPrompt` structure. Fetch the API doc for the exact shape.
+The Answer component accepts `messages` following the `AIPrompt` structure. Consult the API doc for the exact shape.
 
 ---
 
 ## Path C — `/aiprompt` API (canonical)
 
-**`/aiprompt` replaces the legacy IQ Backend API (IQMessage).** Fetch the canonical spec before implementing:
+**`/aiprompt` replaces the legacy IQ Backend API (IQMessage).** Consult the canonical spec before implementing:
 
 ```
 https://developer.luzmo.com/api/createAIPrompt.md
@@ -172,7 +172,7 @@ Content-Type: application/json
 Accept: text/event-stream   # required when stream: true
 ```
 
-Fetch `https://developer.luzmo.com/api/createAIPrompt.md` for the full body. Minimal teaching example:
+Consult `https://developer.luzmo.com/api/createAIPrompt.md` for the full body. Minimal teaching example:
 
 ```javascript
 {
@@ -206,7 +206,7 @@ Fetch `https://developer.luzmo.com/api/createAIPrompt.md` for the full body. Min
 | `item` | Generate, suggest, or describe a single visualization item | `task`: `generate` \| `suggest` \| `describe` |
 | `analyst` | IQ-backed natural-language Q&A (text and/or chart) | `task`: `generate` only; requires IQ addon |
 
-Always fetch `https://developer.luzmo.com/api/createAIPrompt.md` for the full `agent` × `task` matrix, response schema, and streaming event payloads.
+Consult `https://developer.luzmo.com/api/createAIPrompt.md` for the full `agent` x `task` matrix, response schema, and streaming event payloads.
 
 ### `input` types
 
@@ -222,7 +222,7 @@ Exactly one `{ type: "text", text: "..." }` is required. Optional inputs (fetch 
 
 Set `stream: true` and `Accept: text/event-stream`. The API emits JSON events in order: `start` → `progress` (optional) → `text_start` / `text_delta` / `text_end` → `asset_start` / `asset_delta` / `asset_end` → `finish` (final result) — or `error` on failure. Ends with `data: [DONE]`.
 
-Fetch `https://developer.luzmo.com/api/createAIPrompt.md` for exact event payloads. Socket.IO clients on a connected socket receive the same events on the `aiprompt` channel.
+Consult `https://developer.luzmo.com/api/createAIPrompt.md` for exact event payloads. Socket.IO clients on a connected socket receive the same events on the `aiprompt` channel.
 
 ### Persisted conversations and assets
 
@@ -259,7 +259,7 @@ Use when an LLM agent needs to answer analytics questions by calling Luzmo data 
 2. Parse the response (text, item asset, or mixed per `response_mode`); use `conversation_id` for follow-ups.
 3. **Hosted MCP** (Cursor, Claude, LangChain, OpenAI Agents SDK): `https://api.<region>.luzmo.com/0.1.0/mcp` — default tools: `search_datasets`, `answer_question`, `create_chart`. See `references/mcp-server.md` and `https://developer.luzmo.com/guide/mcp--introduction.md`.
 
-Fetch: `https://developer.luzmo.com/guide/guides--adding-luzmo-iq-to-agentic-workflow.md` — prefer `https://developer.luzmo.com/api/createAIPrompt.md` for request shapes.
+Docs: `https://developer.luzmo.com/guide/guides--adding-luzmo-iq-to-agentic-workflow.md` — prefer `https://developer.luzmo.com/api/createAIPrompt.md` for request shapes.
 
 See also `references/agentic-integration.md`.
 
@@ -269,7 +269,7 @@ See also `references/agentic-integration.md`.
 
 Read `references/data-modeling-for-iq.md` — it is the comprehensive quality reference. The checklist, examples, and modeling issues table all live there.
 
-Fetch: `https://academy.luzmo.com/article/e6ght1rk`
+Docs: `https://academy.luzmo.com/article/e6ght1rk`
 
 ---
 
@@ -327,7 +327,7 @@ The legacy **IQMessage** / IQ Backend API is replaced by **`POST /0.1.0/aiprompt
 | Prompt text | `{ type: "text", text: "..." }` in `input` array |
 | Dataset scope | `{ type: "dataset", id: "..." }` in `input` + token `access.datasets` |
 
-Fetch `https://developer.luzmo.com/api/createAIPrompt.md` — do not implement against deprecated IQ Backend shapes.
+Consult `https://developer.luzmo.com/api/createAIPrompt.md` — do not implement against deprecated IQ Backend shapes.
 
 ## Canonical Sources
 

@@ -6,7 +6,7 @@ Detailed installation and initialization for each official Luzmo SDK. Read this 
 
 Backend SDKs use API credentials (`LUZMO_API_KEY`, `LUZMO_API_TOKEN`) directly. They must NEVER run in a browser.
 
-Fetch per-language **call forms** for `createAuthorization` and other endpoints (HTML, no `.md` suffix):
+Consult per-language **call forms** for `createAuthorization` and other endpoints (HTML, no `.md` suffix):
 
 `https://developer.luzmo.com/api/createAuthorization/call/{js|python|java|dotnet|curl|php}`
 
@@ -124,8 +124,8 @@ NOTE: IQ Chat/Answer components are NOT supported in React Native — only stand
 
 ## When in Doubt
 
-Fetch the up-to-date install/usage docs:
+Consult the up-to-date install/usage docs:
 - `https://developer.luzmo.com/guide/dashboard-embedding--embed-into-application.md`
 - `https://developer.luzmo.com/guide/flex--introduction--installation-instructions.md`
 
-**IMPORTANT:** Also fetch any framework-specific guides those docs reference.
+**IMPORTANT:** Also consult any framework-specific guides those docs reference.
