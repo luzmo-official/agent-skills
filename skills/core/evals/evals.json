@@ -50,7 +50,7 @@
     {
       "id": 5,
       "prompt": "We're a SaaS platform for retail chains. Each store has its own employees. When an employee logs in, they should only be able to see and interact with colleagues from their own store — not employees from other stores. Can I use suborganizations for this?",
-      "expected_output": "Explain that `suborganization` in `createAuthorization` scopes the embed token to a logical tenant within the organization, isolating the user pool so employees only see colleagues from their own store. Fetch the createAuthorization docs for the exact shape.",
+      "expected_output": "Explain that `suborganization` in `createAuthorization` scopes the embed token to a logical tenant within the organization, isolating the user pool so employees only see colleagues from their own store. Consult and cite the createAuthorization docs as implementation-detail guidance for the exact shape.",
       "expectations": [
         "Explains that `suborganization` in `createAuthorization` isolates the user pool to a single tenant (store), so employees only see colleagues from their own store",
         "References `https://developer.luzmo.com/api/createAuthorization.md`",

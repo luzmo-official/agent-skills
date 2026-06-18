@@ -59,7 +59,7 @@
         "References `https://developer.luzmo.com/api/associateTheme.md` or generic associate API docs",
         "References dissociate API docs for removing the association",
         "Uses POST-only requests with `action` in the payload",
-        "Does not invent association payload shapes without fetching docs",
+        "Does not invent association payload shapes without consulting docs",
         "Keeps credentials server-side"
       ]
     },

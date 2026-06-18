@@ -13,7 +13,7 @@ Every generated delete script should:
 5. Mark the delete call as irreversible.
 6. Stop on unexpected errors instead of swallowing them.
 
-Fetch `delete{Resource}.md` before writing the final delete body. The examples below show the guardrail structure; adapt the actual delete payload to the resource-specific docs.
+Consult `https://developer.luzmo.com/api/delete{Resource}.md` before writing the final delete body. The examples below show the guardrail structure; adapt the actual delete payload to the resource-specific docs.
 
 ## JavaScript Guard
 
@@ -48,7 +48,7 @@ async function deleteMatches(resourceType, findPayload, options = {}) {
 
   for (const item of items) {
     // IRREVERSIBLE - runs only after explicit confirmation above.
-    // Build this from the fetched delete{Resource}.md docs; payloads vary by resource.
+    // Build this from the delete{Resource}.md docs; payloads vary by resource.
     await deleteResource(resourceType, item);
     console.log(`Deleted: ${item.id}`);
   }
@@ -94,7 +94,7 @@ def delete_matches(
 
     for item in items:
         # IRREVERSIBLE - runs only after explicit confirmation above.
-        # Build this from the fetched delete{Resource}.md docs; payloads vary by resource.
+        # Build this from the delete{Resource}.md docs; payloads vary by resource.
         delete_resource(resource_type, item)
         print(f"Deleted: {item['id']}")
 ```

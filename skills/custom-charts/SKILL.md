@@ -19,9 +19,9 @@ To **embed ad-hoc charts with built-in types**, use `data-visualization` (Flex).
 
 ## Doc Retrieval
 
-- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
-- If it is an index/overview, follow the relevant links to the concrete manifest, lifecycle, schema, or example page.
-- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+- `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
+- Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
 ## When to Use Custom Charts
 
@@ -55,7 +55,7 @@ Once a custom chart is released org-wide, embed it like any built-in Flex chart:
 
 ## Required Docs
 
-Fetch before answering:
+Documentation to consult when relevant:
 
 - Custom charts overview: `https://developer.luzmo.com/guide/guides--custom-charts.md`
 - Quick start (prerequisites, installation): sub-pages under the overview
@@ -104,7 +104,7 @@ For framework-specific component names and Flex sizing details, see `data-visual
 ## Rules
 
 - Exhaust built-in chart types and Flex before starting a custom chart.
-- Fetch the manifest schema and slot property docs before inventing field shapes.
+- Consult the manifest schema and slot property docs before inventing field shapes.
 - All user-facing text in slots must be localized: `{ en: "Label" }`.
 - Custom charts require explicit container dimensions when embedded via Flex (same as built-in Flex charts).
 - Use embed tokens from the backend — never API credentials client-side.
@@ -116,7 +116,7 @@ For framework-specific component names and Flex sizing details, see `data-visual
 | Custom chart not in chart picker | Not uploaded or not released org-wide | Complete upload and org release workflow |
 | Chart renders but data is wrong | Incorrect `buildQuery` or slot mapping | Review manifest slots vs. render data shape |
 | Chart invisible in embed | Missing container dimensions | Set height/width on container and Flex component |
-| Validation fails on upload | Manifest schema errors | Fetch manifest docs; fix slot/option definitions |
+| Validation fails on upload | Manifest schema errors | Consult manifest docs; fix slot/option definitions |
 
 ## Hand Off
 

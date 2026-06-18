@@ -17,7 +17,7 @@
     {
       "id": 2,
       "prompt": "I want to send a question to Luzmo IQ from our Node.js backend and display the answer in our own custom UI — not the built-in chat widget. Which API do I use and what does the request look like?",
-      "expected_output": "Direct the user to the /aiprompt API (POST /0.1.0/aiprompt) for server-side prompts. Should fetch createAIPrompt.md before describing the request shape.",
+      "expected_output": "Direct the user to the /aiprompt API (POST /0.1.0/aiprompt) for server-side prompts. Should consult https://developer.luzmo.com/api/createAIPrompt.md before describing the request shape.",
       "expectations": [
         "Identifies `/aiprompt` or `createAIPrompt` as the correct API (not legacy IQMessage)",
         "States that this is a backend / server-side API call",

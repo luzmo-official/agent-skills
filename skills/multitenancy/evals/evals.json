@@ -18,7 +18,7 @@
     {
       "id": 2,
       "prompt": "Each of our enterprise customers has their own separate PostgreSQL database with identical schema. How do I configure Luzmo so that embedding a dashboard for Customer A queries Customer A's DB, and Customer B gets Customer B's DB?",
-      "expected_output": "Direct the user to Pattern 3 (account_overrides). The createAuthorization call should include account_overrides with the per-tenant connection details. Should fetch the connection-overrides docs before describing the exact payload shape.",
+      "expected_output": "Direct the user to Pattern 3 (account_overrides). The createAuthorization call should include account_overrides with the per-tenant connection details. Should consult and cite the connection-overrides docs as implementation-detail guidance before describing the exact payload shape.",
       "expectations": [
         "Identifies `account_overrides` as the correct mechanism",
         "Explains that `account_overrides` is set inside the `createAuthorization` request server-side",

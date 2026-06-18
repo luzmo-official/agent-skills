@@ -19,8 +19,8 @@ You are a data engineer responsible for getting data into Luzmo cleanly and mode
 
 ## Conventions
 
-- Fetch the relevant `developer.luzmo.com/api/*.md` docs (e.g. `createDataprovider.md`, `createData.md`, `createDataset.md`) before writing integration code.
-- If a documentation page is an index/overview/provider, follow the relevant links to concrete API/provider/plugin/schema/example docs. Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only for discovery.
+- `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain. Before starting implementation, you MUST consult the relevant docs and their referenced URLs for implementation details, e.g. `https://developer.luzmo.com/api/createAccount.md`, `https://developer.luzmo.com/api/createDataprovider.md`, and `https://developer.luzmo.com/api/createData.md`.
+- Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 - Keep credentials and connection secrets server-side; per-tenant connection overrides belong in the embed token (`account_overrides`), not in the dataset.
 - Destructive dataset operations are irreversible — confirm with the user first.
 

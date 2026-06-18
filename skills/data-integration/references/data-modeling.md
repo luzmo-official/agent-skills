@@ -2,7 +2,7 @@
 
 Column types, derived columns, aggregation formulas, hierarchy levels, and Warp acceleration.
 
-## Docs to Fetch
+## Reference Docs
 
 ```
 https://developer.luzmo.com/api/createColumn.md
@@ -62,7 +62,7 @@ Use when a hierarchy column needs an explicit tree structure with named levels.
 
 Use Warp when datasets exceed ~1M rows or query performance is slow. Warp syncs data into Luzmo's optimized analytics warehouse.
 
-Fetch: `https://developer.luzmo.com/api/createAcceleration.md`
+Docs: `https://developer.luzmo.com/api/createAcceleration.md`
 
 Key config options:
 

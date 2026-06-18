@@ -9,7 +9,7 @@ Use this reference when an LLM agent (Claude, OpenAI, custom) needs to answer an
 - `https://developer.luzmo.com/guide/mcp--introduction.md` (hosted MCP; alternative to direct `/aiprompt` calls)
 - `references/mcp-server.md` - MCP tools, auth, and themes (this directory)
 
-Fetch these and any guides they reference before generating production code.
+Consult these and any relevant guides they reference before generating production code. Use docs as guidance for implementation details only.
 
 ## Architecture
 
@@ -51,7 +51,7 @@ The embed token's `access.datasets`, `parameter_overrides`, and `filters` determ
 
 ## Backend Implementation
 
-Fetch `https://developer.luzmo.com/api/createAIPrompt.md` for the full request/response schema. Example pattern:
+Consult `https://developer.luzmo.com/api/createAIPrompt.md` for the full request/response schema. Example pattern:
 
 ```javascript
 import Luzmo from '@luzmo/nodejs-sdk';
@@ -77,7 +77,7 @@ async function askLuzmoIQ({ question, conversation_id, user }) {
     parameter_overrides: { tenant_id: user.tenant_id },
   });
 
-  // 2. Call /aiprompt (server-side) — fetch https://developer.luzmo.com/api/createAIPrompt.md for exact fields
+  // 2. Call /aiprompt (server-side) — consult https://developer.luzmo.com/api/createAIPrompt.md for exact fields
   const luzmoEmbedClient = new Luzmo({
     host: process.env.LUZMO_API_HOST,
     api_key: auth.id,
@@ -103,7 +103,7 @@ async function askLuzmoIQ({ question, conversation_id, user }) {
 }
 ```
 
-For chart-only generation from a prompt, use `agent: 'item'` with `task: 'generate'`. Fetch `createAIPrompt.md` for the full agent/task matrix.
+For chart-only generation from a prompt, use `agent: 'item'` with `task: 'generate'`. Consult `https://developer.luzmo.com/api/createAIPrompt.md` for the full agent/task matrix.
 
 ## Multi-Turn Conversations
 

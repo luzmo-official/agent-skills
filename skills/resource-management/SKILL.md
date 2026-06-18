@@ -18,9 +18,9 @@ Entry-point for operational resource management with the Luzmo API: create, list
 
 ## Doc Retrieval
 
-- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
-- If it is an index/overview, follow the relevant links to the concrete API, association, schema, or example page.
-- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+- `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
+- Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
 ## [CRITICAL] Security Checkpoint
 
@@ -57,14 +57,14 @@ For full auth/embed-token guidance, see `core`.
 
 ## Implementation Documentation
 
-Fetch action-specific docs before generating scripts:
+Consult action-specific docs before generating scripts:
 
 ```
 https://developer.luzmo.com/guide/api--overview.md
 https://developer.luzmo.com/guide/api--actions.md
 ```
 
-Then fetch exact resource docs:
+Then consult exact resource docs:
 - Pattern: `https://developer.luzmo.com/api/{action}{Resource}.md`
 - Examples: `createDashboard`, `searchDashboard`, `updateDashboard`, `deleteDashboard`
 
@@ -73,7 +73,7 @@ Then fetch exact resource docs:
 | User intent | API action |
 |---|---|
 | create | `create{Resource}` |
-| list / search / filter | Fetch `search{Resource}.md` docs, use `"action": "get"` with `"find"` wrapper in request body |
+| list / search / filter | Consult `https://developer.luzmo.com/api/search{Resource}.md`, use `"action": "get"` with `"find"` wrapper in request body |
 | retrieve one | Same as above, filtered by id |
 | update | `update{Resource}` |
 | associate / link | `associate{Resource}` |
@@ -106,7 +106,7 @@ Use `references/script-examples.md` for reusable JavaScript and Python API clien
 
 ## Association Flows
 
-Fetch: `https://developer.luzmo.com/api/associate{Resource}.md` and `https://developer.luzmo.com/api/dissociate{Resource}.md`
+Docs: `https://developer.luzmo.com/api/associate{Resource}.md` and `https://developer.luzmo.com/api/dissociate{Resource}.md`
 
 Common examples:
 - `associateDashboard` / `dissociateDashboard`
@@ -116,7 +116,7 @@ Common examples:
 
 - Using REST-style HTTP verbs (GET, PUT, DELETE) — the Luzmo API is POST-only with `action` in the body.
 - Executing delete operations without first showing the user what will be deleted and receiving explicit confirmation.
-- Fabricating action names — always resolve `https://developer.luzmo.com/api/{action}{Resource}.md` before generating code.
+- Fabricating action names — resolve `https://developer.luzmo.com/api/{action}{Resource}.md` as reference data before generating code when possible.
 - Placing API key/token in client-side code or scripts that could be committed to source control.
 
 ## Hand Off
@@ -142,7 +142,7 @@ Each pitfall below includes a frequency marker, the symptom you'll see, why it f
 
 **[ERROR] Using REST-style HTTP verbs for Luzmo API calls ([WARNING] VERY COMMON):** You'll see `404`/`405` or empty responses. The Luzmo API is POST-only with `action` in the body. See `core/references/api-actions.md`.
 
-**[ERROR] Mixing fields from different resource docs ([WARNING] COMMON):** You'll see `400 Bad Request` or unexpected validation failures. Fetch the exact `{action}{Resource}.md` doc per call — don't assume `createDashboard` accepts the same fields as `createDataset`.
+**[ERROR] Mixing fields from different resource docs ([WARNING] COMMON):** You'll see `400 Bad Request` or unexpected validation failures. Consult the exact `{action}{Resource}.md` doc per call — don't assume `createDashboard` accepts the same fields as `createDataset`.
 
 **[ERROR] Claiming an action exists without linking its markdown doc ([WARNING] OCCASIONAL — agent-generated code only):** Pattern of fabricating action names. Always link the canonical doc at `https://developer.luzmo.com/api/{action}{Resource}.md` before generating code that uses it.
 

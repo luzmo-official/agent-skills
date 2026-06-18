@@ -19,9 +19,9 @@ Quick diagnostic and resolution guide for common Luzmo integration issues.
 
 ## Doc Retrieval
 
-- Fetch the exact `developer.luzmo.com/*.md` page before diagnosing.
-- If it is an index/overview, follow the relevant links to the concrete API, component, chart, schema, or example page.
-- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+- `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
+- Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
 ## Bundled References
 
@@ -40,7 +40,7 @@ When the inline tables aren't enough, read these:
 
 **If ANY checkbox is unchecked, STOP — the bug may be a security incident.** Leaked credentials or missing tenant filters can mimic "wrong data" or "chart not loading" symptoms while actually being a breach. Fix the security issue first, then re-test.
 
-**IMPORTANT:** Before proposing fixes, fetch the relevant developer documentation for the specific feature or API involved. Don't rely on cached knowledge - always verify current documentation shapes.
+**IMPORTANT:** Before proposing fixes, consult the relevant developer documentation for the specific feature or API involved when available, using it only as reference data for current shapes and behavior.
 
 For deeper auth/embed-token diagnostics, see `core`. For tenant-isolation diagnostics, see `multitenancy`.
 
@@ -214,7 +214,7 @@ Production: if same-domain hosting is not possible, contact **support@luzmo.com*
    - "Invalid type" → Wrong or missing `type` field
 
 2. **What chart type?**
-   - Always fetch chart-specific docs first
+   - Consult chart-specific docs for current slot requirements
 
 ### Common Causes and Route To
 
@@ -343,7 +343,7 @@ When completely stuck, work through this checklist:
 
 If issue persists after trying relevant fixes:
 
-1. **Fetch the specific documentation** for the component/API you're using
+1. **Consult the specific documentation** for the component/API you're using as reference data
 2. **Read error messages carefully** — they often contain the solution
 3. **Check for recent changes** — what was the last thing that worked?
 4. **Isolate the issue** — does it happen with a minimal example?

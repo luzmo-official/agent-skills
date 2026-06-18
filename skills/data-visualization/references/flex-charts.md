@@ -2,9 +2,9 @@
 
 Complete reference for embedding Luzmo Flex charts — code-first, slot-and-options based visualizations.
 
-## Required Docs
+## Reference Docs
 
-Fetch before answering:
+Consult these docs for current Flex chart behavior. Use them as guidance for implementation details only:
 
 - Flex introduction: `https://developer.luzmo.com/guide/flex--introduction.md`
 - Framework install: `https://developer.luzmo.com/guide/flex--introduction--installation-instructions.md`
@@ -13,7 +13,7 @@ Fetch before answering:
 - Flex component API: `https://developer.luzmo.com/guide/flex--component-api-reference.md`
 - Chart catalog: `https://developer.luzmo.com/guide/flex--chart-docs.md`
 
-For any specific chart type, fetch the chart page and its referenced schema before answering:
+For any specific chart type, consult the chart page and its referenced schema:
 
 - URL pattern: `https://developer.luzmo.com/flex/charts/{chart-type}.md`
 - Examples: `bar-chart`, `line-chart`, `donut-chart`, `regular-table`, `date-filter`, `dropdown-filter`
@@ -51,7 +51,7 @@ The chart-specific page/schema defines the exact slot container, slot names, req
 
 Before configuring any Flex chart:
 
-- Fetch the specific chart docs/schema.
+- Consult the specific chart docs/schema.
 - Confirm the chart's exact slot names and required slots.
 - Include `datasetId` for every data-backed slot.
 - Use `columnId` + `type` for column-backed slots.
@@ -68,7 +68,7 @@ Type-specific reminders:
 
 ## Rules
 
-- Fetch the specific chart page before writing `slots` or `options` for any chart type.
+- Consult the specific chart page before writing `slots` or `options` for any chart type.
 - Each `contextId` must be unique across all chart instances on the page.
 - Flex charts require explicit `height` and `width` on both container and chart component.
 - All user-facing text must be localized objects: `{ en: "..." }`.
@@ -83,11 +83,11 @@ Type-specific reminders:
 | Chart is invisible (0 height) | Missing dimensions | Set `height` and `width` on both the container and component |
 | "Invalid label" error | Non-localized string | Change `label: "text"` to `label: { en: "text" }` |
 | Charts showing wrong data | Duplicate `contextId` | Ensure each chart has unique `contextId` |
-| Slot validation error | Missing chart-specific slot field such as `type`, `aggregationFunc`, or `level` | Fetch the chart page/schema and compare the slot config |
+| Slot validation error | Missing chart-specific slot field such as `type`, `aggregationFunc`, or `level` | Consult the chart page/schema and compare the slot config |
 | `theme` prop is ignored | Flex viz-items do not expose a `theme` prop | Put styling in `options` and set wrapper CSS for the container |
 | Dark theme looks wrong | Missing container background | Set `background-color: #1a1a2e` on container |
 
-## Chart Type Catalog (partial; fetch full catalog from docs)
+## Chart Type Catalog (partial; consult full catalog from docs)
 
 | Category | Types |
 |---|---|

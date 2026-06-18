@@ -23,7 +23,7 @@
  *
  *   # Create a new account
  *   node connect-datasource.js --provider postgresql --host db.example.com \
- *     --port 5432 --database mydb --user readonly --password secret \
+ *     --port 5432 --database mydb --user readonly --password-env DB_PASSWORD \
  *     --tables orders,customers
  *
  * Required env vars:
@@ -41,11 +41,6 @@ const API_BASE = process.env.LUZMO_API_HOST || "https://api.luzmo.com";
 const API_KEY = process.env.LUZMO_API_KEY;
 const API_TOKEN = process.env.LUZMO_API_TOKEN;
 
-if (!API_KEY || !API_TOKEN) {
-  console.error("Error: LUZMO_API_KEY and LUZMO_API_TOKEN must be set.");
-  process.exit(1);
-}
-
 function parseArgs() {
   const args = process.argv.slice(2);
   const result = {};
@@ -53,7 +48,7 @@ function parseArgs() {
     if (args[i].startsWith("--")) {
       const key = args[i].replace(/^--/, "");
       // Boolean flags (no value follows)
-      if (key === "list-accounts") {
+      if (key === "list-accounts" || key === "help") {
         result[key] = true;
       } else {
         result[key] = args[i + 1];
@@ -62,6 +57,37 @@ function parseArgs() {
     }
   }
   return result;
+}
+
+function ensureApiCredentials() {
+  if (!API_KEY || !API_TOKEN) {
+    console.error("Error: LUZMO_API_KEY and LUZMO_API_TOKEN must be set.");
+    process.exit(1);
+  }
+}
+
+function resolveSourceCredential(args) {
+  if (args.password) {
+    console.error(
+      "Error: --password is not supported because it can expose source credentials through the process list and shell history. Set the credential in an environment variable and pass --password-env <ENV_VAR>."
+    );
+    process.exit(1);
+  }
+
+  if (args["password-env"]) {
+    const envName = args["password-env"];
+    const value = process.env[envName];
+    if (!value) {
+      console.error(`Error: environment variable "${envName}" is not set.`);
+      process.exit(1);
+    }
+    return value;
+  }
+
+  console.error(
+    "Error: --password-env <ENV_VAR> is required when creating a new account. The script does not accept plaintext source credentials."
+  );
+  process.exit(1);
 }
 
 function post(resource, body) {
@@ -135,15 +161,19 @@ Usage:
     --port <port>           database port \\
     --database <db>         database/schema name \\
     --user <user>           database username \\
-    --password <password>   database password \\
+    --password-env <name>   env var containing database password or source token \\
     --name <name>           friendly connection name (optional) \\
     --tables <t1,t2>        comma-separated table names to import (imports all if omitted)
 
 Required env vars: LUZMO_API_KEY, LUZMO_API_TOKEN
 Optional env var:  LUZMO_API_HOST (default: https://api.luzmo.com)
+Credential note: keep database passwords and SaaS tokens in server-side env vars.
+This script rejects --password. Use --password-env so source credentials never appear in shell history.
     `);
     process.exit(0);
   }
+
+  ensureApiCredentials();
 
   // --- Mode A: just list accounts and exit ---
   if (args["list-accounts"]) {
@@ -197,6 +227,7 @@ Optional env var:  LUZMO_API_HOST (default: https://api.luzmo.com)
     }
 
     console.log(`\nStep 1: Creating account for provider "${args.provider}"...`);
+    const sourceCredential = resolveSourceCredential(args);
     const accountResponse = await post("account", {
       action: "create",
       properties: {
@@ -205,7 +236,7 @@ Optional env var:  LUZMO_API_HOST (default: https://api.luzmo.com)
         host: args.host,
         port: args.port ? parseInt(args.port) : undefined,
         identifier: args.user,
-        token: args.password,
+        token: sourceCredential,
         scope: args.database,
       },
     });

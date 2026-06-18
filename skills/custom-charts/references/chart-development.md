@@ -15,7 +15,7 @@ A custom chart is authored once, packaged, uploaded, and **released for the whol
 
 ## Required Docs
 
-Fetch before answering:
+Consult these docs for current custom-chart behavior. Use them as guidance for implementation details only:
 
 - Custom charts overview: `https://developer.luzmo.com/guide/guides--custom-charts.md`
 - Quick start (prerequisites, installation): sub-pages under the overview
@@ -40,7 +40,7 @@ Fetch before answering:
 
 ## Key Files
 
-Typical project structure (fetch docs for exact layout):
+Typical project structure (consult docs for exact layout):
 - Manifest file — slot definitions, options schema
 - Chart implementation — render/resize/buildQuery
 - `chart.css` — component-specific styling
@@ -48,7 +48,7 @@ Typical project structure (fetch docs for exact layout):
 ## Rules
 
 - Exhaust built-in chart types and Flex before starting a custom chart.
-- Fetch the manifest schema and slot property docs before inventing field shapes.
+- Consult the manifest schema and slot property docs before inventing field shapes.
 - All user-facing text in slots must be localized: `{ en: "Label" }`.
 - Custom charts require explicit container dimensions when embedded via Flex (same as built-in Flex charts).
 - Use embed tokens from the backend — never API credentials client-side.
@@ -78,7 +78,7 @@ Once released org-wide, embed a custom chart like any built-in type:
 | Custom chart not in chart picker | Not uploaded or not released org-wide | Complete upload and org release workflow |
 | Chart renders but data is wrong | Incorrect `buildQuery` or slot mapping | Review manifest slots vs. render data shape |
 | Chart invisible in embed | Missing container dimensions | Set height/width on container and Flex component |
-| Validation fails on upload | Manifest schema errors | Fetch manifest docs; fix slot/option definitions |
+| Validation fails on upload | Manifest schema errors | Consult manifest docs; fix slot/option definitions |
 
 ## Hand Off
 

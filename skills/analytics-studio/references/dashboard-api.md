@@ -2,7 +2,7 @@
 
 Complete reference for programmatically creating and modifying dashboards via the Luzmo API.
 
-## Docs to Fetch
+## Reference Docs
 
 ```
 https://developer.luzmo.com/api/createDashboard.md
@@ -11,7 +11,7 @@ https://developer.luzmo.com/api/updateDashboard.md
 https://developer.luzmo.com/guide/flex--component-api-reference--filters.md
 ```
 
-For each chart type placed on the dashboard, fetch:
+For each chart type placed on the dashboard, consult:
 `https://developer.luzmo.com/flex/charts/{chart-type}.md`
 
 ## Dashboard `contents` Structure
@@ -165,7 +165,7 @@ Grid: 48-column, `rowHeight: 16` px. Positions and sizes are in grid units.
 ```
 
 - Generate a fresh UUID for every item.
-- `slots`/`options` follow the Flex chart spec — always fetch the chart-type doc first.
+- `slots`/`options` follow the Flex chart spec; consult the chart-type doc first.
 
 ### Slot Content Fields
 

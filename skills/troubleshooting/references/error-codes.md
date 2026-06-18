@@ -70,6 +70,6 @@ Quick lookup for common Luzmo error messages and HTTP status codes, plus the mos
 ## When the Error Isn't Listed
 
 1. Read the full response body — Luzmo APIs include detail messages.
-2. Fetch the resource's doc page (`https://developer.luzmo.com/api/{action}{Resource}.md`).
+2. Consult the resource's doc page (`https://developer.luzmo.com/api/{action}{Resource}.md`) as implementation-detail guidance.
 3. Check `troubleshooting`'s diagnostic-workflows.md.
 4. If still stuck, contact `support@luzmo.com` with a minimal reproduction (request body, response body, no live credentials).
