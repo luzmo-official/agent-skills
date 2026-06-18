@@ -17,6 +17,12 @@ metadata:
 
 Entry-point for all Luzmo integrations. Establishes security and API patterns that other Luzmo skills assume.
 
+## Doc Retrieval
+
+- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
+- If it is an index/overview, follow the relevant links to the concrete API, component, chart, schema, or example page.
+- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+
 ## 🚨 CRITICAL RULES 🚨
 
 Read these BEFORE implementing anything with Luzmo:
@@ -182,6 +188,7 @@ When you're uncertain which specific documentation page to fetch:
 1. Fetch the developer documentation index at `https://developer.luzmo.com/llms.txt` (concise) or `https://developer.luzmo.com/llms-full.txt` (comprehensive with descriptions)
 2. Review the index to find relevant pages by description or topic
 3. Fetch the specific `.md` pages you need
+4. If those pages are indexes or overviews, follow the relevant links to the concrete implementation docs
 
 You may also reference `https://developer.luzmo.com/AGENTS.md` for high-level integration patterns, but the detailed documentation lives in the individual `.md` files listed in the index.
 

@@ -16,6 +16,12 @@ metadata:
 
 Entry-point for operational resource management with the Luzmo API: create, list/search, retrieve, update, associate/dissociate, and delete resources.
 
+## Doc Retrieval
+
+- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
+- If it is an index/overview, follow the relevant links to the concrete API, association, schema, or example page.
+- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+
 ## 🚨 Security Checkpoint
 
 **BEFORE generating ANY resource-management script, verify:**

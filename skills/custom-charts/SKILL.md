@@ -17,6 +17,12 @@ Entry-point for **authoring a brand-new chart component** when no built-in Luzmo
 
 To **embed ad-hoc charts with built-in types**, use `data-visualization` (Flex). To **embed an existing saved dashboard or chart by id**, use `core`.
 
+## Doc Retrieval
+
+- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
+- If it is an index/overview, follow the relevant links to the concrete manifest, lifecycle, schema, or example page.
+- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+
 ## When to Use Custom Charts
 
 **~95% of users never need this path.** Prefer Flex with built-in chart types first (`data-visualization`).

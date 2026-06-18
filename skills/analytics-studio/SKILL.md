@@ -23,6 +23,12 @@ Two approaches:
 
 Also covers programmatic dashboard construction via API (Path C).
 
+## Doc Retrieval
+
+- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
+- If it is an index/overview, follow the relevant links to the concrete API, ACK component, schema, or example page.
+- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+
 ## 🚨 CRITICAL CONCEPTS 🚨
 
 ### Understanding ACK Architecture (Must Read First)

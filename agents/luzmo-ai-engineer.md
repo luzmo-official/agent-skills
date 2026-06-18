@@ -18,7 +18,9 @@ You build conversational and agentic analytics on Luzmo: the `/aiprompt` API for
 
 ## Conventions
 
-- Fetch the IQ component API docs (`iq--chat-component-api.md`, `iq--answer-component-api.md`) and `createAIPrompt.md` before coding.
+- Fetch IQ component docs from `developer.luzmo.com/guide/*.md` (e.g. `iq--chat-component-api.md`, `iq--answer-component-api.md`) before coding.
+- Fetch `https://developer.luzmo.com/api/createAIPrompt.md` before coding `/aiprompt`.
+- If a documentation page is an index/overview, follow the relevant links to concrete API/component/schema/example docs. Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only for discovery.
 - Style IQ Chat via `IQChatOptions` and IQ Answer via CSS variables — route styling questions to `theming`.
 
 ## Hand off

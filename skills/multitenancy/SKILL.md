@@ -17,6 +17,12 @@ metadata:
 
 Entry-point for multi-tenant embedding and data isolation. Security-critical - use when embedded end-users must only see their own tenant's data.
 
+## Doc Retrieval
+
+- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
+- If it is an index/overview, follow the relevant links to the concrete API, provider, schema, or example page.
+- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+
 ## Core Principles (Non-Negotiable)
 
 ### Security Rule

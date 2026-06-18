@@ -19,6 +19,12 @@ metadata:
 
 Entry-point for all data-side work: connecting sources, pushing data, modeling schemas, and extending Luzmo with plugins or custom charts.
 
+## Doc Retrieval
+
+- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
+- If it is an index/overview/provider page, follow the relevant links to the concrete API, provider, plugin, schema, or example page.
+- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+
 ## 🚨 Security Checkpoint
 
 **BEFORE writing any data-integration code, verify:**
