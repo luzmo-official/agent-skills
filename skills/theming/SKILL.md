@@ -29,6 +29,7 @@ Entry-point for visual customization of any Luzmo surface. Route to the right me
 - [ ] If using the Theme API (`createTheme`, `updateTheme`), the call is made with `LUZMO_API_KEY` / `LUZMO_API_TOKEN` server-side
 - [ ] Per-tenant theme decisions (which theme/CSS to apply) are made server-side based on the authenticated user, not via client-side query params a user could spoof
 - [ ] CSS overrides do NOT inject untrusted user input — sanitize any tenant-supplied strings before placing them in a `css` payload to avoid CSS injection
+- [ ] For standalone Flex viz-items, do not use a `theme` component prop; apply chart styling through the item `options` object and keep any server-selected theme values scoped to the authenticated user
 
 **If ANY checkbox is unchecked, STOP and fix before proceeding.** Per-tenant theming that relies on client-side branching can be bypassed, allowing one tenant to apply another tenant's theme (minor) or to inject hostile CSS (more serious in shared frames).
 
@@ -44,11 +45,11 @@ For full auth/embed-token guidance, see `core`.
 | Target surface | Mechanism |
 |---|---|
 | Reusable dashboard themes (org-wide) | **Theme API** |
-| Dynamic theme or CSS per embed token | **Authorization `theme` / `css` override** |
+| Dashboard embed theme or CSS per embed token | **Authorization `theme` / `css` override** |
 | IQ Chat component look and feel | **IQ Chat customization** |
 | IQ Answer component CSS | **IQ Answer CSS variables** |
 | ACK component styling | **ACK theming guide** |
-| Flex chart runtime styling | **Flex theme example** |
+| Standalone Flex viz-item runtime styling | **Flex `options` object (`options.theme`, `options.color`, chart-specific options)** |
 
 ---
 
@@ -76,12 +77,13 @@ Docs: `https://developer.luzmo.com/api/createAuthorization.md`
 Academy: `https://academy.luzmo.com/article/hmvy5pwz`, `https://academy.luzmo.com/article/7zclnkrk`, `https://academy.luzmo.com/article/q3n82ib1`
 
 - Add inline `theme` JSON or `css` to the `createAuthorization` request body to apply styling per token.
-- Useful for white-labeling or per-tenant visual customization.
+- Useful for white-labeling or per-tenant visual customization of dashboard embeds and other surfaces that consume authorization-level theme/css.
 - Fetch `https://developer.luzmo.com/api/createAuthorization.md` for exact field shapes.
+- Standalone Flex viz-items do **not** have a `theme` prop, and authorization-level `theme` should not be presented as the primary way to style them. For standalone Flex charts, use item `options` instead.
 
 **Dark theme note:** When using a dark theme, set a dark background on the container element explicitly — chart content adapts to the theme but the container background does not. Two approaches:
 1. CSS: `background-color: #1a1a2e` on the container element
-2. Flex option: Set `itemsBackground: '#1a1a2e'` (or similar dark color) in chart options
+2. Flex options: set supported background/theme fields in the chart `options` object after fetching the relevant Flex chart docs/schema
 
 ---
 
@@ -123,10 +125,15 @@ https://developer.luzmo.com/guide/ack--patterns.md
 
 ## 6. Flex Runtime Chart Theming
 
-Docs: `https://developer.luzmo.com/flex/examples/apply-custom-theme`
+Docs:
+```
+https://developer.luzmo.com/flex/examples/apply-custom-theme
+https://developer.luzmo.com/guide/flex--component-api-reference--properties.md
+```
 
-- Separate from the dashboard Theme API — applies at the individual chart component level
-- Can also use the `itemsBackground` option on Flex charts to set background colors programmatically (useful for dark themes)
+- Separate from the dashboard Theme API and authorization-level dashboard theme — applies through the individual chart's `options` object.
+- Flex viz-items have no `theme` component prop. Use `options.theme`, `options.color`, and chart-specific options after fetching the chart docs/schema.
+- Set the wrapper/container background with CSS when dark styling should cover the area around the chart.
 
 ---
 
@@ -141,22 +148,34 @@ Docs: `https://developer.luzmo.com/flex/examples/apply-custom-theme`
 
 Each pitfall below includes a frequency marker, the symptom you'll see, why it fails, and the fix.
 
-**❌ Forgetting container background for dark themes (⚠️ VERY COMMON):**
+**❌ Passing a `theme` prop to standalone Flex viz-items (⚠️ COMMON):**
 ```html
-<!-- Wrong - chart dark but container white -->
-<div>
-  <luzmo-embed-viz-item theme="default_dark" />
-</div>
+<!-- Wrong - standalone Flex viz-items do not expose a theme prop -->
+<luzmo-embed-viz-item theme="default_dark" />
 ```
-You'll see: chart content correctly dark, but a bright white halo around it from the wrapper.
-**Why this fails:** Luzmo themes color chart CONTENT — they don't reach outside the component's box. The wrapper background is your CSS to set.
-**✅ Set explicit dark background on container:**
+You'll see: the prop is ignored and the chart keeps its default styling.
+**Why this fails:** Flex runtime styling belongs in the `options` object, not a top-level component prop.
+**✅ Put Flex styling in options and style the wrapper yourself:**
 ```html
-<!-- Correct - container matches theme -->
 <div style="background-color: #1a1a2e;">
-  <luzmo-embed-viz-item theme="default_dark" />
+  <luzmo-embed-viz-item id="sales-chart" type="bar-chart" />
 </div>
 ```
+```javascript
+document.querySelector('#sales-chart').options = {
+  theme: {
+    itemsBackground: '#FFFFFF',
+    mainColor: '#D97757',
+    colors: ['#D97757', '#6A9B8E', '#C9A26B'],
+    font: { fontFamily: 'Inter, system-ui, sans-serif', fontSize: 13 },
+  },
+  color: '#D97757',
+}
+```
+
+**❌ Forgetting container background for dark themes (⚠️ VERY COMMON):**
+You'll see: chart content styled correctly, but a bright halo around it from the wrapper.
+**Why this fails:** Chart options style chart content — they don't reach outside the component's box. The wrapper background is your CSS to set.
 
 **❌ Expecting dashboard themes to apply to IQ/ACK:**
 ```javascript
@@ -184,7 +203,8 @@ await client.create('authorization', { theme: {...} })
 
 ## Avoid
 
-- Applying themes or CSS overrides client-side — all `theme`/`css` properties must be set in the server-side `createAuthorization` call.
+- Applying authorization-level themes or CSS overrides client-side — all `theme`/`css` properties on `createAuthorization` must be set server-side.
+- Passing `theme` as a prop to standalone Flex viz-items — use the chart `options` object instead.
 - Injecting unsanitized tenant-supplied strings into `css` payloads (CSS injection risk).
 - Describing IQ Chat CSS variables or ACK theme props without fetching the current customization documentation.
 - Confusing the dashboard Theme API with per-token `css` overrides — they serve different scopes.

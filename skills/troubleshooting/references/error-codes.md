@@ -8,7 +8,7 @@ Quick lookup for common Luzmo error messages and HTTP status codes, plus the mos
 |---|---|---|---|
 | 400 | Bad Request | Malformed body, wrong action, invalid field shapes | Read response body; check the resource doc |
 | 401 | Unauthorized | Missing/invalid API key/token or embed token | See `core` and Workflow 2 in diagnostic-workflows.md |
-| 403 | Forbidden | Role insufficient (e.g. viewer trying to edit), token expired, resource access not in token's `access` | Check role and `access.securables`/`access.datasets` |
+| 403 | Forbidden | Role insufficient (e.g. viewer trying to edit), token expired, resource access not in token's `access`, or dataset not grantable by the API-token account | Check role, `access.securables`/`access.datasets`, and dataset ownership/sharing |
 | 404 | Not Found | Wrong endpoint, wrong region base URL, resource id wrong, or wrong API version path | Verify base URL (EU/US/VPC) and resource id |
 | 429 | Too Many Requests | Rate-limited | Implement exponential backoff (see `resource-management/references/script-examples.md`) |
 | 5xx | Server Error | Transient Luzmo issue | Retry with backoff; if persistent contact support@luzmo.com |
@@ -50,6 +50,10 @@ Quick lookup for common Luzmo error messages and HTTP status codes, plus the mos
 ### `Invalid host` / CORS error
 - **Cause:** Wrong region/tenancy host (`apiHost` / `appServer`).
 - **Fix:** Match the tenancy — EU `api.luzmo.com`, US `api.us.luzmo.com`, VPC `{vpc}-api.luzmo.com`.
+
+### `You don't have access to the analytics dataset`
+- **Cause:** The embed token includes the dataset id in `access.datasets`, but the API-token account that minted the embed token does not own the dataset and has not been granted sufficient access to it. IQ or backend `/data` calls can still work with the API key, while embed tokens can only delegate datasets that the token-issuing account can grant.
+- **Fix:** Own the dataset with the token-issuing account, share/grant the dataset to that account with sufficient rights, or use an owned dataset. Then mint a fresh embed token.
 
 ### `Token expired` / `Embed token expired`
 - **Cause:** Default token lifetime is 24h.

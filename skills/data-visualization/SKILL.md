@@ -39,6 +39,8 @@ Read these rules BEFORE implementing ANY visualization — they prevent 80% of r
 
 For full auth/embed-token guidance, see `core`.
 
+For localhost CORS or reconnecting `/realtime` sockets, see `core/references/local-development-proxy.md`: proxy `/0.1.0` and `/realtime` through the app origin, set Flex `apiHost` to that origin, and keep `appServer` pointed directly at the Luzmo app host.
+
 ### 1. Component Naming (Framework-Specific)
 
 Using wrong names causes "component not found" errors:
@@ -232,28 +234,28 @@ Always fetch the chart-specific documentation for available slots and options:
 
 Different chart types have different required and optional properties — fetch the schema (and any guides it references) before guessing field shapes.
 
-### Dark Theme Container Background
+### Flex Theming and Dark Backgrounds
 
-When using a dark theme, the chart content adapts automatically, but the **container background does not**.
+Flex viz-items do **not** have a `theme` prop. The component API props are `appServer`, `apiHost`, `authKey`, `authToken`, `type`, `slots`, `options`, `contextId`, and optional interaction props. For standalone Flex viz-items, put chart styling in `options` (for example `options.theme`, `options.color`, or chart-specific options after fetching the chart schema).
+
+When using dark chart styling, the chart content can adapt, but the **container background does not**.
 
 **Required:** Set an explicit dark background on the container element.
 
 Example:
 ```html
 <div style="background-color: #1a1a2e;">
-  <luzmo-embed-viz-item theme="default_dark" ...></luzmo-embed-viz-item>
+  <luzmo-embed-viz-item id="sales-chart" type="bar-chart"></luzmo-embed-viz-item>
 </div>
 ```
 
-Or with inline theme JSON in the authorization token:
 ```javascript
-{
+document.querySelector('#sales-chart').options = {
   theme: {
-    type: "custom",
-    background: "#1a1a2e",
-    itemsBackground: "#1a1a2e"
+    itemsBackground: '#1a1a2e',
+    colors: ['#FFB74D', '#FFEB3B', '#FF4081'],
+    font: { fontFamily: 'Inter, system-ui, sans-serif', fontSize: 13 },
   },
-  // Still set a matching background on the host container.
 }
 ```
 

@@ -41,6 +41,12 @@ Academy references: `https://academy.luzmo.com/article/06trr3t5`, `https://acade
 
 `appServer`, `apiHost`, `authKey`, `authToken`, `dashboardId`
 
+## Local Development CORS
+
+For localhost CORS or reconnecting `/realtime` sockets, see `local-development-proxy.md`.
+In local development, proxy API/realtime paths through the app origin and keep `appServer`
+pointed directly at the Luzmo app host; do not proxy `appServer` under a sub-path.
+
 ## Editor Roles and editMode
 
 Token role controls what the user can do:

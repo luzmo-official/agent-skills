@@ -111,6 +111,7 @@ For deeper auth/embed-token diagnostics, see `core`. For tenant-isolation diagno
 | "Action 'search' not found" | Using wrong action name | Fix API action → `core` or `resource-management` |
 | 401 Unauthorized | API credentials wrong/missing | Fix credentials → `core` |
 | 403 Forbidden (editor scenario) | Token role is `viewer` | Fix token role → `core` or `analytics-studio` |
+| 403 "no access to the analytics dataset" although dataset is in `access.datasets` | Dataset is not owned by or shared to the API-token account minting the embed token | Own/share the dataset to that account, or use an owned dataset → `core` |
 | "Invalid localized string" | Using plain string instead of object | Fix localized strings → `data-visualization` |
 | HTTP GET/PUT/DELETE not working | Using REST verbs instead of POST | Fix API architecture → `core` |
 | 404 on API call | Wrong base URL for region | Fix region config → `core` |
@@ -123,20 +124,27 @@ For deeper auth/embed-token diagnostics, see `core`. For tenant-isolation diagno
    - Web component dashboard in embed mode, Flex chart, or IQ widget → Same-domain requirement applies
    - Other API calls from your backend → Check region/host mismatch
 
-2. **Is the `appServer` or `apiHost` on a different domain than the parent application?**
-   - Yes → This is the cause. Same-domain hosting or CNAME setup is required.
+2. **Is this local development on `localhost` or `127.0.0.1`?**
+   - Yes → Use the local same-origin proxy recipe in `core/references/local-development-proxy.md`
+
+3. **Is this production or a shared staging environment?**
+   - Yes → Use same-domain hosting/CNAME setup for the Luzmo API host.
 
 ### Root Cause
 
-For **web component dashboards (embed mode), Flex charts, and charts rendered inside IQ widgets**, the `appServer` and `apiHost` must be on the **same domain** as the parent application. Pointing to `app.luzmo.com` or `app.us.luzmo.com` directly from a host like `yourapp.example.com` will cause CORS errors because the origins don't match.
+For **web component dashboards (embed mode), Flex charts, and charts rendered inside IQ widgets**, browser calls to the Luzmo API/realtime host must be same-origin with the parent application or routed through a host configured for that application. Flex realtime connections use `<apiHost>/realtime`; from `localhost`, direct credentialed calls to `api.luzmo.com` can fail CORS and reconnect forever.
 
-If same-domain co-hosting is not possible, contact **support@luzmo.com** to arrange a CNAME record — e.g. `analytics.example.com` → Luzmo app server, `analytics-api.example.com` → Luzmo API. This is the standard path for production deployments that need custom domains.
+Local development: proxy root paths `/0.1.0` and `/realtime` to the Luzmo API host and set component `apiHost` to the app's own origin. Keep `appServer` pointed directly at the Luzmo app host (`https://app.luzmo.com`, `https://app.us.luzmo.com`, or VPC app host). Do **not** proxy or rewrite `appServer` under a sub-path; Flex/dashboard bundles load from `appServer` and sub-path proxying can break module loading.
+
+Production: if same-domain hosting is not possible, contact **support@luzmo.com** to arrange a CNAME record — e.g. `analytics.example.com` → Luzmo app server, `analytics-api.example.com` → Luzmo API. This is the standard path for production deployments that need custom domains.
 
 ### Common Causes and Route To
 
 | Symptom | Likely Cause | Route To |
 |---|---|---|
-| CORS error on Flex chart or web component dashboard | `appServer`/`apiHost` not same-domain as parent app | Contact support@luzmo.com for CNAME, or → `analytics-studio` for embed config |
+| Localhost CORS error or reconnecting `/realtime` socket on Flex/web component/IQ chart | Direct browser calls to Luzmo API/realtime host | Use `core/references/local-development-proxy.md`; set `apiHost` to local origin, keep `appServer` direct |
+| Module Federation `remoteEntry`/snapshot errors after proxying `appServer` | `appServer` was proxied or rewritten under a sub-path | Stop proxying `appServer`; point it directly at the Luzmo app host |
+| Production CORS error on Flex chart or web component dashboard | API/realtime host not configured for the parent app domain | Contact support@luzmo.com for CNAME, or → `analytics-studio` for embed config |
 | CORS error only on EU/US switch | Mixed region URLs | Fix region config → `core` |
 | CORS error on API calls from backend | `apiHost` misconfigured server-side | Fix region config → `core` |
 
@@ -324,7 +332,7 @@ When completely stuck, work through this checklist:
 2. ✅ Verify component names match framework (see data-visualization skill)
 3. ✅ Confirm API credentials are correct and server-side only
 4. ✅ Check that embed tokens are being generated and passed correctly
-5. ✅ Verify `apiHost` and `appServer` match your Luzmo region — and for Flex charts, web component dashboards, and IQ widgets, they must also be on the **same domain** as the parent app (if not, a CNAME request sent to support@luzmo.com is required)
+5. ✅ Verify `apiHost` and `appServer` match your Luzmo region. For local Flex/web component/IQ chart development, route `apiHost` through the local same-origin proxy and keep `appServer` direct; for production custom domains, use the documented CNAME setup.
 6. ✅ Ensure all user-facing text uses localized objects: `{ en: "..." }`
 7. ✅ Check that `contextId` is unique for each chart
 8. ✅ For Flex charts: verify dimensions set on both container and component

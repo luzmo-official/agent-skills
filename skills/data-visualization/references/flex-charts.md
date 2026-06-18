@@ -31,6 +31,8 @@ For any specific chart type, fetch the chart page and its referenced schema befo
 
 `appServer`, `apiHost`, `authKey`, `authToken`, `type`, `slots`, `options`, `contextId`
 
+There is no `theme` prop on standalone Flex viz-items. Use the `options` object for chart-level styling (`options.theme`, `options.color`, and chart-specific styling fields), and set wrapper CSS for any background outside the component.
+
 ## Slot Content Fields
 
 The chart-specific page/schema defines the exact slot container, slot names, required slots, and options. Do not invent slot names from memory.
@@ -71,6 +73,7 @@ Type-specific reminders:
 - Flex charts require explicit `height` and `width` on both container and chart component.
 - All user-facing text must be localized objects: `{ en: "..." }`.
 - Use embed tokens from the backend; never API credentials client-side.
+- For localhost CORS or reconnecting `/realtime` sockets, use `core/references/local-development-proxy.md`: set `apiHost` to the local app origin and keep `appServer` direct.
 - Do not use outdated names like `LuzmoFlex`.
 
 ## Troubleshooting Common Issues
@@ -80,7 +83,9 @@ Type-specific reminders:
 | Chart is invisible (0 height) | Missing dimensions | Set `height` and `width` on both the container and component |
 | "Invalid label" error | Non-localized string | Change `label: "text"` to `label: { en: "text" }` |
 | Charts showing wrong data | Duplicate `contextId` | Ensure each chart has unique `contextId` |
-| Slot validation error | Missing chart-specific slot field | Fetch the chart page/schema and compare the slot config |
+| Slot validation error | Missing chart-specific slot field such as `type`, `aggregationFunc`, or `level` | Fetch the chart page/schema and compare the slot config |
+| `theme` prop is ignored | Flex viz-items do not expose a `theme` prop | Put styling in `options` and set wrapper CSS for the container |
+| Dark theme looks wrong | Missing container background | Set `background-color: #1a1a2e` on container |
 
 ## Chart Type Catalog (partial; fetch full catalog from docs)
 

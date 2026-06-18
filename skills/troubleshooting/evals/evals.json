@@ -83,6 +83,18 @@
         "Routes to `theming` for the full theming implementation once the diagnostic identifies the cause",
         "Does not immediately rewrite the entire theming implementation without diagnosing first"
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "IQ /aiprompt and backend createData can query my dataset, and my embed token includes the dataset id in access.datasets, but the browser chart still returns 403: \"You don't have access to the analytics dataset\". What should I check?",
+      "expected_output": "A diagnostic that distinguishes API-key query access from embed-token grantability. It should explain that the dataset may not be owned by or shared to the API-token account minting the embed token, even if backend API calls can query it. The fix is to own/share the dataset to that account with sufficient rights, or use an owned dataset, then mint a fresh embed token.",
+      "expectations": [
+        "Recognizes that `access.datasets` containing the id is not sufficient if the issuing account cannot grant that dataset",
+        "Explains that backend API-key queries can succeed while embed-token access fails",
+        "Suggests checking whether the dataset is owned by or shared to the API-token account that mints the embed token",
+        "Recommends owning/sharing the dataset to that account or using an owned dataset",
+        "Recommends minting a fresh embed token after fixing access"
+      ]
     }
   ]
 }

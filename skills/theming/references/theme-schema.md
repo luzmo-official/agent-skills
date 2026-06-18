@@ -1,6 +1,6 @@
 # Theme JSON Schema Reference
 
-Reference for theme JSON used by the Theme API (`createTheme` / `updateTheme`) and inline per-token `theme` overrides on `createAuthorization`. Always fetch `https://developer.luzmo.com/api/createTheme.md` and `https://developer.luzmo.com/api/createAuthorization.md` before generating production theme JSON.
+Reference for theme JSON used by the Theme API (`createTheme` / `updateTheme`) and inline per-token `theme` overrides on `createAuthorization` for dashboard embeds. Always fetch `https://developer.luzmo.com/api/createTheme.md`, `https://developer.luzmo.com/api/createAuthorization.md`, and any guides they reference before generating production theme JSON.
 
 ## High-Level Shape
 
@@ -11,13 +11,13 @@ The canonical schema currently nests visual settings under a `theme` object for 
   "name": { "en": "Acme Brand" },
   "theme": {
     "type": "custom",
-    "background": "#FFFFFF",
+    "background": "rgb(255,255,255)",
     "itemsBackground": "#FFFFFF",
-    "mainColor": "#0F172A",
-    "colors": ["#0F172A", "#3B82F6", "#10B981"],
+    "mainColor": "rgb(217,119,87)",
+    "colors": ["#D97757", "#6A9B8E", "#C9A26B"],
     "font": {
-      "fontFamily": "Inter",
-      "fontSize": 14
+      "fontFamily": "Inter, system-ui, sans-serif",
+      "fontSize": 13
     },
     "title": {
       "align": "left",
@@ -31,6 +31,7 @@ The canonical schema currently nests visual settings under a `theme` object for 
       "border-color": "#E2E8F0",
       "border-radius": "8px"
     },
+    "margins": [12, 12],
     "boxShadow": {
       "size": "none",
       "color": "rgb(0,0,0)"
@@ -39,7 +40,7 @@ The canonical schema currently nests visual settings under a `theme` object for 
 }
 ```
 
-Field names and supported keys evolve. Confirm against `createTheme.md` before generating production themes.
+Field names and supported keys evolve — confirm against `createTheme.md` before generating production themes. In particular, `font` is an object with `fontFamily` and `fontSize`, not a string.
 
 ## Built-In Theme IDs
 
@@ -61,10 +62,7 @@ const theme = await client.create('theme', {
   theme: {
     type: 'custom',
     mainColor: '#0F172A',
-    font: {
-      fontFamily: 'Inter',
-      fontSize: 14,
-    },
+    font: { fontFamily: 'Inter, system-ui, sans-serif', fontSize: 13 },
     colors: ['#0F172A', '#3B82F6', '#10B981'],
   },
 });
@@ -99,11 +97,29 @@ const auth = await client.create('authorization', {
     mainColor: tenant.primary_color,
     font: {
       fontFamily: tenant.font_family,
-      fontSize: 14,
+      fontSize: 13,
     },
     colors: tenant.palette,
   },
 });
+```
+
+This authorization-level `theme` is for dashboard embed theming. Standalone Flex viz-items should be themed through the item `options` object instead.
+
+## Standalone Flex Viz-Item Theme Options
+
+Flex viz-items do not expose a `theme` prop. Put runtime chart styling in `options`:
+
+```javascript
+const options = {
+  theme: {
+    itemsBackground: '#FFFFFF',
+    mainColor: '#D97757',
+    colors: ['#D97757', '#6A9B8E', '#C9A26B'],
+    font: { fontFamily: 'Inter, system-ui, sans-serif', fontSize: 13 },
+  },
+  color: '#D97757',
+};
 ```
 
 ## CSS Override (Token-Level)
@@ -128,7 +144,7 @@ CRITICAL: sanitize any tenant-supplied strings before injecting into `css`; see 
 
 ## Dark Theme Container Requirement
 
-Theme JSON colors apply to chart/dashboard content. The container background of your embedding element is your responsibility:
+Theme JSON/options colors apply to chart/dashboard content. The container background of your embedding element is your responsibility:
 
 ```html
 <div style="background-color: #0F172A;">
@@ -143,7 +159,7 @@ Without this, a dark theme can leave a light wrapper background around the embed
 - IQ Chat uses `IQChatOptions` and its documented CSS variables.
 - IQ Answer uses CSS custom properties.
 - ACK editor components use the ACK theming guide.
-- Flex runtime theming uses the Flex runtime theme example and component-level props/options.
+- Standalone Flex runtime → uses the Flex item `options` object, not a component `theme` prop
 
 See SKILL.md for the per-surface mechanism table.
 

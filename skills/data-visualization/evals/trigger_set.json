@@ -28,6 +28,10 @@
     "should_trigger": true
   },
   {
+    "query": "Localhost Flex chart keeps reconnecting to /realtime and eventually says Query failed. apiHost points at api.luzmo.com.",
+    "should_trigger": true
+  },
+  {
     "query": "Need to add a datetime hierarchy dimension to a line chart at month granularity, what does the slot config look like for that?",
     "should_trigger": true
   },
