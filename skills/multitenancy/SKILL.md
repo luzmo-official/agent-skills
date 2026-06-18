@@ -9,8 +9,8 @@ description: >-
   Pair with core for token generation and data-integration for connection-level overrides.
 metadata:
   author: Luzmo
-  version: 0.1.0
-  last_updated: 2026-05-21
+  version: 0.1.1
+  last_updated: 2026-06-18
 ---
 
 # Luzmo Multitenancy

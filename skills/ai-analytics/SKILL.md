@@ -8,8 +8,8 @@ description: >-
   Not for standard chart embedding (use core for saved dashboards, data-visualization for Flex) or React Native (IQ embed components are web-only).
 metadata:
   author: Luzmo
-  version: 0.1.0
-  last_updated: 2026-06-01
+  version: 0.1.1
+  last_updated: 2026-06-18
 ---
 
 # Luzmo AI Analytics
