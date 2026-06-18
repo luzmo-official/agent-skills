@@ -13,10 +13,10 @@ These apply to all Luzmo code. Stop and fix before continuing if any are violate
 - **Multi-tenant isolation is a security boundary.** Scope every embed token with the correct `access`, filters, and `parameter_overrides`/`account_overrides` so a user can only see their own tenant's data. Wrong isolation is a breach, not a bug.
 
 ```javascript
-// ❌ NEVER — credentials exposed in client code
+// [ERROR] NEVER — credentials exposed in client code
 const client = new Luzmo({ api_key: 'KEY', api_token: 'TOKEN' });
 
-// ✅ Backend mints the token, frontend gets only id/token
+// [OK] Backend mints the token, frontend gets only id/token
 const auth = await client.create('authorization', { type: 'embed', /* ... */ });
 // <luzmo-embed-dashboard authKey={auth.id} authToken={auth.token} />
 ```

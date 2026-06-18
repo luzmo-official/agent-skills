@@ -29,7 +29,7 @@ Also covers programmatic dashboard construction via API (Path C).
 - If it is an index/overview, follow the relevant links to the concrete API, ACK component, schema, or example page.
 - Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
 
-## 🚨 CRITICAL CONCEPTS 🚨
+## [CRITICAL] Concepts
 
 ### Understanding ACK Architecture (Must Read First)
 
@@ -67,14 +67,14 @@ Also covers programmatic dashboard construction via API (Path C).
 
 **Reality:** Individual ACK configuration components only produce configuration. Your app stores it. Exception: `<luzmo-item-grid>` provides built-in rendering for multi-chart layouts.
 
-❌ **WRONG - This won't display anything:**
+[ERROR] **WRONG - This won't display anything:**
 ```javascript
 // ACK components don't render - they just configure!
 <luzmo-item-slot-drop-panel item-type="bar-chart" />
 // Nothing visible on screen...
 ```
 
-✅ **CORRECT - ACK configures, app stores, separate component renders:**
+[OK] **CORRECT - ACK configures, app stores, separate component renders:**
 
 ```jsx
 // React example
@@ -108,13 +108,13 @@ For full auth/embed-token guidance, see `core`.
 
 ACK `item-type` MUST match rendering component `type`:
 
-❌ **WRONG - Types don't match:**
+[ERROR] **WRONG - Types don't match:**
 ```javascript
 <luzmo-item-slot-drop-panel item-type="bar-chart" />
 <luzmo-embed-viz-item type="column-bar-chart" />  // Mismatch!
 ```
 
-✅ **CORRECT - Types synchronized:**
+[OK] **CORRECT - Types synchronized:**
 ```javascript
 <luzmo-item-slot-drop-panel item-type="column-bar-chart" />
 <luzmo-embed-viz-item type="column-bar-chart" />  // Match
@@ -228,27 +228,27 @@ Full component documentation: `references/embedded-editor.md`
 
 Each pitfall below includes a frequency marker, the symptom you'll see, why it fails, and the fix.
 
-**❌ Treating ACK as a renderer (⚠️ VERY COMMON — the #1 ACK failure):**
+**[ERROR] Treating ACK as a renderer ([WARNING] VERY COMMON — the #1 ACK failure):**
 ```html
 <!-- Wrong - no chart will appear -->
 <luzmo-item-slot-drop-panel item-type="bar-chart" />
 ```
 You'll see: ACK UI renders, user can drop fields, no chart ever appears, no error in console.
 **Why this fails:** ACK components produce configuration STATE — they do not render charts. The configured state must be captured by your app and passed into a separate Embed rendering component.
-**✅ Always pair ACK with rendering component:**
+**[OK] Always pair ACK with rendering component:**
 ```html
 <!-- Correct - ACK configures, Flex renders -->
 <luzmo-item-slot-drop-panel item-type="bar-chart" />
 <luzmo-embed-viz-item type="bar-chart" :slots="slots" />
 ```
 
-**❌ Letting ACK manage state:**
+**[ERROR] Letting ACK manage state:**
 ```javascript
 // Wrong - assuming ACK stores the configuration
 <luzmo-item-slot-drop-panel />
 // Later: where is my slot configuration?
 ```
-**✅ Your app owns and stores the state:**
+**[OK] Your app owns and stores the state:**
 
 ```vue
 <!-- Vue example -->
@@ -264,29 +264,29 @@ const slots = ref([])
 </template>
 ```
 
-**❌ Mismatched item-type and rendering type:**
+**[ERROR] Mismatched item-type and rendering type:**
 ```html
 <!-- Wrong - ACK configured as bar, but rendering line -->
 <luzmo-item-slot-drop-panel item-type="bar-chart" />
 <luzmo-embed-viz-item type="line-chart" :slots="slots" />
 ```
-**✅ Keep types synchronized:**
+**[OK] Keep types synchronized:**
 ```html
 <!-- Correct - both use same chart type -->
 <luzmo-item-slot-drop-panel item-type="bar-chart" />
 <luzmo-embed-viz-item type="bar-chart" :slots="slots" />
 ```
 
-**❌ CORS errors because API/realtime requests are cross-origin from the app:**
+**[ERROR] CORS errors because API/realtime requests are cross-origin from the app:**
 
 You'll see: dashboard or chart fails to load, browser console shows CORS errors even though region URLs look correct.
 **Why this fails:** Flex, web component dashboards, and IQ-rendered charts open browser requests to the Luzmo API/realtime host. If those requests are not same-origin or configured for the app domain, the browser blocks them.
-**✅ Solutions:**
+**[OK] Solutions:**
 1. Local development: use `core/references/local-development-proxy.md`, set `apiHost` to the local app origin, and keep `appServer` direct (`https://app.luzmo.com`, `https://app.us.luzmo.com`, or VPC app host).
 2. Production: contact `support@luzmo.com` to set up CNAMEs when custom domains are needed. EU and US have different base URLs; never mix them.
 3. Never proxy or rewrite `appServer` under a sub-path; Flex/dashboard bundles load from `appServer`.
 
-**❌ Using viewer token for Embedded Dashboard Editor (EDE) (⚠️ COMMON):**
+**[ERROR] Using viewer token for Embedded Dashboard Editor (EDE) ([WARNING] COMMON):**
 ```javascript
 // Wrong - viewer cannot use EDE
 const token = await client.create('authorization', {
@@ -296,7 +296,7 @@ const token = await client.create('authorization', {
 ```
 You'll see: 403 Forbidden when the dashboard component tries to load the editor UI (EDE) when the token has role: 'viewer'. This is not enforced for custom editor experiences built with ACK components.
 **Why this fails:** EDE requires the editing-capable roles `designer` or `owner`. Viewer is intentionally restricted to read-only.
-**✅ Use designer or owner role:**
+**[OK] Use designer or owner role:**
 ```javascript
 // Correct - designer can use EDE
 const token = await client.create('authorization', {

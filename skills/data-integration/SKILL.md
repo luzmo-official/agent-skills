@@ -25,7 +25,7 @@ Entry-point for all data-side work: connecting sources, pushing data, modeling s
 - If it is an index/overview/provider page, follow the relevant links to the concrete API, provider, plugin, schema, or example page.
 - Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
 
-## 🚨 Security Checkpoint
+## [CRITICAL] Security Checkpoint
 
 **BEFORE writing any data-integration code, verify:**
 - [ ] API credentials (`LUZMO_API_KEY`, `LUZMO_API_TOKEN`) live server-side ONLY (env vars, secrets manager)
@@ -225,12 +225,12 @@ For deeper guidance on specific data integration topics:
 
 Each pitfall below includes a frequency marker, the symptom you'll see, why it fails, and the fix.
 
-**❌ Using createDataset directly instead of appropriate method (⚠️ COMMON):**
+**[ERROR] Using createDataset directly instead of appropriate method ([WARNING] COMMON):**
 ```javascript
 // Wrong - bypasses proper data integration flow
 await client.create('dataset', { name: "My Data", ... })
 ```
-**✅ Use createData for data-push or createDataprovider for connections:**
+**[OK] Use createData for data-push or createDataprovider for connections:**
 ```javascript
 // Correct for data-push
 await client.create('data', {
@@ -243,12 +243,12 @@ await client.create('data', {
 await client.create('dataprovider', { account_id: "...", ... })
 ```
 
-**❌ Creating new accounts without checking for existing ones:**
+**[ERROR] Creating new accounts without checking for existing ones:**
 ```bash
 # Wrong - creates duplicate connections
 node skills/data-integration/scripts/connect-datasource.js --provider postgresql --host db.example.com ...
 ```
-**✅ List and reuse existing accounts:**
+**[OK] List and reuse existing accounts:**
 ```bash
 # Correct - check first
 node skills/data-integration/scripts/connect-datasource.js --list-accounts --provider postgresql
@@ -256,25 +256,25 @@ node skills/data-integration/scripts/connect-datasource.js --list-accounts --pro
 node skills/data-integration/scripts/connect-datasource.js --account-id <uuid> --tables orders
 ```
 
-**❌ Exceeding 10,000 row limit in single createData call (⚠️ VERY COMMON for bulk loads):**
+**[ERROR] Exceeding 10,000 row limit in single createData call ([WARNING] VERY COMMON for bulk loads):**
 ```javascript
 // Wrong - will fail with large datasets
 await client.create('data', { type: 'append', securable_id: datasetId, data: hugeArray })  // 50,000 rows
 ```
 You'll see: `Rows exceed 10,000` error, or partial loads.
 **Why this fails:** Luzmo caps `createData` at 10k rows per call to keep the ingest path bounded. Bulk loads must be batched.
-**✅ Use scripts that handle batching automatically:**
+**[OK] Use scripts that handle batching automatically:**
 ```bash
 # Correct - scripts handle batching
 node skills/data-integration/scripts/push-data.js --file large-file.csv  # Any size
 ```
 
-**❌ Expecting `/export` or another export task to page arbitrary rows:**
+**[ERROR] Expecting `/export` or another export task to page arbitrary rows:**
 ```javascript
 // Wrong - dashboard/chart export service, not a row pagination API
 await client.create('export', { securable_id, chart_id, type: 'csv' })
 ```
-**✅ Page row-level data through `/data`, then write the file yourself:**
+**[OK] Page row-level data through `/data`, then write the file yourself:**
 ```javascript
 const page = await client.get('data', {
   queries: [{

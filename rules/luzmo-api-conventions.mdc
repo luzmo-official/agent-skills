@@ -15,6 +15,6 @@ The Luzmo API is **not** traditional REST. Every call is a `POST` to `/:resource
 - **Fetch the doc before coding:** `https://developer.luzmo.com/api/{action}{Resource}.md` (e.g. `createAuthorization.md`). Don't rely on cached shapes.
 
 ```javascript
-// ✅ list dashboards (no "search" action)
+// [OK] list dashboards (no "search" action)
 await client.get('dashboard', { find: { where: { /* ... */ } }, include: [{ model: 'Column' }] });
 ```
