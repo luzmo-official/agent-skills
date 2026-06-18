@@ -22,7 +22,7 @@ Entry-point for visual customization of any Luzmo surface. Route to the right me
 - If it is an index/overview, follow the relevant links to the concrete theme API, component, CSS variable, schema, or example page.
 - Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
 
-## 🚨 Security Checkpoint
+## [CRITICAL] Security Checkpoint
 
 **BEFORE applying themes via API or authorization tokens, verify:**
 - [ ] Theme JSON or CSS is set via the SERVER-SIDE `createAuthorization` call (`theme`, `css` properties) — never patched on the client after the token is issued
@@ -148,14 +148,14 @@ https://developer.luzmo.com/guide/flex--component-api-reference--properties.md
 
 Each pitfall below includes a frequency marker, the symptom you'll see, why it fails, and the fix.
 
-**❌ Passing a `theme` prop to standalone Flex viz-items (⚠️ COMMON):**
+**[ERROR] Passing a `theme` prop to standalone Flex viz-items ([WARNING] COMMON):**
 ```html
 <!-- Wrong - standalone Flex viz-items do not expose a theme prop -->
 <luzmo-embed-viz-item theme="default_dark" />
 ```
 You'll see: the prop is ignored and the chart keeps its default styling.
 **Why this fails:** Flex runtime styling belongs in the `options` object, not a top-level component prop.
-**✅ Put Flex styling in options and style the wrapper yourself:**
+**[OK] Put Flex styling in options and style the wrapper yourself:**
 ```html
 <div style="background-color: #1a1a2e;">
   <luzmo-embed-viz-item id="sales-chart" type="bar-chart" />
@@ -173,17 +173,17 @@ document.querySelector('#sales-chart').options = {
 }
 ```
 
-**❌ Forgetting container background for dark themes (⚠️ VERY COMMON):**
+**[ERROR] Forgetting container background for dark themes ([WARNING] VERY COMMON):**
 You'll see: chart content styled correctly, but a bright halo around it from the wrapper.
 **Why this fails:** Chart options style chart content — they don't reach outside the component's box. The wrapper background is your CSS to set.
 
-**❌ Expecting dashboard themes to apply to IQ/ACK:**
+**[ERROR] Expecting dashboard themes to apply to IQ/ACK:**
 ```javascript
 // Wrong - Theme API themes don't control IQ components
 const theme = await client.get('theme', {...});
 // IQ components need their own CSS variables
 ```
-**✅ Use component-specific theming:**
+**[OK] Use component-specific theming:**
 ```javascript
 // Correct - IQ components have separate styling mechanism
 <luzmo-iq-embed-chat 
@@ -191,7 +191,7 @@ const theme = await client.get('theme', {...});
 />
 ```
 
-**❌ Confusing Theme API with token theme overrides:**
+**[ERROR] Confusing Theme API with token theme overrides:**
 ```javascript
 // These are DIFFERENT mechanisms:
 // 1. Theme API: Create reusable themes in your org

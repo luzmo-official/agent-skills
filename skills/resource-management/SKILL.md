@@ -22,7 +22,7 @@ Entry-point for operational resource management with the Luzmo API: create, list
 - If it is an index/overview, follow the relevant links to the concrete API, association, schema, or example page.
 - Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
 
-## 🚨 Security Checkpoint
+## [CRITICAL] Security Checkpoint
 
 **BEFORE generating ANY resource-management script, verify:**
 - [ ] `LUZMO_API_KEY` and `LUZMO_API_TOKEN` are loaded from environment variables, NEVER hardcoded
@@ -140,15 +140,15 @@ Common examples:
 
 Each pitfall below includes a frequency marker, the symptom you'll see, why it fails, and where to escalate.
 
-**❌ Using REST-style HTTP verbs for Luzmo API calls (⚠️ VERY COMMON):** You'll see `404`/`405` or empty responses. The Luzmo API is POST-only with `action` in the body. See `core/references/api-actions.md`.
+**[ERROR] Using REST-style HTTP verbs for Luzmo API calls ([WARNING] VERY COMMON):** You'll see `404`/`405` or empty responses. The Luzmo API is POST-only with `action` in the body. See `core/references/api-actions.md`.
 
-**❌ Mixing fields from different resource docs (⚠️ COMMON):** You'll see `400 Bad Request` or unexpected validation failures. Fetch the exact `{action}{Resource}.md` doc per call — don't assume `createDashboard` accepts the same fields as `createDataset`.
+**[ERROR] Mixing fields from different resource docs ([WARNING] COMMON):** You'll see `400 Bad Request` or unexpected validation failures. Fetch the exact `{action}{Resource}.md` doc per call — don't assume `createDashboard` accepts the same fields as `createDataset`.
 
-**❌ Claiming an action exists without linking its markdown doc (⚠️ OCCASIONAL — agent-generated code only):** Pattern of fabricating action names. Always link the canonical doc at `https://developer.luzmo.com/api/{action}{Resource}.md` before generating code that uses it.
+**[ERROR] Claiming an action exists without linking its markdown doc ([WARNING] OCCASIONAL — agent-generated code only):** Pattern of fabricating action names. Always link the canonical doc at `https://developer.luzmo.com/api/{action}{Resource}.md` before generating code that uses it.
 
-**❌ Exposing API key/token in client-side code (⚠️ COMMON — SECURITY CRITICAL):** Leaked credentials = full org compromise. Resource-management scripts must run server-side. See `core` for the security checkpoint.
+**[ERROR] Exposing API key/token in client-side code ([WARNING] COMMON — SECURITY CRITICAL):** Leaked credentials = full org compromise. Resource-management scripts must run server-side. See `core` for the security checkpoint.
 
-**❌ Calling `delete{Resource}` without first showing the user what will be deleted (⚠️ COMMON — IRREVERSIBLE):** No symptom — data just disappears. The agent must own the search -> show -> confirm -> delete workflow defined in `references/deletion-policy.md`. Generated scripts need their own guardrails from `references/delete-script-patterns.md` because they may be run later outside the agent.
+**[ERROR] Calling `delete{Resource}` without first showing the user what will be deleted ([WARNING] COMMON — IRREVERSIBLE):** No symptom — data just disappears. The agent must own the search -> show -> confirm -> delete workflow defined in `references/deletion-policy.md`. Generated scripts need their own guardrails from `references/delete-script-patterns.md` because they may be run later outside the agent.
 
 ## Canonical Sources
 

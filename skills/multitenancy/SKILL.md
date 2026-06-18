@@ -294,16 +294,16 @@ Always fetch both the connection overrides guide AND the specific plugin documen
 
 ## Common Mistakes
 
-Each pitfall below includes a frequency marker, the symptom you'll see, why it fails, and the secure alternative. ⚠️ Wrong patterns here cause real data breaches.
+Each pitfall below includes a frequency marker, the symptom you'll see, why it fails, and the secure alternative. [WARNING] Wrong patterns here cause real data breaches.
 
-**❌ Using dashboard-level filters for tenant isolation (⚠️ VERY COMMON — SECURITY CRITICAL):**
+**[ERROR] Using dashboard-level filters for tenant isolation ([WARNING] VERY COMMON — SECURITY CRITICAL):**
 ```javascript
 // Wrong - editors can remove dashboard filters
 dashboard.filters = [{ expression: "tenant_id = '123'" }]
 ```
 You'll see: users with `designer`/`owner` roles successfully removing or modifying the filter and viewing other tenants' rows. No error appears.
 **Why this fails:** Dashboard-level filters live in the dashboard JSON. Anyone with edit permission on the dashboard can change them. This is a data-breach-in-waiting whenever editor roles are exposed.
-**✅ Use server-side token/query enforcement instead:**
+**[OK] Use server-side token/query enforcement instead:**
 ```javascript
 // Correct - Pattern 1 centralizes the tenant filter definition
 await client.create('embedfiltergroup', {
@@ -315,7 +315,7 @@ await client.create('embedfiltergroup', {
 parameter_overrides: { tenant_id: '123' }
 ```
 
-**❌ Using wrong property name for connection overrides (⚠️ COMMON — silent failure):**
+**[ERROR] Using wrong property name for connection overrides ([WARNING] COMMON — silent failure):**
 ```javascript
 // Wrong - property names
 connectionOverrides: {...}
@@ -323,19 +323,19 @@ connection_overrides: {...}
 ```
 You'll see: NO error. The token is issued, queries run, and they hit the BASE account's database — meaning every tenant sees the same (often the default) data. Detected only when a tenant complains about wrong data.
 **Why this fails:** Luzmo ignores unknown properties on `createAuthorization`. The misspelling silently does nothing.
-**✅ Use exact property name:**
+**[OK] Use exact property name:**
 ```javascript
 // Correct
 account_overrides: {...}
 ```
 
-**❌ Implementing tenant filtering in client-side code:**
+**[ERROR] Implementing tenant filtering in client-side code:**
 ```javascript
 // Wrong - client-side filtering is not secure
 const userTenantId = getCurrentUser().tenantId
 <luzmo-embed-dashboard filters={[{tenant_id: userTenantId}]} />
 ```
-**✅ Enforce tenant filtering server-side in token:**
+**[OK] Enforce tenant filtering server-side in token:**
 ```javascript
 // Correct - server-side token generation
 const token = await client.create('authorization', {
@@ -344,13 +344,13 @@ const token = await client.create('authorization', {
 // Send token.id and token.token to client
 ```
 
-**❌ Creating multiple EmbedFilterGroups:**
+**[ERROR] Creating multiple EmbedFilterGroups:**
 ```javascript
 // Wrong - only one EmbedFilterGroup per organization
 await client.create('embedfiltergroup', { expression: 'tenant_id = {{tid}}' })
 await client.create('embedfiltergroup', { expression: 'region = {{r}}' })  // Will fail
 ```
-**✅ Use a single EmbedFilterGroup with multiple parameters:**
+**[OK] Use a single EmbedFilterGroup with multiple parameters:**
 ```javascript
 // Correct - one group, multiple parameters
 await client.create('embedfiltergroup', {
@@ -364,7 +364,7 @@ parameter_overrides: {
 }
 ```
 
-**❌ Forgetting to extend Pattern 2 filters when dataset access expands:**
+**[ERROR] Forgetting to extend Pattern 2 filters when dataset access expands:**
 ```javascript
 // Wrong - token grants two datasets but filters only one
 access: { datasets: [{ id: ordersDatasetId, rights: 'use' }, { id: invoicesDatasetId, rights: 'use' }] },
@@ -377,7 +377,7 @@ filters: [{
   value: 'tenant-123',
 }]
 ```
-**✅ Keep Pattern 2 filters complete:**
+**[OK] Keep Pattern 2 filters complete:**
 ```javascript
 // Correct - every tenant-scoped dataset in access has a matching token filter
 filters: [

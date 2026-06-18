@@ -24,7 +24,7 @@ To **embed an existing saved dashboard or chart by id**, use `core`. To **build 
 - If it is an index/catalog, follow the relevant links to the concrete chart, component, schema, or example page.
 - Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
 
-## 🚨 CRITICAL SETUP RULES 🚨
+## [CRITICAL] Setup Rules
 
 Read these rules BEFORE implementing ANY visualization — they prevent 80% of rendering failures:
 
@@ -52,13 +52,13 @@ Using wrong names causes "component not found" errors:
 | Angular | `<luzmo-viz-item>` |
 | Vue | `<luzmo-viz-item>` |
 
-❌ **WRONG:**
+[ERROR] **WRONG:**
 ```javascript
 // Vanilla JS - missing "embed"
 <luzmo-viz-item type="bar-chart" />
 ```
 
-✅ **CORRECT:**
+[OK] **CORRECT:**
 ```javascript
 // Vanilla JS - includes "embed"
 <luzmo-embed-viz-item type="bar-chart" />
@@ -87,7 +87,7 @@ Without explicit dimensions → **chart will be INVISIBLE (0 height)**
    └─────────────────────────────────────────┘
 ```
 
-❌ **WRONG - Renders nothing visible:**
+[ERROR] **WRONG - Renders nothing visible:**
 ```javascript
 // Container has no height
 <div>
@@ -96,7 +96,7 @@ Without explicit dimensions → **chart will be INVISIBLE (0 height)**
 // Result: 0px height, invisible chart
 ```
 
-✅ **CORRECT - Set BOTH:**
+[OK] **CORRECT - Set BOTH:**
 ```javascript
 // Container with explicit size
 <div style={{ height: '400px', width: '100%' }}>
@@ -149,7 +149,7 @@ All user-facing text properties **MUST** be localized objects, never plain strin
 **Wrong:**
 ```javascript
 {
-  label: "Revenue"  // ❌ This will cause errors
+  label: "Revenue"  // [ERROR] This will cause errors
 }
 ```
 
@@ -167,13 +167,13 @@ options: {
 **Wrong:**
 ```javascript
 options: {
-  title: "My Chart Title"  // ❌ Not localized
+  title: "My Chart Title"  // [ERROR] Not localized
 }
 
 // OR
 
 options: {
-  title: { title: { en: "My Chart Title" } }  // ❌ Nested, wrong structure
+  title: { title: { en: "My Chart Title" } }  // [ERROR] Nested, wrong structure
 }
 ```
 
@@ -278,41 +278,41 @@ If your visualization isn't working as expected, check these common issues:
 
 ## Common Mistakes
 
-Each pitfall below includes the error you'll see, why it fails, a frequency marker (⚠️ VERY COMMON / ⚠️ COMMON / ⚠️ OCCASIONAL), and where to escalate if you need deeper troubleshooting.
+Each pitfall below includes the error you'll see, why it fails, a frequency marker ([WARNING] VERY COMMON / [WARNING] COMMON / [WARNING] OCCASIONAL), and where to escalate if you need deeper troubleshooting.
 
-**❌ Using plain strings instead of localized objects (⚠️ VERY COMMON):**
+**[ERROR] Using plain strings instead of localized objects ([WARNING] VERY COMMON):**
 ```javascript
 label: "Revenue"  // Wrong
 ```
 You'll see: `Invalid label` / `Invalid title` / `Invalid localized string format`.
 **Why this fails:** Luzmo requires every user-facing text field to be a language object so it can handle i18n consistently. A bare string has no language tag, so the validator rejects it.
-**✅ Always use localized objects:**
+**[OK] Always use localized objects:**
 ```javascript
 label: { en: "Revenue" }  // Correct
 ```
 **See also:** `troubleshooting` → "Title and Label Errors".
 
-**❌ Reusing the same contextId (⚠️ COMMON):**
+**[ERROR] Reusing the same contextId ([WARNING] COMMON):**
 ```javascript
 <luzmo-embed-viz-item contextId="chart-1" />
 <luzmo-embed-viz-item contextId="chart-1" />  // Conflict!
 ```
 You'll see: charts swapping data on reload, filter changes affecting the wrong chart, stale data not refreshing.
 **Why this fails:** `contextId` is the key Luzmo uses to deduplicate state and queries across chart instances. Two charts sharing one id share state — chaos follows.
-**✅ Make each contextId unique:**
+**[OK] Make each contextId unique:**
 ```javascript
 <luzmo-embed-viz-item contextId="chart-1" />
 <luzmo-embed-viz-item contextId="chart-2" />  // Good
 ```
 **See also:** `troubleshooting` → "Chart Rendering But Shows Wrong Data".
 
-**❌ Forgetting dimensions on Flex charts (⚠️ VERY COMMON — most common failure mode):**
+**[ERROR] Forgetting dimensions on Flex charts ([WARNING] VERY COMMON — most common failure mode):**
 ```html
 <luzmo-embed-viz-item type="bar-chart" />  // Invisible
 ```
 You'll see: nothing on the page. No error. DevTools shows the element with 0px height.
 **Why this fails:** Flex charts use their container's box for layout — without explicit dimensions on BOTH container and component, the chart computes 0px and renders invisibly.
-**✅ Always set height and width on BOTH:**
+**[OK] Always set height and width on BOTH:**
 ```html
 <div style="height: 400px; width: 100%;">
   <luzmo-embed-viz-item style="height: 100%; width: 100%;" />
@@ -320,7 +320,7 @@ You'll see: nothing on the page. No error. DevTools shows the element with 0px h
 ```
 **See also:** `troubleshooting` → "Component Not Rendering At All".
 
-**❌ Missing required slot fields (⚠️ COMMON):**
+**[ERROR] Missing required slot fields ([WARNING] COMMON):**
 ```javascript
 {
   datasetId: "...",
@@ -330,7 +330,7 @@ You'll see: nothing on the page. No error. DevTools shows the element with 0px h
 ```
 You'll see: `Missing aggregationFunc` (for numeric measures), `Missing level` (for datetime/hierarchy), or `Invalid label`.
 **Why this fails:** Slots are typed configurations — different column types need different bookkeeping. A numeric measure without aggregationFunc is ambiguous; a datetime without level can't be bucketed.
-**✅ Include all required fields:**
+**[OK] Include all required fields:**
 ```javascript
 {
   datasetId: "...",
@@ -342,13 +342,13 @@ You'll see: `Missing aggregationFunc` (for numeric measures), `Missing level` (f
 ```
 **See also:** `troubleshooting` → "Slot Configuration Errors" and the chart-specific doc at `https://developer.luzmo.com/flex/charts/{chart-type}.md`.
 
-**❌ Using deprecated `<cumul-*>` tag names (⚠️ OCCASIONAL but increasing):**
+**[ERROR] Using deprecated `<cumul-*>` tag names ([WARNING] OCCASIONAL but increasing):**
 ```html
 <luzmo-viz-item type="bar-chart" ...></luzmo-viz-item>  <!-- Wrong: missing "embed" in vanilla JS -->
 ```
 You'll see: `Component not found` in console, or the element renders as inert markup.
 **Why this fails:** The product rebranded from Cumul.io to Luzmo and the tag/component names changed.
-**✅ Use the current Luzmo names:**
+**[OK] Use the current Luzmo names:**
 ```html
 <luzmo-embed-viz-item type="bar-chart" ...></luzmo-embed-viz-item>
 ```

@@ -23,7 +23,7 @@ Entry-point for all Luzmo integrations. Establishes security and API patterns th
 - If it is an index/overview, follow the relevant links to the concrete API, component, chart, schema, or example page.
 - Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
 
-## 🚨 CRITICAL RULES 🚨
+## [CRITICAL] Rules
 
 Read these BEFORE implementing anything with Luzmo:
 
@@ -36,7 +36,7 @@ Read these BEFORE implementing anything with Luzmo:
 
 **If ANY checkbox is unchecked, STOP and fix before proceeding.**
 
-❌ **NEVER ACCEPTABLE:**
+[ERROR] **NEVER ACCEPTABLE:**
 ```javascript
 // Client-side code with credentials - SECURITY BREACH
 const client = new Luzmo({
@@ -45,7 +45,7 @@ const client = new Luzmo({
 })
 ```
 
-✅ **CORRECT PATTERN:**
+[OK] **CORRECT PATTERN:**
 ```javascript
 // Server-side: generate token
 const embedToken = await client.create('authorization', {...})
@@ -85,8 +85,8 @@ If the user needs each tenant/customer to see only **their own rows** in a **sha
    Body   = data                          Body   = { action, key, token, ...params }
 ```
 
-❌ Never use: `GET`, `PUT`, `PATCH`, `DELETE`  
-✅ Always use: `POST` with `action` field in request body
+[ERROR] Never use: `GET`, `PUT`, `PATCH`, `DELETE`
+[OK] Always use: `POST` with `action` field in request body
 
 **Always cite the API overview when explaining request shapes:** `https://developer.luzmo.com/guide/api--overview.md`
 
@@ -349,8 +349,8 @@ Use this path when the user wants to **display an existing Luzmo dashboard or ch
 | React | `LuzmoDashboardComponent` |
 | Angular / Vue | `<luzmo-dashboard>` |
 
-❌ **WRONG:** `<cumul-dashboard>` (deprecated)  
-✅ **CORRECT:** `<luzmo-embed-dashboard>` (vanilla JS)
+[ERROR] **WRONG:** `<cumul-dashboard>` (deprecated)
+[OK] **CORRECT:** `<luzmo-embed-dashboard>` (vanilla JS)
 
 ### Minimal Required Props
 
@@ -440,10 +440,10 @@ Luzmo's API architecture differs from typical REST APIs. The most common mistake
 **For detailed error patterns with symptoms and fixes, see `references/common-mistakes.md`.**
 
 Quick reference of top issues:
-- Using GET/PUT/DELETE instead of POST with `action` field (⚠️ VERY COMMON)
-- Using `action: "search"` instead of `action: "get"` (⚠️ VERY COMMON)
-- Exposing API credentials in client-side code (⚠️ COMMON - SECURITY CRITICAL)
-- Wrong property names for included models (⚠️ COMMON)
+- Using GET/PUT/DELETE instead of POST with `action` field ([WARNING] VERY COMMON)
+- Using `action: "search"` instead of `action: "get"` ([WARNING] VERY COMMON)
+- Exposing API credentials in client-side code ([WARNING] COMMON - SECURITY CRITICAL)
+- Wrong property names for included models ([WARNING] COMMON)
 
 ## Avoid
 

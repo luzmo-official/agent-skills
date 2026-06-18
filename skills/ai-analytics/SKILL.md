@@ -22,7 +22,7 @@ Entry-point for Luzmo AI analytics: the **`/aiprompt`** API (canonical backend),
 - If it is an index/overview, follow the relevant links to the concrete API, component, schema, or example page.
 - Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
 
-## 🚨 Security Checkpoint
+## [CRITICAL] Security Checkpoint
 
 **BEFORE implementing any IQ component or API integration, verify:**
 - [ ] API credentials (`LUZMO_API_KEY`, `LUZMO_API_TOKEN`) are server-side ONLY — never in the IQ Chat/Answer component, never in the agent's frontend code
@@ -67,7 +67,7 @@ The `iq.context` value is appended to IQ's base system prompt for queries made w
 
 IQ is available as an **add-on** — if the user encounters a license error, contact support@luzmo.com.
 
-**⚠️ React Native Limitation:** The IQ Chat and Answer components are **NOT supported** in React Native. Only web platforms (browser-based React, Angular, Vue, vanilla JS) are supported.
+**[WARNING] React Native Limitation:** The IQ Chat and Answer components are **NOT supported** in React Native. Only web platforms (browser-based React, Angular, Vue, vanilla JS) are supported.
 
 ### Component Names (Common Mistake)
 
@@ -82,9 +82,9 @@ Use the correct component names with `-embed-` in them:
 
 **Note:** Angular and Vue IQ components drop the `-embed-` infix (opposite to vanilla JS/React).
 
-❌ **WRONG:** `luzmo-iq-chat`, `luzmo-iq-answer` (missing `-embed-`) for vanilla JS/React  
-✅ **CORRECT:** `luzmo-iq-embed-chat`, `luzmo-iq-embed-answer` for vanilla JS/React  
-✅ **CORRECT:** `luzmo-iq-chat`, `luzmo-iq-answer` for Angular/Vue
+[ERROR] **WRONG:** `luzmo-iq-chat`, `luzmo-iq-answer` (missing `-embed-`) for vanilla JS/React
+[OK] **CORRECT:** `luzmo-iq-embed-chat`, `luzmo-iq-embed-answer` for vanilla JS/React
+[OK] **CORRECT:** `luzmo-iq-chat`, `luzmo-iq-answer` for Angular/Vue
 
 ## Bundled References
 
@@ -275,17 +275,17 @@ Fetch: `https://academy.luzmo.com/article/e6ght1rk`
 
 ## Common IQ Issues
 
-Troubleshoot these frequent problems. ⚠️ Most of them are data-modeling issues, not IQ bugs — see `references/data-modeling-for-iq.md`.
+Troubleshoot these frequent problems. [WARNING] Most of them are data-modeling issues, not IQ bugs — see `references/data-modeling-for-iq.md`.
 
 | Problem | Frequency | Likely Cause | Solution |
 |---|---|---|---|
-| IQ returns wrong dataset | ⚠️ VERY COMMON | Token has access to too many datasets — IQ can't disambiguate | Narrow token `access.datasets` to 5–10 relevant datasets |
-| IQ doesn't understand column | ⚠️ VERY COMMON | Generic or technical column name | Rename to business-friendly name ("amt" → "Order Amount") |
-| IQ formats currency wrong | ⚠️ COMMON | Missing subtype | Set `subtype: "currency"` on column |
-| IQ can't find a metric | ⚠️ COMMON | No pre-built formula exists | Create aggregation formula with descriptive name |
-| IQ misinterprets calculated field | ⚠️ COMMON | No description | Add column description explaining calculation |
-| Component license error | ⚠️ OCCASIONAL | IQ addon not enabled | Contact support@luzmo.com to enable IQ addon |
-| React Native components not working | ⚠️ OCCASIONAL | Platform not supported | IQ components only work in web browsers (not React Native) |
+| IQ returns wrong dataset | [WARNING] VERY COMMON | Token has access to too many datasets — IQ can't disambiguate | Narrow token `access.datasets` to 5–10 relevant datasets |
+| IQ doesn't understand column | [WARNING] VERY COMMON | Generic or technical column name | Rename to business-friendly name ("amt" → "Order Amount") |
+| IQ formats currency wrong | [WARNING] COMMON | Missing subtype | Set `subtype: "currency"` on column |
+| IQ can't find a metric | [WARNING] COMMON | No pre-built formula exists | Create aggregation formula with descriptive name |
+| IQ misinterprets calculated field | [WARNING] COMMON | No description | Add column description explaining calculation |
+| Component license error | [WARNING] OCCASIONAL | IQ addon not enabled | Contact support@luzmo.com to enable IQ addon |
+| React Native components not working | [WARNING] OCCASIONAL | Platform not supported | IQ components only work in web browsers (not React Native) |
 
 For each row above, see also `troubleshooting` → "IQ (Natural Language) Issues" and `references/data-modeling-for-iq.md` for the underlying modeling fix.
 

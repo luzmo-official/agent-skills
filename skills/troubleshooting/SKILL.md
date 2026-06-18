@@ -30,7 +30,7 @@ When the inline tables aren't enough, read these:
 - `references/diagnostic-workflows.md` — Decision trees per symptom category (render, auth, wrong data, slot errors, ACK, IQ)
 - `references/error-codes.md` — HTTP status codes and exact error-message lookups with root causes and next steps
 
-## 🚨 Security Checkpoint (First Diagnostic)
+## [CRITICAL] Security Checkpoint (First Diagnostic)
 
 **Before troubleshooting visual or functional issues, verify there's no underlying SECURITY misconfiguration that explains the symptom:**
 - [ ] API credentials (`LUZMO_API_KEY`, `LUZMO_API_TOKEN`) are server-side only — never in browser code, never in the failing component's props
@@ -328,16 +328,16 @@ This skill handles diagnostics and quick fixes — for deeper implementation, es
 
 When completely stuck, work through this checklist:
 
-1. ✅ Check browser console for errors
-2. ✅ Verify component names match framework (see data-visualization skill)
-3. ✅ Confirm API credentials are correct and server-side only
-4. ✅ Check that embed tokens are being generated and passed correctly
-5. ✅ Verify `apiHost` and `appServer` match your Luzmo region. For local Flex/web component/IQ chart development, route `apiHost` through the local same-origin proxy and keep `appServer` direct; for production custom domains, use the documented CNAME setup.
-6. ✅ Ensure all user-facing text uses localized objects: `{ en: "..." }`
-7. ✅ Check that `contextId` is unique for each chart
-8. ✅ For Flex charts: verify dimensions set on both container and component
-9. ✅ For API calls: confirm using POST with `action` in request body
-10.✅ For multi-tenant: verify filtering is applied in authorization token (server-side)
+1. [OK] Check browser console for errors
+2. [OK] Verify component names match framework (see data-visualization skill)
+3. [OK] Confirm API credentials are correct and server-side only
+4. [OK] Check that embed tokens are being generated and passed correctly
+5. [OK] Verify `apiHost` and `appServer` match your Luzmo region. For local Flex/web component/IQ chart development, route `apiHost` through the local same-origin proxy and keep `appServer` direct; for production custom domains, use the documented CNAME setup.
+6. [OK] Ensure all user-facing text uses localized objects: `{ en: "..." }`
+7. [OK] Check that `contextId` is unique for each chart
+8. [OK] For Flex charts: verify dimensions set on both container and component
+9. [OK] For API calls: confirm using POST with `action` in request body
+10. [OK] For multi-tenant: verify filtering is applied in authorization token (server-side)
 
 ## Still Stuck?
 
