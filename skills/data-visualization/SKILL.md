@@ -226,7 +226,9 @@ Every Flex chart slot must follow these rules:
 Always fetch the chart-specific documentation for available slots and options:
 - URL pattern: `https://developer.luzmo.com/flex/charts/{chart-type}.md`
 - Chart catalog: `https://developer.luzmo.com/guide/flex--chart-docs.md`
-- JSON schema per chart: `https://developer.luzmo.com/assets/json-schemas/{chartType}.json`
+- JSON schemas per chart: 
+  - Slots: `https://developer.luzmo.com/assets/json-schemas/0.1.99/{chartType}-slots.schema.json`
+  - Options: `https://developer.luzmo.com/assets/json-schemas/0.1.99/{chartType}-options.schema.json`
 
 Different chart types have different required and optional properties — fetch the schema (and any guides it references) before guessing field shapes.
 
