@@ -18,6 +18,12 @@ Entry-point for **building Flex charts in code** in your application — ad-hoc,
 
 To **embed an existing saved dashboard or chart by id**, use `core`. To **build a brand-new custom chart component** when no built-in type fits, use `custom-charts`.
 
+## Doc Retrieval
+
+- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
+- If it is an index/catalog, follow the relevant links to the concrete chart, component, schema, or example page.
+- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+
 ## 🚨 CRITICAL SETUP RULES 🚨
 
 Read these rules BEFORE implementing ANY visualization — they prevent 80% of rendering failures:

@@ -16,6 +16,12 @@ metadata:
 
 Entry-point for visual customization of any Luzmo surface. Route to the right mechanism — there is no single universal theme API for all Luzmo components.
 
+## Doc Retrieval
+
+- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
+- If it is an index/overview, follow the relevant links to the concrete theme API, component, CSS variable, schema, or example page.
+- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+
 ## 🚨 Security Checkpoint
 
 **BEFORE applying themes via API or authorization tokens, verify:**

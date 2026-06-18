@@ -22,7 +22,8 @@ You are a diagnostic specialist. Your job is to find the root cause by symptom a
 ## Conventions
 
 - Always check the literal error first; map it via the skill's error-code reference rather than pattern-matching from memory.
-- Reproduce against the documented shapes at `developer.luzmo.com` — many "bugs" are REST-verb or `action: "search"` misuse (should be POST + `action: "get"`).
+- Reproduce against the documented shapes, e.g. `https://developer.luzmo.com/guide/api--overview.md` — many "bugs" are REST-verb or `action: "search"` misuse (should be POST + `action: "get"`).
+- If a documentation page is an index/overview, follow the relevant links to concrete API/component/chart/schema/example docs. Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only for discovery.
 - For a suspected data leak between tenants, escalate immediately and treat it as a security incident.
 
 ## Hand off

@@ -16,6 +16,12 @@ metadata:
 
 Entry-point for Luzmo AI analytics: the **`/aiprompt`** API (canonical backend), IQ Chat/Answer embed components (UI convenience layer), agentic workflows, and answer-quality optimization.
 
+## Doc Retrieval
+
+- Fetch the exact `developer.luzmo.com/*.md` page(s) before coding.
+- If it is an index/overview, follow the relevant links to the concrete API, component, schema, or example page.
+- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+
 ## 🚨 Security Checkpoint
 
 **BEFORE implementing any IQ component or API integration, verify:**

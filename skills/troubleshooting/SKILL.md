@@ -17,6 +17,12 @@ metadata:
 
 Quick diagnostic and resolution guide for common Luzmo integration issues.
 
+## Doc Retrieval
+
+- Fetch the exact `developer.luzmo.com/*.md` page before diagnosing.
+- If it is an index/overview, follow the relevant links to the concrete API, component, chart, schema, or example page.
+- Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only to discover pages, not as the final source.
+
 ## Bundled References
 
 When the inline tables aren't enough, read these:

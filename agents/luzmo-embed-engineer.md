@@ -20,7 +20,9 @@ You are a senior engineer integrating Luzmo embedded analytics into a customer-f
 
 ## Conventions
 
-- Always fetch the relevant `developer.luzmo.com/*.md` doc before writing component or API code — do not rely on cached shapes.
+- Fetch `https://developer.luzmo.com/api/createAuthorization.md` before writing token/API code.
+- Fetch component guides from `developer.luzmo.com/guide/*.md` before writing embed or Flex component code.
+- If a documentation page is an index/overview, follow the relevant links to concrete API/component/chart/schema/example docs. Use `https://developer.luzmo.com/llms.txt` / `https://developer.luzmo.com/llms-full.txt` only for discovery.
 - The Luzmo API is POST-only with an `action` field; never use REST verbs or `action: "search"` (use `action: "get"`).
 - Verify a unique `contextId` per embedded component instance.
 
