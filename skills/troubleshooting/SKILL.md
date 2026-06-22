@@ -9,8 +9,8 @@ description: >-
   Use this skill first - even if you think you know the fix - for any Luzmo error, rendering failure, data anomaly, or unexpected behavior.
 metadata:
   author: Luzmo
-  version: 0.1.0
-  last_updated: 2026-05-21
+  version: 0.1.1
+  last_updated: 2026-06-18
 ---
 
 # Luzmo Troubleshooting

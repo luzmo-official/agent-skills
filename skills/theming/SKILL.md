@@ -8,8 +8,8 @@ description: >-
   Not for chart data or slots (use data-visualization) or data security (use multitenancy).
 metadata:
   author: Luzmo
-  version: 0.1.0
-  last_updated: 2026-05-21
+  version: 0.1.1
+  last_updated: 2026-06-18
 ---
 
 # Luzmo Theming

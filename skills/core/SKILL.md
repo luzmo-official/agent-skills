@@ -9,8 +9,8 @@ description: >-
   Not for building charts in code (use data-visualization), data loading (use data-integration), or tenant isolation (use multitenancy).
 metadata:
   author: Luzmo
-  version: 0.1.0
-  last_updated: 2026-06-01
+  version: 0.1.1
+  last_updated: 2026-06-18
 ---
 
 # Luzmo Core

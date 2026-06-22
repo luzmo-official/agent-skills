@@ -8,8 +8,8 @@ description: >-
   Not for custom chart development (use custom-charts), embedding saved dashboards/charts by id (use core), chart editors (use analytics-studio), data connection (use data-integration), AI queries (use ai-analytics), or visual theming (use theming).
 metadata:
   author: Luzmo
-  version: 0.1.0
-  last_updated: 2026-05-21
+  version: 0.1.1
+  last_updated: 2026-06-18
 ---
 
 # Luzmo Data Visualization
