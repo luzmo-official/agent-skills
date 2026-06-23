@@ -61,7 +61,9 @@ function post(resource, body) {
       version: "0.1.0",
       ...body,
     });
-    const parsed = url.parse(`${API_BASE}/${resource}`);
+    // The Luzmo REST API is versioned in the path: https://api.luzmo.com/0.1.0/<resource>.
+    // Without the /0.1.0 segment the request hits a non-existent route and returns HTTP 404.
+    const parsed = url.parse(`${API_BASE}/0.1.0/${resource}`);
     const lib = parsed.protocol === "https:" ? https : http;
     const req = lib.request(
       {
