@@ -36,6 +36,8 @@ Read these BEFORE implementing anything with Luzmo:
 
 **If ANY checkbox is unchecked, STOP and fix before proceeding.**
 
+> Carve-out — **pre-issued embed token**: if your app is handed an embed token (an `authKey`/`authToken` pair already scoped to the data it may see) instead of raw API credentials — e.g. issued by another service, a tenant-provisioning step, a fixed-scope integration, or a time-boxed credential — using it directly satisfies these checks: no API key is client-side, and an embed token is *designed* to reach the frontend. Use it server-side for token-scoped calls (`/aiprompt`, `getData`, …) and as the Flex `authKey`/`authToken`. Do **not** try to "fix" it by calling `createAuthorization`: that needs API credentials you don't have, and an embed token cannot mint other tokens anyway.
+
 [ERROR] **NEVER ACCEPTABLE:**
 ```javascript
 // Client-side code with credentials - SECURITY BREACH

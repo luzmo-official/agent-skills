@@ -40,6 +40,7 @@ For full auth/embed-token guidance, see `core`.
 ## Bundled References
 
 - `references/theme-schema.md` — Theme JSON shape for `createTheme` and per-token `theme` override (colors, typography, palettes, dark-theme container requirement)
+- `references/flex-runtime-theme.md` — **Standalone Flex viz-item** runtime theming: the validated `options.theme` + top-level `options` keys that actually render, and the look-alike keys (`mainColor`, `fontColor`, `background`) that are silently ignored
 - `references/css-variables.md` — Per-surface styling mechanism map and how CSS variables are exposed for IQ Chat/Answer, ACK, and token-level `css`
 
 ## Theming Mechanisms by Surface
@@ -138,6 +139,13 @@ https://developer.luzmo.com/guide/flex--component-api-reference--properties.md
 - Flex viz-items have no `theme` component prop. Use `options.theme`, `options.color`, and chart-specific options after fetching the chart docs/schema.
 - Set the wrapper/container background with CSS when dark styling should cover the area around the chart.
 
+**The runtime keys are split across `options.theme` AND top-level `options` — and several plausible keys are silently ignored.** Getting this wrong is the usual cause of "I themed it but the charts stayed default":
+- **Main (single-series) colour → top-level `options.color`** — for the common chart types `options.theme` has **no `mainColor`** (a few types such as `pyramid-chart` differ — check the chart's schema). Setting only `theme.mainColor`/`theme.colors` leaves a one-measure bar/line chart in the default colour.
+- **Multi-series palette → `options.theme.colors`**; **canvas → `options.theme.itemsBackground`** (not `background`).
+- **Axis colour → top-level `options.axis.{x,y}.color`** (line/ticks) — there is **no `fontColor`** and `theme.font` carries only `fontFamily`/`fontSize`. Axis **label-text contrast auto-derives from `theme.itemsBackground`**, so set `itemsBackground` to your canvas colour or labels go unreadable on a dark background.
+- `theme.tooltip` has `background`/`fontSize`/`opacity` only (no text colour); `theme.title`/`theme.legend` carry no colour. `theme.borders` (corner radius/border) and `theme.boxShadow` are valid.
+- `createTheme` (Theme API) key names like `mainColor`, `fontColor`, `titleFont`, `secondaryColor` are **not** the Flex runtime keys — see the full validated key tables in `references/flex-runtime-theme.md`.
+
 ---
 
 ## Important Facts
@@ -167,13 +175,15 @@ You'll see: the prop is ignored and the chart keeps its default styling.
 ```javascript
 document.querySelector('#sales-chart').options = {
   theme: {
+    type: 'custom',
     itemsBackground: '#FFFFFF',
-    mainColor: '#D97757',
-    colors: ['#D97757', '#6A9B8E', '#C9A26B'],
+    colors: ['#D97757', '#6A9B8E', '#C9A26B'],   // multi-series palette (theme.colors)
     font: { fontFamily: 'Inter, system-ui, sans-serif', fontSize: 13 },
   },
-  color: '#D97757',
+  color: '#D97757',                              // main single-series colour — NOT theme.mainColor (ignored)
+  axis: { x: { color: '#475569' }, y: { color: '#475569' } }, // axis/text colour — there is no fontColor
 }
+// Full validated key reference: references/flex-runtime-theme.md
 ```
 
 **[ERROR] Forgetting container background for dark themes ([WARNING] VERY COMMON):**

@@ -156,6 +156,18 @@ The Answer component accepts `messages` following the `AIPrompt` structure. Cons
 
 ## Path C — `/aiprompt` API (canonical)
 
+> **IQ output is directly Flex-renderable (the "AI chart" bridge) — you don't need to fetch the API doc for the shape.** The `/aiprompt` response (`agent: 'analyst'`, `task: 'generate'`) returns:
+> ```
+> result.assistant_message.aiMessageAssets[]   // filter type === 'item'
+>   .value → { type, slots, options, filters }  // a complete Flex viz-item spec
+> ```
+> Map each item asset's `value` straight onto a Flex viz-item — no reshaping:
+> ```js
+> // React: <LuzmoVizItemComponent type={a.value.type} slots={a.value.slots}
+> //           options={a.value.options} filters={a.value.filters} authKey=… authToken=… />
+> ```
+> This is what turns an IQ answer into a live, embeddable chart. Theme the `options` per `theming` (Flex runtime theme). See `data-visualization` for the component.
+
 **`/aiprompt` replaces the legacy IQ Backend API (IQMessage).** Consult the canonical spec before implementing:
 
 ```
