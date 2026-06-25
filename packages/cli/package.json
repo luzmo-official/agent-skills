@@ -1,6 +1,6 @@
 {
   "name": "@luzmo/agent-skills",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Install Luzmo agent skills and optional MCP config for Cursor, Claude Code, Codex, and more.",
   "keywords": [
     "luzmo",
