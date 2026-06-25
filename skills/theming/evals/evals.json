@@ -80,6 +80,18 @@
         "Mentions setting wrapper/container background separately when needed",
         "Does NOT recommend passing `theme` directly to `<luzmo-embed-viz-item>`"
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "My standalone Flex bar chart's page is styled in our brand, but the bars are still the default colour and the axis labels are unreadable on my dark chart background. I set options.theme.mainColor and options.theme.fontColor and options.theme.background. What's wrong?",
+      "expected_output": "Those three keys are not honored on a standalone Flex viz-item, so the chart keeps default styling. The main (single-series) colour is the TOP-LEVEL `options.color`, not `options.theme.mainColor` (a bar chart's theme object has no `mainColor`; most chart types behave this way, though a few like pyramid-chart differ — check the chart's options schema). There is no `fontColor` on any chart; the axis line/tick colour is set via top-level `options.axis.x.color` / `options.axis.y.color`, and axis label-text contrast auto-derives from `options.theme.itemsBackground`. The canvas background is `options.theme.itemsBackground`, not `background`. The multi-series palette is `options.theme.colors`. `mainColor`/`fontColor`/`titleFont` are Theme-API (createTheme) keys, not Flex runtime keys. See references/flex-runtime-theme.md.",
+      "expectations": [
+        "Identifies that `options.theme.mainColor` is ignored and the single-series colour is the top-level `options.color`",
+        "States there is no `fontColor` and axis/text colour is `options.axis.x.color` / `options.axis.y.color`",
+        "Corrects `background` to `options.theme.itemsBackground`",
+        "Mentions `options.theme.colors` for the multi-series palette",
+        "Notes that `mainColor`/`fontColor` are createTheme (Theme API) keys, not Flex runtime option keys"
+      ]
     }
   ]
 }

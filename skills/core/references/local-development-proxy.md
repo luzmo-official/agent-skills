@@ -52,6 +52,8 @@ server.on('upgrade', (req, socket, head) => {
 });
 ```
 
+**Gotcha — register the proxies BEFORE any body parser.** If `express.json()` (or any body-parsing middleware) runs before these proxies, it consumes the POST request stream; the Flex component's data POSTs to `/0.1.0` then arrive empty and hang (504), silently breaking chart rendering. GET `/realtime` is unaffected, so it's easy to miss. Mount the proxies first and scope `express.json()` to your own `/api/*` routes.
+
 Frontend component configuration:
 
 ```js

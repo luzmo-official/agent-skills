@@ -2,6 +2,8 @@
 
 Reference for theme JSON used by the Theme API (`createTheme` / `updateTheme`) and inline per-token `theme` overrides on `createAuthorization` for dashboard embeds. Consult `https://developer.luzmo.com/api/createTheme.md` and `https://developer.luzmo.com/api/createAuthorization.md` for current production field shapes. These docs guide implementation details only.
 
+> ⚠️ **This is the Theme API schema, NOT the standalone Flex per-item runtime theme.** A Flex viz-item's `options.theme` uses a *different* set of keys (e.g. the main colour is the top-level `options.color`, not `mainColor`; text colour is `options.axis.{x,y}.color`, there is no `fontColor`). Do not copy keys from this page onto a standalone Flex chart. For Flex charts, use `references/flex-runtime-theme.md`.
+
 ## High-Level Shape
 
 The canonical schema currently nests visual settings under a `theme` object for Theme API calls:
