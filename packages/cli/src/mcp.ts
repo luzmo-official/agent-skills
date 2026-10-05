@@ -22,6 +22,7 @@ export function mcpUrl(
 export function luzmoMcpServerEntry(url: string): Record<string, unknown> {
   return {
     luzmo: {
+      type: 'http',
       url,
       headers: {
         'X-Luzmo-Key': '${LUZMO_KEY}',

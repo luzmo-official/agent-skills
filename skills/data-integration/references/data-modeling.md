@@ -84,3 +84,4 @@ Delta sync requirements:
 - Set correct column types and subtypes, especially for dates, currencies, and durations.
 - Add common business metrics as explicit formulas where possible.
 - Add column descriptions to help IQ understand business logic.
+- Put definitions, caveats, and sign conventions in `ai_context` (plain text on the dataset, column, or formula). Names and descriptions stay. See `ai-analytics` and `https://developer.luzmo.com/guide/guides--managing-ai-context.md`.

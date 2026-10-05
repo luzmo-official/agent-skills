@@ -80,6 +80,40 @@
         "Notes that `parameter_overrides` (Pattern 1) ensures IQ cannot see other tenants' rows even when it picks the right dataset",
         "Does NOT present only narrowing dataset scope as sufficient — row-level isolation also requires multitenancy patterns"
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "We created a Luzmo Agent called Revenue assistant and I want our Node backend to call it. I was going to POST /aiprompt with agent: 'analyst', task: 'generate', and agent_id set to the Agent's id. Is that the right request?",
+      "expected_output": "Invoke the saved Agent with agent_id only. Do not also send agent, task, or capabilities — those come from the saved Agent. Call /aiprompt with the user's embed token, not the organization API key. Point at the Agents guide and createAIPrompt docs.",
+      "expectations": [
+        "Uses `agent_id` for the saved Agent",
+        "States that `agent_id` must not be combined with `agent`, `task`, or `capabilities`",
+        "Identifies `/aiprompt` or `createAIPrompt` as the invocation API",
+        "States that the call uses the user's embed token",
+        "References `https://developer.luzmo.com/guide/guides--creating-and-using-agents-through-the-api.md` or `https://developer.luzmo.com/api/createAIPrompt.md`"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "I linked a discount-policy Rule to our Agent, then edited the text through the API. The Agent still answers with the old policy. The Rule response shows has_unpublished_changes: true. What did I miss?",
+      "expected_output": "Saving a Rule appends a version and does not change what Agents run. Publish the new version. A draft-only Rule contributes nothing even while linked.",
+      "expectations": [
+        "States that a linked Rule applies only its currently published version",
+        "States that saving or updating appends a version and does not change Agent behavior until that version is published",
+        "Explains that `has_unpublished_changes: true` means a newer version exists than the published one",
+        "References `https://developer.luzmo.com/guide/guides--creating-and-managing-rules-through-the-api.md` or the saved-agents guidance"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "IQ keeps treating refunds as positive revenue. The column is named Revenue and the description says 'order revenue'. Refunds are stored as negative amounts, and revenue should be net of refunds. Where do I record that so IQ uses it?",
+      "expected_output": "Keep the name and description. Put the definition and sign convention in ai_context on the column or dataset. ai_context is plain text, not a localized object. Do not rely on description alone.",
+      "expectations": [
+        "Identifies `ai_context` as the field for the refund / net-revenue definition",
+        "States that `ai_context` is plain text and not a localized name/description object",
+        "States that name and description stay; AI context enriches them",
+        "References `https://developer.luzmo.com/guide/guides--managing-ai-context.md` or the data-modeling-for-iq guidance"
+      ]
     }
   ]
 }
