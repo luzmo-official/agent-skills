@@ -40,6 +40,18 @@
     "should_trigger": true
   },
   {
+    "query": "Create a Luzmo Agent that can analyze revenue and build charts, associate our orders dataset, and call it from the backend with agent_id.",
+    "should_trigger": true
+  },
+  {
+    "query": "I saved a new version of our pricing Rule but the Agent still follows the old text. How do I publish it?",
+    "should_trigger": true
+  },
+  {
+    "query": "Point our Cursor MCP server at a saved Luzmo Agent with agentId so answer_question uses that Agent's datasets and rules.",
+    "should_trigger": true
+  },
+  {
     "query": "How do I embed a normal (non-AI) Luzmo dashboard in a Vue app?",
     "should_trigger": false
   },

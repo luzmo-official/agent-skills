@@ -40,7 +40,7 @@
       "id": "ai-analytics",
       "path": "skills/ai-analytics",
       "required": false,
-      "description": "AI analytics via /aiprompt and IQ embed components",
+      "description": "AI analytics via /aiprompt, saved Agents, Rules, AI context, and IQ embed components",
       "depends_on": ["core"]
     },
     {

@@ -115,6 +115,7 @@ Decision trees for each major symptom category. Use this file when the SKILL.md 
 
 2. Column names — are they business-friendly?
    → "amt"/"col1"/"tbl_x" hurt IQ accuracy — rename to "Order Amount", etc.
+   → Definitions and caveats (for example "revenue is net of refunds") belong in `ai_context`, not only the description. Route the write-up to `ai-analytics`.
 
 3. Currency / duration / coordinates — is subtype set?
    → Set subtype: "currency" etc. so IQ formats correctly.
@@ -125,7 +126,13 @@ Decision trees for each major symptom category. Use this file when the SKILL.md 
 5. License enabled?
    → IQ is an add-on. License errors → contact support@luzmo.com.
 
-6. React Native?
+6. Saved Agent or Rule?
+   → `404` on `agent_id`: unknown, deleted, or other organization.
+   → Linked Rule never changes answers: still a draft, or a newer version was saved and not published.
+   → Dataset inputs ignored: outside the Agent allowlist, or missing from the embed token.
+   → Agent theme missing on charts: AIPrompt does not apply `theme_id`. Route the fix to `ai-analytics`.
+
+7. React Native?
    → IQ components are NOT supported in React Native.
 ```
 

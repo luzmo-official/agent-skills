@@ -67,6 +67,7 @@ https://developer.luzmo.com/guide/api--actions.md
 Then consult exact resource docs:
 - Pattern: `https://developer.luzmo.com/api/{action}{Resource}.md`
 - Examples: `createDashboard`, `searchDashboard`, `updateDashboard`, `deleteDashboard`
+- Agents and Rules are normal resources (`agent`, `airule`, `airuleversion`). Publish-before-apply, dataset allowlists, and `agent_id` invocation live in `ai-analytics` (`references/saved-agents.md`) — do not restate that lifecycle here.
 
 ## Action Map
 
@@ -128,6 +129,7 @@ Common examples:
 - WHEN scripts must enforce multi-tenant isolation (EmbedFilterGroup, parameter_overrides) → use `multitenancy` (SECURITY CRITICAL)
 - WHEN editing dashboard `contents` JSON (slots, items) programmatically → use `analytics-studio`
 - WHEN automating theme creation/updates → use `theming`
+- WHEN the script is really about invoking a saved Agent, publishing a Rule, or setting `ai_context` for IQ → use `ai-analytics`
 - WHEN a script returns 401/403/404/400 errors → use `troubleshooting` FIRST
 
 **This skill does NOT cover:**

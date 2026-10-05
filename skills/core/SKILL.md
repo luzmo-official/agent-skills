@@ -306,7 +306,7 @@ The `createAuthorization` API generates short-lived tokens for frontend access:
 - `expiry` — RFC 3339 timestamp; defaults to 24 h, max 1 year
 - `parameter_overrides` — supply tenant-specific values for parameterized dataset filters (for full row-level tenant isolation, defer to `multitenancy` — do not assemble the complete filter pattern from core)
 - `account_overrides` — override database/plugin connection credentials per tenant (for full row-level tenant isolation, defer to `multitenancy` — do not assemble the complete filter pattern from core)
-- `iq.context` — custom system prompt appended to IQ queries for this token
+- `iq.context` — custom system prompt appended to IQ queries for this token. On a call it merges with per-request `context` and, for a saved Agent, that Agent's published Rules. Business knowledge on the data is `ai_context` — see `ai-analytics`
 - `environment` — pin to `"production"`, `"development"`, `"acceptance"`, `"qa"`, or `null` (latest)
 
 For the full property list see `https://developer.luzmo.com/api/createAuthorization.md`.
