@@ -8,6 +8,13 @@ For each provider, the `properties` shape in `createAccount` differs. Consult `h
 
 **IMPORTANT:** Also consult any provider-specific guides referenced from `https://developer.luzmo.com/api/createAccount.md`; these contain the exact credential fields and connection options for each source. The skill continues to define credential-handling rules.
 
+### Authentication modes beyond username/password
+
+- **Databricks**: personal access token, or OAuth2 machine-to-machine (client ID and client secret of a service principal). Prefer the service principal for production connections that should not depend on a personal user.
+- **Snowflake**: username/password or key-pair (private key with optional passphrase).
+
+Create these connections on the Connections page of the Luzmo app, then reuse the account by id (`connect-datasource.js --account-id <uuid>`). Their `createAccount` property shapes are not in the public API reference; do not invent them, and never ask the user to paste client secrets or private keys into the conversation.
+
 ## Plugin API (Unsupported Data Sources)
 
 Use the Plugin API when the target source has no native Luzmo connector.

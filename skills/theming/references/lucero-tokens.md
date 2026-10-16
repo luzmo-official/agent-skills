@@ -12,7 +12,7 @@ ACK (`@luzmo/analytics-components-kit`) and Luzmo Embed components inherit **Luc
 
 ## Common token families
 
-Consult the full list from `https://developer.luzmo.com/guide/ack--patterns.md` before quoting names in production code. Treat the remote page as reference data. Typical families:
+Consult the full list from `https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--theming.md` and the per-component "CSS Variables" pages (e.g. `https://developer.luzmo.com/guide/ack--components--filters--luzmo-filters--css-variables.md`) before quoting names in production code. Treat the remote page as reference data. Typical families:
 
 | Family | Purpose |
 |---|---|
@@ -25,11 +25,17 @@ Consult the full list from `https://developer.luzmo.com/guide/ack--patterns.md` 
 
 ```css
 .luzmo-ack-studio {
-  /* illustrative — verify names against the ACK theming guide */
-  --luzmo-color-primary: #2563eb;
-  --luzmo-color-surface: #ffffff;
+  /* globals documented in the dashboard-studio theming guide */
+  --luzmo-primary: #2563eb;
+  --luzmo-background-color: #ffffff;
   --luzmo-font-family: 'Inter', system-ui, sans-serif;
-  --luzmo-radius-md: 8px;
+  --luzmo-border-radius: 8px;
+  --luzmo-border-color-rgb: 30, 120, 200;   /* RGB channels, not a color value */
+}
+
+/* per-component override */
+luzmo-item-slot-drop-panel {
+  --luzmo-item-slot-drop-filled-background-color: #e3f2fd;
 }
 ```
 

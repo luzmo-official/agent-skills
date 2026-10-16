@@ -4,12 +4,12 @@ description: >-
   Server-side Luzmo resource operations - CRUD, automation, and bulk API scripts.
   Use for listing, searching, creating, or deleting dashboards, datasets, themes, users, groups.
   Triggers on: "list all dashboards", "delete dataset", "bulk update", "automate", "script", "find resources".
-  Critical: all deletes are irreversible and require explicit user confirmation before execution.
+  Critical: API deletes are permanent (only app deletes of dashboards/datasets go to a 30-day Archive) and require explicit user confirmation before execution.
   Not for embedding saved dashboards/charts (use core), auth setup (use core), or data ingestion (use data-integration).
 metadata:
   author: Luzmo
-  version: 0.1.1
-  last_updated: 2026-06-18
+  version: 0.1.2
+  last_updated: 2026-10-16
 ---
 
 # Luzmo Resource Management
@@ -80,10 +80,11 @@ Then consult exact resource docs:
 | associate / link | `associate{Resource}` |
 | dissociate / unlink | `dissociate{Resource}` |
 | delete / remove | `delete{Resource}` — **see deletion safety rule below** |
+| restore / undelete | Dashboards and datasets deleted in the Luzmo app: restore from the Archive within 30 days - see `references/deletion-policy.md`. API deletes cannot be restored. |
 
 ## Deletion Safety Rule
 
-Deleting a resource is irreversible. Treat delete requests as an agent-owned approval workflow, not something delegated to generated script code.
+An API `delete{Resource}` call is permanent for every resource type: it skips the Archive and cannot be undone through the API. Only dashboards and datasets deleted in the Luzmo app are archived and restorable for 30 days (see `references/deletion-policy.md`). Treat delete requests as an agent-owned approval workflow, not something delegated to generated script code.
 
 For any delete request, even casually phrased requests such as "clean up", "drop", or "remove old stuff":
 
@@ -91,19 +92,30 @@ For any delete request, even casually phrased requests such as "clean up", "drop
 2. **Require explicit confirmation:** Ask for explicit user confirmation after showing the exact resources. Require the word `yes`.
 3. Do NOT execute `delete{Resource}` until the user explicitly confirms.
 
-When generating delete scripts, include script-level guardrails because the script may run later outside the agent conversation. Use dry-run defaults and explicit non-interactive opt-in flags or environment variables, and clearly mark the irreversible call.
+When generating delete scripts, include script-level guardrails because the script may run later outside the agent conversation. Use dry-run defaults and explicit non-interactive opt-in flags or environment variables, and clearly mark the permanent call.
+
+When the user wants a reversible cleanup of dashboards or datasets, say that deleting them in the Luzmo app moves them to the Archive (restorable for 30 days), while the API delete does not.
 
 Read `references/deletion-policy.md` before handling delete requests. Read `references/delete-script-patterns.md` when generating a reusable delete script.
 
 ## Bundled References
 
 - `references/script-examples.md` — Comprehensive search/create/update/associate templates, pagination, retry/backoff, bulk patterns
-- `references/deletion-policy.md` — Agent-owned preview, confirmation, and execution workflow for irreversible deletes
+- `references/deletion-policy.md` - Agent-owned preview, confirmation, and execution workflow; what the Archive can restore and what is permanent
 - `references/delete-script-patterns.md` — Script-level dry-run and confirmation guardrails for generated delete scripts
 
 ## Script Templates
 
 Use `references/script-examples.md` for reusable JavaScript and Python API client templates. For deletion scripts, combine those base clients with the guardrails in `references/delete-script-patterns.md`.
+
+## Exports and Background Tasks
+
+For automation around data exports, alerts, and schedules:
+
+- Table data exports (`createDataexport`) can go to a webhook instead of email: set `channel_id` to a webhook Channel shared with the organization. Luzmo POSTs the export `taskId` once (no retries), with the channel secret in the body and the `x-secret` header - verify it. Docs: `https://developer.luzmo.com/api/createDataexport.md`, `https://developer.luzmo.com/api/createChannel.md`.
+- Retrieve the file with `searchTask` by `id` and read `result.downloadUrl` (expires after 7 days). Exports requested with an embed token belong to the embed user: retrieve them with the API key/token of an Organization Admin. Docs: `https://developer.luzmo.com/api/searchTask.md`.
+- Organization Admins can see all alerts, alert channels with recipients, and every user's tasks (Academy: `https://academy.luzmo.com/article/jme3i2tm`).
+- Email exports are rate limited per user and per organization. An over-limit request is refused (`429`), so back off instead of retrying in a tight loop; a scheduled export over the limit skips that run and stays active. Limits are not published - prefer webhook delivery for high-volume automation.
 
 ## Association Flows
 
@@ -146,11 +158,13 @@ Each pitfall below includes a frequency marker, the symptom you'll see, why it f
 
 **[ERROR] Mixing fields from different resource docs ([WARNING] COMMON):** You'll see `400 Bad Request` or unexpected validation failures. Consult the exact `{action}{Resource}.md` doc per call — don't assume `createDashboard` accepts the same fields as `createDataset`.
 
+**[ERROR] Telling users an API-deleted dashboard or dataset is in the Archive ([WARNING] COMMON):** Only deletes made in the Luzmo app are archived for 30 days. An API delete removes the item from the API immediately with no API restore - confirm as if permanent.
+
 **[ERROR] Claiming an action exists without linking its markdown doc ([WARNING] OCCASIONAL — agent-generated code only):** Pattern of fabricating action names. Always link the canonical doc at `https://developer.luzmo.com/api/{action}{Resource}.md` before generating code that uses it.
 
 **[ERROR] Exposing API key/token in client-side code ([WARNING] COMMON — SECURITY CRITICAL):** Leaked credentials = full org compromise. Resource-management scripts must run server-side. See `core` for the security checkpoint.
 
-**[ERROR] Calling `delete{Resource}` without first showing the user what will be deleted ([WARNING] COMMON — IRREVERSIBLE):** No symptom — data just disappears. The agent must own the search -> show -> confirm -> delete workflow defined in `references/deletion-policy.md`. Generated scripts need their own guardrails from `references/delete-script-patterns.md` because they may be run later outside the agent.
+**[ERROR] Calling `delete{Resource}` without first showing the user what will be deleted ([WARNING] COMMON - PERMANENT VIA API):** No symptom - data just disappears, and API deletes never go to the Archive. The agent must own the search -> show -> confirm -> delete workflow defined in `references/deletion-policy.md`. Generated scripts need their own guardrails from `references/delete-script-patterns.md` because they may be run later outside the agent.
 
 ## Canonical Sources
 

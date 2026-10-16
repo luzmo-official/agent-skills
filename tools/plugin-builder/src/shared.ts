@@ -44,6 +44,13 @@ export function mcpServersBlock(config: PluginConfig): Record<string, unknown> {
   };
 }
 
+export function loadSkillIds(): string[] {
+  const manifest = JSON.parse(readFileSync(join(repoRoot(), 'skills.manifest.json'), 'utf8')) as {
+    skills: { id: string }[];
+  };
+  return manifest.skills.map((s) => s.id);
+}
+
 export function copySkills(destSkills: string): void {
   const src = join(repoRoot(), 'skills');
   if (existsSync(destSkills)) rmSync(destSkills, { recursive: true, force: true });
@@ -57,6 +64,7 @@ export function writeReadme(
   extra = ''
 ): void {
   const config = loadConfig();
+  const skillIds = loadSkillIds();
   const body = `# ${title}
 
 ${config.description}
@@ -67,7 +75,7 @@ ${installSnippet}
 
 ## Skills
 
-All 9 Luzmo agent skills are bundled: foundation, visualizations, analytics-studio, ai-analytics, multitenancy, data-integration, resource-management, theming, troubleshooting.
+All ${skillIds.length} Luzmo agent skills are bundled: ${skillIds.join(', ')}.
 
 ## MCP server (optional)
 

@@ -74,5 +74,9 @@
   {
     "query": "How do I create a custom data plugin for Luzmo?",
     "should_trigger": false
+  },
+  {
+    "query": "After upgrading to @luzmo/embed 8 our luzmo-embed-dashboard is no longer in an iframe. How do I switch embedMode back?",
+    "should_trigger": true
   }
 ]

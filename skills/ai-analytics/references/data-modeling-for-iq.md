@@ -111,6 +111,8 @@ IQ uses dataset, column, and formula AI context when answering and generating ch
 - The API stores the full value. IQ may shorten long dataset, column, and formula context when building a prompt.
 - Write it for the assistant, not for end-user display. Keep it short and factual. Do not put secrets in it; anyone who can read the resource metadata can read `ai_context`.
 - `ai_context` is knowledge on the data. A saved Agent's published Rules are separate instructions — see `references/saved-agents.md`.
+- To review or write names, descriptions, and `ai_context` for many datasets and columns from an AI client, the MCP tools `search_datasets` and `update_dataset_metadata` do it in bulk — see the `mcp` skill.
+- After changes, check real questions in Agent Logs or the `ailog` API (SKILL.md Path H).
 
 ### 7. Pre-Built Aggregation Formulas
 

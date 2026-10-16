@@ -82,5 +82,9 @@
   {
     "query": "IQ keeps picking the wrong dataset when our PM asks 'revenue last quarter'. Token has all 47 datasets attached — how do I improve accuracy?",
     "should_trigger": false
+  },
+  {
+    "query": "Can I feed a Luzmo Flex line chart an array of records from my own API with inlineData instead of a dataset? Which embed version do I need?",
+    "should_trigger": true
   }
 ]

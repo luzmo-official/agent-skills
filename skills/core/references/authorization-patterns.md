@@ -97,6 +97,12 @@ Enable/disable specific features:
 feature_overrides: ['!flag_export']
 ```
 
+Restrict only data exports (changelog 2026-06-19): `!flag_export_data` turns off CSV/XLSX exports of dashboards and charts (it depends on `flag_export`); `!flag_export_email_data` removes CSV from the "Schedule recurring export" modal (depends on `flag_export` and `flag_export_email`).
+
+```javascript
+feature_overrides: ['!flag_export_data', '!flag_export_email_data']
+```
+
 Consult `https://developer.luzmo.com/api/createAuthorization.md` and the linked Academy feature-flags article before choosing flag names.
 
 ### Inactivity Interval

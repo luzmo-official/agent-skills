@@ -2,14 +2,14 @@
 name: data-visualization
 description: >-
   Build charts in code with Luzmo Flex - ad-hoc, code-first visualizations with full slot/options control.
-  Triggers on: "Flex chart", "build a chart", "chart not rendering", "0 height", "wrong component name", slot errors, slot configuration.
-  Covers Flex sizing, framework-specific component names, unique contextId, localized strings.
+  Triggers on: "Flex chart", "build a chart", "chart not rendering", "0 height", "wrong component name", slot errors, slot configuration, "inlineData", "chart from my own data / without a dataset".
+  Covers Flex sizing, framework-specific component names, unique contextId, localized strings, inline data (records instead of a dataset).
   Use eagerly for building Flex charts in code.
   Not for custom chart development (use custom-charts), embedding saved dashboards/charts by id (use core), chart editors (use analytics-studio), data connection (use data-integration), AI queries (use ai-analytics), or visual theming (use theming).
 metadata:
   author: Luzmo
-  version: 0.1.1
-  last_updated: 2026-06-18
+  version: 0.1.2
+  last_updated: 2026-10-16
 ---
 
 # Luzmo Data Visualization
@@ -179,7 +179,7 @@ options: {
 
 ### Slot Configuration Requirements
 
-Every Flex chart slot must follow these rules:
+Every dataset-backed Flex chart slot must follow these rules (for charts fed by `inlineData`, see "Inline Data" below — slots use `field` instead):
 
 **Always required:**
 - `datasetId` (UUID of the dataset)
@@ -234,6 +234,43 @@ Consult the chart-specific documentation for available slots and options:
 
 Different chart types have different required and optional properties; consult the schema (and any relevant guides it references) before guessing field shapes.
 
+### Inline Data (Charts Without a Dataset)
+
+Since `@luzmo/embed` / `@luzmo/react-embed` / `@luzmo/vue-embed` **8.1.0**, `@luzmo/ngx-embed` **10.1.0** and `@luzmo/react-native-embed` **7.1.0** (7.1.1 escapes quotes in props), a Flex viz item can render records you pass in through the `inlineData` property instead of querying a dataset. Source: the `inlineData` row in each package README and CHANGELOG (not yet on developer.luzmo.com; the public Flex JSON schemas `0.1.99` predate slot `field`).
+
+| Your data | Use |
+|---|---|
+| Lives in a Luzmo dataset; chart should aggregate, filter, rank, or respect token filters | Dataset slots (`datasetId` + `columnId`/`formulaId`) |
+| Already final, per-chart results computed by your backend (or another tool) | `inlineData` + slot `field` bindings |
+
+Shape: `inlineData = { records: [...], sourceDescription?: string, topojson?: ... }`. Each populated slot content names its record property with `field` (no `datasetId`, `columnId`, `formulaId`):
+
+```javascript
+const chart = document.querySelector('luzmo-embed-viz-item'); // type="bar-chart"
+chart.slots = [
+  { name: 'measure', content: [{ field: 'revenue', type: 'numeric', label: { en: 'Revenue' } }] },
+  { name: 'y-axis',  content: [{ field: 'product', type: 'hierarchy', label: { en: 'Product' } }] }
+];
+chart.inlineData = {
+  sourceDescription: 'Revenue per product from the billing service',
+  records: [
+    { product: { id: 'analytics', name: { en: 'Analytics' } }, revenue: 124000 },
+    { product: { id: 'embedded',  name: { en: 'Embedded' } },  revenue: 81000 }
+  ]
+};
+```
+
+React: `<LuzmoVizItemComponent inlineData={...} />`; Angular: `[inlineData]`; Vue: `:inlineData`.
+
+Constraints (enforced by the chart; violations show the chart's error state):
+- Records are final: no aggregation, sorting, ranking, limiting, dashboard filters, or period-over-period. `records: []` renders "no data" (it does not fall back to a query).
+- Every populated slot content needs a non-empty `field`, and fields must be unique across all slots.
+- Period-over-period on a slot content is rejected; the payload is capped at 2 MB.
+- Not supported for `regular-table`, `pivot-table`, `custom-chart`, `venn-diagram`, or filter types (`date-filter`, `date-comparison-filter`, `dropdown-filter`, `search-filter`, `slicer-filter`, `slider-filter`).
+- ACK's `luzmo-item-grid` does not forward `inlineData` (ACK 1.0.8); render inline charts with the standalone viz item.
+
+**[SECURITY] Inline records are treated as already authorized.** Embed-token filters and `parameter_overrides` are NOT applied to them. Filter rows to what the viewer may see on your server before sending them to the browser.
+
 ### Flex Theming and Dark Backgrounds
 
 Flex viz-items do **not** have a `theme` prop. The component API props are `appServer`, `apiHost`, `authKey`, `authToken`, `type`, `slots`, `options`, `contextId`, and optional interaction props. For standalone Flex viz-items, put chart styling in `options` (for example `options.theme`, `options.color`, or chart-specific options after fetching the chart schema).
@@ -275,6 +312,8 @@ If your visualization isn't working as expected, check these common issues:
 | Dark theme looks broken | Missing container background | Set explicit dark `background-color` on container element |
 | Component not loading at all | Wrong component name | Check component naming table above for your framework |
 | Slot configuration errors | Missing `type` or `aggregationFunc` | Review slot configuration requirements above |
+| Inline-data chart shows an error | Missing/duplicate `field`, `records` not an array, unsupported chart type, period-over-period set, or payload > 2 MB | Check the "Inline Data" constraints above |
+| `inlineData` ignored, chart still queries | Embed package older than 8.1.0 (ngx 10.1.0) | Upgrade the embed package |
 
 ## Common Mistakes
 
@@ -342,6 +381,19 @@ You'll see: `Missing aggregationFunc` (for numeric measures), `Missing level` (f
 ```
 **See also:** `troubleshooting` → "Slot Configuration Errors" and the chart-specific doc at `https://developer.luzmo.com/flex/charts/{chart-type}.md`.
 
+**[ERROR] Treating `inlineData` like a dataset ([WARNING] COMMON):**
+```javascript
+chart.slots = [{ name: 'measure', content: [{ datasetId: '...', columnId: '...', field: 'revenue', aggregationFunc: 'sum' }] }];
+chart.inlineData = { records: rawTransactions };   // per-transaction rows, all tenants
+```
+You'll see: one bar per raw row instead of totals, rows from other tenants visible, or a slot-binding error.
+**Why this fails:** Inline records skip the query engine, so nothing is aggregated or filtered, and token filters never touch them.
+**[OK] Send final, already-filtered results and bind by `field` only:**
+```javascript
+chart.slots = [{ name: 'measure', content: [{ field: 'revenue', type: 'numeric', label: { en: 'Revenue' } }] }, /* ... */];
+chart.inlineData = { records: totalsForThisViewer };   // aggregated + filtered server-side
+```
+
 **[ERROR] Using deprecated `<cumul-*>` tag names ([WARNING] OCCASIONAL but increasing):**
 ```html
 <luzmo-viz-item type="bar-chart" ...></luzmo-viz-item>  <!-- Wrong: missing "embed" in vanilla JS -->
@@ -359,6 +411,7 @@ You'll see: `Component not found` in console, or the element renders as inert ma
 - Omitting explicit height/width on Flex chart containers (causes invisible 0-height chart).
 - Reusing the same `contextId` across multiple chart instances on the same page.
 - Recommending GET/PUT/DELETE calls — the API is POST-only; direct any auth or API questions to `core`.
+- Passing unfiltered or other-tenant rows as `inlineData` — token filters do not apply to inline records.
 
 ## Hand Off
 

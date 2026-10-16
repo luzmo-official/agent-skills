@@ -12,6 +12,7 @@ Consult these docs for current Flex chart behavior. Use them as guidance for imp
 - Filters: `https://developer.luzmo.com/guide/flex--introduction--using-filters-in-flex.md`
 - Flex component API: `https://developer.luzmo.com/guide/flex--component-api-reference.md`
 - Chart catalog: `https://developer.luzmo.com/guide/flex--chart-docs.md`
+- Array-column filter expressions (`? includes any ?`, `? length >= ?`, ...): `https://developer.luzmo.com/guide/guides--querying-data--where.md`
 
 For any specific chart type, consult the chart page and its referenced schema:
 
@@ -29,7 +30,9 @@ For any specific chart type, consult the chart page and its referenced schema:
 
 ## Common Props
 
-`appServer`, `apiHost`, `authKey`, `authToken`, `type`, `slots`, `options`, `contextId`
+`appServer`, `apiHost`, `authKey`, `authToken`, `type`, `slots`, `options`, `contextId`, and `inlineData` (embed 8.1.0+ / ngx-embed 10.1.0+; see "Inline Data" in `SKILL.md`)
+
+Viz items also emit an `error` event (embed 7.1.0+) when they cannot load or hit a fatal error; read `event.detail.errorMsg` instead of leaving a stuck loader.
 
 There is no `theme` prop on standalone Flex viz-items. Use the `options` object for chart-level styling (`options.theme`, `options.color`, and chart-specific styling fields), and set wrapper CSS for any background outside the component.
 
@@ -39,7 +42,8 @@ The chart-specific page/schema defines the exact slot container, slot names, req
 
 | Field | Required? | Notes |
 |---|---|---|
-| `datasetId` | Yes | Dataset UUID |
+| `datasetId` | Yes (dataset-backed slots) | Dataset UUID. Omit for inline-data slots |
+| `field` | Inline data only | Record property name in `inlineData.records`; replaces `datasetId`/`columnId`/`formulaId`. Unique across all slots |
 | `type` | Yes for column-based slots | Column type: `hierarchy`, `numeric`, or `datetime` |
 | `label` | Recommended | Localized object: `{ en: "Label" }` |
 | `level` | For datetime/hierarchy | 1=year, 2=quarter, 3=month, 4=week, 5=day, 6=hour, 7=min, 8=sec, 9=ms |
@@ -75,6 +79,7 @@ Type-specific reminders:
 - Use embed tokens from the backend; never API credentials client-side.
 - For localhost CORS or reconnecting `/realtime` sockets, use `core/references/local-development-proxy.md`: set `apiHost` to the local app origin and keep `appServer` direct.
 - Do not use outdated names like `LuzmoFlex`.
+- `inlineData` records are not filtered by the embed token; send only rows the viewer may see, already aggregated.
 
 ## Troubleshooting Common Issues
 
@@ -84,6 +89,7 @@ Type-specific reminders:
 | "Invalid label" error | Non-localized string | Change `label: "text"` to `label: { en: "text" }` |
 | Charts showing wrong data | Duplicate `contextId` | Ensure each chart has unique `contextId` |
 | Slot validation error | Missing chart-specific slot field such as `type`, `aggregationFunc`, or `level` | Consult the chart page/schema and compare the slot config |
+| Inline-data chart in error state | Missing/duplicate `field`, unsupported type (tables, filters, custom, venn), period-over-period, or > 2 MB | Fix the binding or use dataset slots |
 | `theme` prop is ignored | Flex viz-items do not expose a `theme` prop | Put styling in `options` and set wrapper CSS for the container |
 | Dark theme looks wrong | Missing container background | Set `background-color: #1a1a2e` on container |
 

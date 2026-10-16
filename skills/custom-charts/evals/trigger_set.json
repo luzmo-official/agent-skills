@@ -4,7 +4,7 @@
     "should_trigger": true
   },
   {
-    "query": "Working on our custom chart manifest — what slot properties are required for a numeric measure vs a hierarchy dimension?",
+    "query": "Working on our custom chart manifest - what slot properties are required for a numeric measure vs a hierarchy dimension?",
     "should_trigger": true
   },
   {
@@ -16,11 +16,23 @@
     "should_trigger": true
   },
   {
+    "query": "Our multi-query custom chart has no CSV or Excel export option. How do I implement exportData so users can download the data?",
+    "should_trigger": true
+  },
+  {
+    "query": "How do I add configurable options to our custom chart manifest so dashboard editors can change colors in the Edit item panel?",
+    "should_trigger": true
+  },
+  {
+    "query": "Can I upload and publish our custom chart bundle.zip from the command line with the custom chart builder instead of the Settings page?",
+    "should_trigger": true
+  },
+  {
     "query": "What's the right way to build a Flex bar chart in our Vue 3 app for the sales team?",
     "should_trigger": false
   },
   {
-    "query": "My Flex bar chart component renders in the DOM but is completely invisible — DevTools shows 0px height.",
+    "query": "My Flex bar chart component renders in the DOM but is completely invisible - DevTools shows 0px height.",
     "should_trigger": false
   },
   {
@@ -32,11 +44,11 @@
     "should_trigger": false
   },
   {
-    "query": "Getting 'Invalid label' errors when I configure a Flex donut chart in Angular — my measure has aggregationFunc set and everything.",
+    "query": "Getting 'Invalid label' errors when I configure a Flex donut chart in Angular - my measure has aggregationFunc set and everything.",
     "should_trigger": false
   },
   {
-    "query": "Need to embed an existing Luzmo dashboard by id in our Next.js app — which component and props do I use?",
+    "query": "Need to embed an existing Luzmo dashboard by id in our Next.js app - which component and props do I use?",
     "should_trigger": false
   }
 ]
