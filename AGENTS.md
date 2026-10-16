@@ -19,7 +19,8 @@ Or install skills into `.agents/skills/` manually from the `skills/` directory.
 | `data-visualization` | Build Flex charts in code |
 | `custom-charts` | Build a brand-new chart component when no built-in type fits |
 | `analytics-studio` | Self-service analytics: Embedded Dashboard Editor or ACK |
-| `ai-analytics` | `/aiprompt` API + IQ embed components |
+| `ai-analytics` | `/aiprompt`, saved Agents, Rules, AI context, IQ embed components |
+| `mcp` | Hosted Luzmo MCP: AI-client workspace setup, embedded/white-label MCP, `agentId` URLs |
 | `multitenancy` | Tenant isolation |
 | `data-integration` | Connectors, push data, SQL views |
 | `resource-management` | CRUD for Luzmo resources |
@@ -35,7 +36,7 @@ Multi-step subagents in `agents/` (auto-discovered by Cursor and Claude Code):
 |---|---|
 | `luzmo-embed-engineer` | End-to-end secure embedding (auth → token → dashboard/Flex → isolation) |
 | `luzmo-data-engineer` | Connect sources, push data, model datasets |
-| `luzmo-ai-engineer` | `/aiprompt` + IQ Chat/Answer natural-language analytics |
+| `luzmo-ai-engineer` | `/aiprompt`, saved Agents, Rules, and IQ Chat/Answer |
 | `luzmo-troubleshooter` | Diagnose issues by symptom and route to a fix |
 
 ## Cursor rules
@@ -65,4 +66,4 @@ Fetch markdown pages from developer.luzmo.com — do not rely on duplicated spec
 
 Hosted Luzmo MCP (alpha): `https://api.luzmo.com/0.1.0/mcp` — set `LUZMO_KEY` and `LUZMO_TOKEN` in headers or env.
 
-Docs: `https://developer.luzmo.com/guide/mcp--introduction.md` — default tools `search_datasets`, `answer_question`, `create_chart`. Skill reference: `skills/ai-analytics/references/mcp-server.md`.
+Docs: `https://developer.luzmo.com/guide/mcp--introduction.md` — embed sessions default to `search_datasets`, `answer_question`, `create_chart`; API-key and OAuth sessions get the wider tool set. Append `?agentId=` to pin a saved Agent. Skill: `skills/mcp/SKILL.md`.

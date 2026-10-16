@@ -1,0 +1,86 @@
+[
+  {
+    "query": "How do I add the Luzmo MCP server to Cursor? Should I use the Luzmo login or our API key and token?",
+    "should_trigger": true
+  },
+  {
+    "query": "From Claude, list our Luzmo connections and turn the Snowflake orders table into a dataset with good column descriptions and AI context.",
+    "should_trigger": true
+  },
+  {
+    "query": "We want to give our customers an 'Acme Analytics' MCP connector for ChatGPT that only sees their own data. How do we wire that to Luzmo?",
+    "should_trigger": true
+  },
+  {
+    "query": "Our embed-token MCP session only has search_datasets, answer_question and create_chart. How do I enable add_chart_to_dashboard for end users?",
+    "should_trigger": true
+  },
+  {
+    "query": "The MCP URL from the Agents page returns errors on answer_question but search_datasets works. Do I need to regenerate it?",
+    "should_trigger": true
+  },
+  {
+    "query": "Point our Cursor MCP server at a saved Luzmo Agent with agentId so answer_question uses that Agent's datasets and rules.",
+    "should_trigger": true
+  },
+  {
+    "query": "generate_dashboard is missing from tools/list when I connect with ?agentId= - is that expected?",
+    "should_trigger": true
+  },
+  {
+    "query": "What does permissions=non-destructive do on the Luzmo /0.1.0/mcp endpoint, and can I combine it with a tools list?",
+    "should_trigger": true
+  },
+  {
+    "query": "Our white-labeled Luzmo MCP connection still says 'Luzmo' in Claude. How do I show our own product name?",
+    "should_trigger": true
+  },
+  {
+    "query": "Use the Luzmo MCP search_docs tool to look up how formulas work instead of guessing.",
+    "should_trigger": true
+  },
+  {
+    "query": "Charts from the Luzmo MCP don't render in our own MCP proxy - we forward structuredContent but strip _meta.",
+    "should_trigger": true
+  },
+  {
+    "query": "Server-side Node call to /aiprompt with agent_id and agent: 'analyst', streaming the answer into our own chat UI.",
+    "should_trigger": false
+  },
+  {
+    "query": "Embed LuzmoIQChatComponent in React with an agentId so the chat uses our Revenue Agent.",
+    "should_trigger": false
+  },
+  {
+    "query": "Create a Rule for our fiscal year definition and publish it so the Agent applies it.",
+    "should_trigger": false
+  },
+  {
+    "query": "Multi-tenant SaaS, each customer must only see their rows. Pattern 1 or Pattern 2 for the embed token?",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a Node script that creates a Postgres account and registers three tables as datasets with createDataprovider.",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I embed a saved Luzmo dashboard in our Angular app?",
+    "should_trigger": false
+  },
+  {
+    "query": "Flex bar chart shows no data - which slots am I missing?",
+    "should_trigger": false
+  },
+  {
+    "query": "Change the colors of our embedded dashboards to match our brand.",
+    "should_trigger": false
+  },
+  {
+    "query": "IQ keeps picking the wrong dataset in the embedded chat - we have 40 datasets in the token.",
+    "should_trigger": false
+  },
+  {
+    "query": "Build a brand-new radial timeline chart type for Luzmo.",
+    "should_trigger": false
+  }
+]

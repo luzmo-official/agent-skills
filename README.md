@@ -6,7 +6,7 @@
 
 Agent skills for building embedded analytics applications with [Luzmo](https://luzmo.com). Compatible with Cursor, Claude Code, Codex, Windsurf, Google Antigravity, GitHub Copilot, and any tool that supports the [Agent Skills](https://agentskills.io/) standard.
 
-A set of 10 skills that turn your AI coding agent into a Luzmo embedded-analytics expert. They cover the full lifecycle: authentication and the POST + `action` API model, embedding saved dashboards and charts, building Flex and custom charts in code, self-service analytics (Embedded Dashboard Editor or ACK), AI / natural-language Q&A (`/aiprompt`, IQ), multi-tenant isolation, data integration, resource CRUD, theming, and troubleshooting.
+A set of 11 skills that turn your AI coding agent into a Luzmo embedded-analytics expert. They cover the full lifecycle: authentication and the POST + `action` API model, embedding saved dashboards and charts, building Flex and custom charts in code, self-service analytics (Embedded Dashboard Editor or ACK), AI / natural-language Q&A (`/aiprompt`, saved Agents, Rules, AI context, IQ), the hosted Luzmo MCP server, multi-tenant isolation, data integration, resource CRUD, theming, and troubleshooting.
 
 So your agent ships correct, secure integrations the first time instead of guessing the API and tripping over the common traps (leaked API keys, missing tenant filters, REST-verb / `action: "search"` mistakes).
 
@@ -57,7 +57,7 @@ export LUZMO_TOKEN="your-api-token"
 
 US: `https://api.us.luzmo.com/0.1.0/mcp` — VPC: `https://api.<vpc>.luzmo.com/0.1.0/mcp`
 
-Full MCP guide (tools, auth, themes, MCP App): [developer.luzmo.com/guide/mcp--introduction](https://developer.luzmo.com/guide/mcp--introduction). In-repo summary: `skills/ai-analytics/references/mcp-server.md`.
+Full MCP guide (tools, auth, themes, saved Agents, MCP App): [developer.luzmo.com/guide/mcp--introduction](https://developer.luzmo.com/guide/mcp--introduction). Embed sessions default to `search_datasets`, `answer_question`, and `create_chart`; API-key and OAuth sessions get a wider set. Append `?agentId=<uuid>` to the MCP URL to pin a saved Agent — the installer does not set that id. In-repo skill: `skills/mcp/SKILL.md`.
 
 ## In practice
 
@@ -141,7 +141,8 @@ Cursor and Claude Code marketplace manifests are generated from [`plugin.config.
 | **data-visualization** | Build ad hoc charts (Flex) |
 | **custom-charts** | Build a brand-new chart component when no built-in type fits |
 | **analytics-studio** | Self-service analytics: Embedded Dashboard Editor (EDE) or Analytics Components Kit (ACK) |
-| **ai-analytics** | `/aiprompt` AI Chat/Answer and embed components |
+| **ai-analytics** | `/aiprompt`, saved Agents, Rules, AI context, and IQ embed components |
+| **mcp** | Hosted Luzmo MCP: workspace setup from AI clients, embedded/white-label MCP for end users, `agentId` URLs |
 | **multitenancy** | Multi-tenant data isolation |
 | **data-integration** | Connectors, push data, SQL views |
 | **resource-management** | CRUD for dashboards, datasets, accounts, ... |
@@ -158,7 +159,7 @@ native Cursor and Claude Code plugins (auto-discovered from `agents/`).
 |---|---|
 | **luzmo-embed-engineer** | End-to-end secure embedding: auth → embed token → dashboard/Flex → tenant isolation |
 | **luzmo-data-engineer** | Connect data sources, push data, and model datasets |
-| **luzmo-ai-engineer** | Natural-language analytics with `/aiprompt` and IQ Chat/Answer |
+| **luzmo-ai-engineer** | Natural-language analytics with `/aiprompt`, saved Agents, Rules, and IQ Chat/Answer |
 | **luzmo-troubleshooter** | Diagnose broken embeds, auth, data, and AI issues, then route to a fix |
 
 ## Cursor rules

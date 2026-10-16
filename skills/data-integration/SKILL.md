@@ -11,8 +11,8 @@ description: >-
   Not for chart rendering (use data-visualization) or per-tenant access control (use multitenancy).
 metadata:
   author: Luzmo
-  version: 0.1.1
-  last_updated: 2026-06-18
+  version: 0.1.2
+  last_updated: 2026-10-16
 ---
 
 # Luzmo Data Integration
@@ -126,6 +126,8 @@ node skills/data-integration/scripts/connect-datasource.js \
 
 Store the source password or token in a server-side environment variable such as `DB_PASSWORD`. Do not paste live database passwords, SaaS tokens, or plugin credentials directly into commands, scripts, logs, or committed files.
 
+**Token-, key-pair-, or service-principal-based connections** (for example Databricks with a personal access token or OAuth2 machine-to-machine for a service principal, or Snowflake key-pair): the script only creates host/user/password-style accounts. Have the user create the connection on the Connections page of the Luzmo app, then reuse it with `--account-id`. The provider-specific `createAccount` properties for these auth modes are not in the public API reference, so do not guess them.
+
 When helping a user connect a source, provide the env-var setup and the script command for them to run. Do not ask them to share the source password with the agent, and do not run the connection command yourself if the password is not already available through a permitted environment variable.
 
 ### Step 1 — `createAccount`: Set up the connection
@@ -229,6 +231,7 @@ For deeper guidance on specific data integration topics:
 - `searchDataset` supports `include` for related resources: `Column`, `Account`, `Acceleration`, and linked dashboards.
 - For ad-hoc row-level data exports, query `/data` with `client.get('data', { queries: [...] })`; use `options.rollup_data: false`, `order`, and `limit`/`offset` to batch rows, then write CSV/XLSX in the app. Consult `https://developer.luzmo.com/api/getData.md` for current field shapes.
 - For dashboard/chart/Flex exports, use the `/export` service (`createExport`) instead: sync file response, async email, or scheduled email. Consult `https://developer.luzmo.com/api/createExport.md`.
+- Table data exports (`createDataexport`) can be delivered to a webhook channel instead of email; see `resource-management` (Exports and Background Tasks).
 - Fewer, wider tables in data-push datasets generally perform better than many narrow linked tables.
 
 ## Common Mistakes

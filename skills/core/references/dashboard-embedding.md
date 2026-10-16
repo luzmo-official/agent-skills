@@ -11,6 +11,8 @@ Consult these docs for current field names and component behavior. Use them as g
 - Framework install: `https://developer.luzmo.com/guide/dashboard-embedding--embed-into-application--install-a-luzmo-component.md`
 - Minimal secure embed: `https://developer.luzmo.com/guide/dashboard-embedding--embed-into-application--embed-a-dashboard-securely.md`
 - Dashboard component API: `https://developer.luzmo.com/guide/embedding--component-api-reference.md`
+- Properties (incl. `embedMode`): `https://developer.luzmo.com/guide/embedding--component-api-reference--properties.md`
+- Events: `https://developer.luzmo.com/guide/embedding--component-api-reference--events.md`
 
 For editor flows, also consult:
 - Editor overview: `https://developer.luzmo.com/guide/dashboard-embedding--embedded-dashboard-editor.md`
@@ -40,6 +42,24 @@ Academy references: `https://academy.luzmo.com/article/06trr3t5`, `https://acade
 ## Minimal Required Props
 
 `appServer`, `apiHost`, `authKey`, `authToken`, `dashboardId`
+
+## Embed Mode (Web Component vs Iframe)
+
+| Package | Default `embedMode` |
+|---|---|
+| `@luzmo/embed`, `@luzmo/react-embed`, `@luzmo/vue-embed` 8.0.0+; `@luzmo/ngx-embed` 10.0.0+; `@luzmo/react-native-embed` 7.0.0+ | `webComponent` |
+| Earlier majors | `iframe` |
+
+- `embedMode="iframe"` keeps the previous behavior. Edit modes (`editLimited`, `editFull`) always render in an iframe.
+- Web-component mode connects to `apiHost` over `wss://` from your page; allow it in CSP/proxies/firewalls. It no longer depends on third-party cookies, and a CNAME is optional.
+- Handle the `error` event (embed 7.1.0+; message in `event.detail.errorMsg`) for load or connection failures.
+- Embed 7.0.0 removed the `accentColor`/`accent-color` and `qeVersion`/`qe-version` dashboard properties; delete them when upgrading.
+- Since 8.1.0, `addFilters` returns a rejected promise (Angular: an erroring Observable) if the dashboard has not loaded yet; call it after the `load` event.
+- Source: `@luzmo/embed` README "Embed modes and network requirements" and CHANGELOG.
+
+## Dashboard-Aware IQ Panel
+
+A Luzmo IQ panel can be enabled per dashboard from its settings in Luzmo Studio, with no embed-code change. For IQ components, saved Agents, and the panel options, see `ai-analytics`.
 
 ## Local Development CORS
 
@@ -80,3 +100,5 @@ Token role controls what the user can do:
 | Dashboard too tall | Variable height based on content | Add `overflow-y: auto` to container with fixed height |
 | Edit mode not activating | Token role is `viewer` | Use `designer` or `owner` role in token |
 | Component not found | Wrong component name for framework | Check component naming table in main skill |
+| Endless loader after upgrading to embed 8.x | Web-component mode blocked from opening `wss://` to `apiHost` (CSP/proxy) | Allow `wss://<apiHost>`, handle the `error` event, or set `embedMode="iframe"` |
+| Analytics tool sees no clicks inside the dashboard | `embedMode="iframe"` (or embed < 8.0.0) | Use the default web-component mode (view mode only) |

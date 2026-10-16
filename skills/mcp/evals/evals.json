@@ -1,0 +1,85 @@
+{
+  "skill_name": "mcp",
+  "boundary_notes": "Edge cases vs other skills: direct /aiprompt calls, IQ Chat/Answer components, and creating saved Agents or Rules -> ai-analytics; tenant row isolation in the embed token -> multitenancy; minting embed tokens -> core; creating connections or pushing data in code -> data-integration; rendering returned chart JSON in an app -> data-visualization. A saved Agent pinned on an MCP URL (agentId) belongs here.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to use Luzmo from Claude Code to set up our workspace: look at our Postgres connection, turn the orders table into a dataset, add AI context to the columns, and add an Average Order Value formula. How do I connect and what's the order of steps?",
+      "expected_output": "Connect to the hosted MCP URL with the Luzmo login (OAuth) or an API key-token in headers. API-key/OAuth sessions get the workspace tools by default. Order: list_connections -> list_connection_tables -> create_dataset -> read current metadata with search_datasets -> update_dataset_metadata -> generate_formula/create_formula. No tool creates connections.",
+      "expectations": [
+        "Uses the hosted MCP URL `https://api.luzmo.com/0.1.0/mcp` (or the region equivalent)",
+        "States that the Luzmo login (OAuth) or an API key-token gives the workspace tools by default",
+        "Orders the steps: list_connections, list_connection_tables, create_dataset, update_dataset_metadata, then formula tools",
+        "Says to read the existing AI context with `search_datasets` before `update_dataset_metadata` overwrites it",
+        "States that no MCP tool creates a connection; that happens in the Luzmo app Connections page",
+        "References `https://developer.luzmo.com/guide/mcp--introduction.md`"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We're a SaaS company. We want our customers to connect Claude to 'Acme Analytics' and ask questions about their own data, with charts. Should we give them our Luzmo API key in the MCP config?",
+      "expected_output": "No. Run your own MCP server in front of Luzmo's, authenticate your users yourself, mint a per-user embed key-token server-side with use rights and tenant filters, and forward to the Luzmo MCP with headers. Branding via agentId (Agent name) or productName.",
+      "expectations": [
+        "Rejects putting the org API key-token in an end user's MCP config",
+        "Recommends a per-user embed key-token minted server-side",
+        "Describes running your own MCP server in front of Luzmo's and forwarding with the embed credentials in headers",
+        "Mentions tenant scoping in the embed token and routes row isolation to `multitenancy`",
+        "Explains that the embed session defaults to Q&A and chart tools (`search_datasets`, `answer_question`, `create_chart`)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our end users connect through embed tokens. They can ask questions and get charts, but we also want them to save a chart to one of their dashboards from Claude. The tool isn't there. How do I turn it on?",
+      "expected_output": "Embed sessions only get the Q&A and chart tools by default. Pass an explicit tools list including list_dashboards and add_chart_to_dashboard; permissions must allow write tools, and the token must have rights to the dashboard.",
+      "expectations": [
+        "States that embed key-token sessions do not get dashboard tools by default",
+        "Shows an explicit `tools` query parameter that includes `list_dashboards` and `add_chart_to_dashboard`",
+        "Notes that the `tools` list replaces the default set, so the Q&A and chart tools must be listed too",
+        "States that the embed token still needs the rights for the call to succeed, and `permissions` must not be `read-only`"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I copied the MCP URL for our Revenue Agent from the Agents page last month and gave it to a customer. Now every answer_question call fails, although search_datasets lists the datasets. What's wrong?",
+      "expected_output": "Older Agent embed MCP URLs carried a read-only token. AI queries need use access. Regenerate the URL (new tokens have use on the Agent's datasets) or mint a per-user embed token with use rights.",
+      "expectations": [
+        "Identifies `read` versus `use` rights on the Agent's datasets as the cause",
+        "Explains that the AI writes its own queries, which require `use`",
+        "Recommends regenerating the Agent MCP URL or minting an embed token with `use` rights",
+        "Recommends per-user embed tokens in production instead of one shared URL"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I pinned our Sales Agent on the MCP URL with ?agentId=. The Agent has data analysis only and two datasets. Why can't Claude make charts or call generate_dashboard, and why can't it see our other datasets?",
+      "expected_output": "Agent capabilities narrow the default tools: data analysis -> answer_question (text only without chart creation), search_datasets always. generate_dashboard and save_generated_dashboard are refused on agentId connections. Agent datasets limit every tool.",
+      "expectations": [
+        "Explains that the Agent's capabilities narrow the default tools and never add tools",
+        "States that without chart creation `answer_question` answers in text only",
+        "States that `generate_dashboard` is not available on connections with `agentId`",
+        "States that an Agent with datasets limits every tool, including `search_datasets`, to those datasets",
+        "Notes that `agentId` sets context, not access"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Is setting permissions=read-only on our customers' MCP URL enough to make sure they can't change any Luzmo data?",
+      "expected_output": "No. permissions only hides tools by impact; what a call can do is decided by the credentials. Restrict the embed token's rights and datasets.",
+      "expectations": [
+        "States that `permissions` is not an access-control boundary",
+        "States that the credentials (embed token rights, OAuth scopes) decide what a call can do",
+        "Recommends restricting the embed token's dataset access and rights"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Our MCP connection with agentId shows up in Claude as 'Luzmo'. We want it to show our product name 'Acme Insights' and use our brand theme for charts.",
+      "expected_output": "Name resolves productName URL param > X-Luzmo-Product-Name header > Agent name > Luzmo (Agent name applies to new sessions). Theme: tool themeId > session themeId/header > Agent theme > default.",
+      "expectations": [
+        "Mentions `productName` (URL) or `X-Luzmo-Product-Name` (header), or naming the Agent, to change the presented name",
+        "States that an Agent rename applies to new MCP sessions only",
+        "Explains the chart theme priority including the Agent's theme as fallback and `themeId` as override"
+      ]
+    }
+  ]
+}

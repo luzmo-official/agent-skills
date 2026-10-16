@@ -51,6 +51,10 @@ Use formulas for metrics that depend on groupings and filters (e.g., profit marg
 
 Formulas are different from derived columns — they operate across grouped/filtered rows, not per row.
 
+- **Nested aggregations** are generally available on all connectors and plugins: wrap an inner grouped aggregation, e.g. `AVG(GROUPINEX(SUM({<ds>:<revenue>}), [{<ds>:<store_id>}], []))`. Use `GROUPFULL(...)` to ignore chart dimensions and `GROUPINEX(agg, [include], [exclude])` to control grouping. See `createFormula.md` examples.
+- **Linked datasets**: a formula can reference columns of datasets directly linked to its dataset (e.g. monthly targets next to transactions), including inside nested aggregations and grouping lists. Create the dataset link first; reference the column as `{<linked_dataset_id>:<column_id>}`.
+- Columns and formulas can be assigned to a tenant (custom fields per tenant); see `multitenancy`.
+
 ## Hierarchy Levels
 
 Use when a hierarchy column needs an explicit tree structure with named levels.
@@ -78,9 +82,12 @@ Delta sync requirements:
 
 `full-delta` = delta syncs with a periodic full sync for hard-delete reconciliation.
 
+`delta_sync_schema_change_strategy` defaults to `sync`: after a safe schema change in the source (for example a new column), the next scheduled sync runs a full reload. Changes to tracking columns still need manual review. Set `alert` to require review for every schema change.
+
 ## IQ-Relevant Modeling Tips
 
 - Use clear, descriptive dataset and column names — IQ uses them for data selection.
 - Set correct column types and subtypes, especially for dates, currencies, and durations.
 - Add common business metrics as explicit formulas where possible.
 - Add column descriptions to help IQ understand business logic.
+- Put definitions, caveats, and sign conventions in `ai_context` (plain text on the dataset, column, or formula). Names and descriptions stay. See `ai-analytics` and `https://developer.luzmo.com/guide/guides--managing-ai-context.md`.

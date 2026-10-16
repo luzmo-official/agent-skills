@@ -9,8 +9,8 @@ description: >-
   Use this skill first - even if you think you know the fix - for any Luzmo error, rendering failure, data anomaly, or unexpected behavior.
 metadata:
   author: Luzmo
-  version: 0.1.1
-  last_updated: 2026-06-18
+  version: 0.1.2
+  last_updated: 2026-10-16
 ---
 
 # Luzmo Troubleshooting
@@ -68,6 +68,9 @@ For deeper auth/embed-token diagnostics, see `core`. For tenant-isolation diagno
 | Dashboard not appearing | Invalid authKey/authToken | Fix token generation → `core` |
 | "Component not found" error | Package not installed or imported | Fix setup → `data-visualization` |
 | Old component names used | Using deprecated names | Fix component names → `data-visualization` |
+| Dashboard keeps loading after upgrading the embed library | Dashboards now default to web component mode; CSP blocks the `wss://` realtime connection | Allow `wss://` in CSP, or set `embedMode` explicitly → `core` |
+| Flex chart with `inlineData` shows an error state | Inline data outside the supported shape (unique fields, size cap, supported chart types) | Fix inline data → `data-visualization` |
+| `npm install` fails with ERESOLVE for ACK | ACK peer range does not accept the installed `@luzmo/embed` major | Align versions → `analytics-studio` |
 
 ## Chart Rendering But Shows Wrong Data
 
@@ -89,6 +92,7 @@ For deeper auth/embed-token diagnostics, see `core`. For tenant-isolation diagno
 | Charts showing each other's data | Duplicate `contextId` | Fix contextId → `data-visualization` |
 | Wrong tenant's data visible | Token filtering not applied | Fix tenant isolation → `multitenancy` (SECURITY CRITICAL) |
 | Data not updating | Stale context/cache | Fix refresh → `data-visualization` |
+| Dashboard broke after its dataset was deleted | Dataset was archived or deleted | Restore from the Archive in the Luzmo app (30 days; API deletes cannot be restored) → `resource-management` |
 
 ## API Errors
 
@@ -115,6 +119,7 @@ For deeper auth/embed-token diagnostics, see `core`. For tenant-isolation diagno
 | "Invalid localized string" | Using plain string instead of object | Fix localized strings → `data-visualization` |
 | HTTP GET/PUT/DELETE not working | Using REST verbs instead of POST | Fix API architecture → `core` |
 | 404 on API call | Wrong base URL for region | Fix region config → `core` |
+| 429 when creating e-mailed exports | Export e-mails are rate limited per user and organization | Back off, or deliver exports to a webhook → `resource-management` |
 
 ## CORS / Cross-Origin Errors
 
@@ -253,6 +258,12 @@ Production: if same-domain hosting is not possible, contact **support@luzmo.com*
 
 - License errors, component loading issues, React Native incompatibility → `ai-analytics`
 - Wrong answers, wrong dataset selection, column understanding, formatting issues → `ai-analytics` (most are data-quality issues; may also need `data-integration` for modeling fixes)
+- `404` on `agent_id`, a linked Rule that never applies, prompt datasets silently dropped, or an Agent `theme_id` that does not show up on returned charts → `ai-analytics`
+
+## MCP Server Issues
+
+- HTTP 400/401/403 from the MCP endpoint, a tool missing from `tools/list`, or an Agent MCP link that cannot query its datasets → `mcp`
+- Wrong or low-quality answers through MCP → `mcp` for the connection setup, then `ai-analytics` for answer quality
 
 ## Connection and Multi-Tenant Issues
 
@@ -275,6 +286,7 @@ See `multitenancy` skill for the different patterns and how to check them.
 | Editors can bypass filters | Using dashboard-level filters | Fix filter pattern → `multitenancy` (SECURITY CRITICAL) |
 | Connection override not working | Wrong property name | Fix overrides → `multitenancy` |
 | "Only one EmbedFilterGroup allowed" error | Trying to create multiple filter groups | Fix filter group → `multitenancy` |
+| Scheduled export or alert shows unfiltered or wrong-tenant data | Overrides were not pinned to the schedule | Add `sticky: true` to the overrides on the token → `multitenancy` (SECURITY CRITICAL) |
 
 ## Performance Issues
 
@@ -314,7 +326,8 @@ This skill handles diagnostics and quick fixes — for deeper implementation, es
 - WHEN the issue is Flex chart rendering (0 height, slot errors, contextId) → use `data-visualization`
 - WHEN the issue is ACK/editor (ACK not rendering, state out of sync, viewer can't edit) → use `analytics-studio`
 - WHEN the issue is cross-tenant data exposure or filters not holding → use `multitenancy` (SECURITY CRITICAL)
-- WHEN the issue is IQ answer quality, IQ license, or IQ component loading → use `ai-analytics`
+- WHEN the issue is IQ answer quality, IQ license, IQ component loading, a saved Agent `404`, an unpublished Rule, a dataset dropped by an Agent allowlist, or an Agent theme that AIPrompt did not apply → use `ai-analytics`
+- WHEN the issue is the hosted MCP server (auth, missing tools, `agentId` URLs) → use `mcp`
 - WHEN the issue is data not loading, dataset/connection problems, createData errors → use `data-integration`
 - WHEN the issue is theming (dark mode container white, brand colors not applying) → use `theming`
 - WHEN the issue is script-side API errors (search/get confusion, delete safety) → use `resource-management`

@@ -20,6 +20,10 @@ Use Luzmo's vocabulary when reasoning about resources and APIs.
 | Tenant / customer / workspace | **Suborganization** (`suborganization` on the token) |
 | Row-level security / per-customer filtering | **Multi-tenancy** via token `access`, filters, `parameter_overrides`, `account_overrides` |
 | Natural-language AI Q&A | **IQ** / `/aiprompt` (IQ Chat, IQ Answer components) |
+| One-shot prompt router (`analyst`, `item`, `dashboard`, or `auto` for the universal agent) | Request field **`agent`** plus **`task`** |
+| Reusable IQ configuration (capabilities, datasets, Rules, theme) | **Agent** — invoke with `agent_id` on `/aiprompt` (optionally with `agent`; without `agent` the universal agent uses the Agent's capabilities), `agentId` on IQ Chat, or `agentId` on the MCP URL |
+| Instructions a saved Agent must follow (policy, tone, shared definition); sometimes called knowledge | **Rule** (`AIRule`). Only the published version applies |
+| Business knowledge on a dataset, column, formula, or dashboard (definitions, caveats) | **AI context** (`ai_context`), plain text, not localized |
 | Query acceleration / caching | **Warp** |
 
 - Roles on an embed token: `viewer` (default), `designer`, `owner`.

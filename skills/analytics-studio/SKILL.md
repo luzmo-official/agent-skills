@@ -5,12 +5,12 @@ description: >-
   Two approaches - out-of-the-box Embedded Dashboard Editor (editMode) or custom Analytics Components Kit (ACK).
   Use for letting end-users create/edit dashboards, white-label studios, editMode, designer/owner token roles, and ACK configuration.
   Triggers on: "self-service analytics", "let users edit dashboards", "embedded studio", "analytics components kit", "ACK", "designer role", "dashboard editor".
-  Critical pattern: ACK configures -> your app stores state -> separate renderer displays.
+  Critical pattern: ACK configures, your app stores state, a separate renderer displays.
   Not for view-only embedding of saved dashboards (use core), building charts in code (use data-visualization), data connection (use data-integration), or AI queries (use ai-analytics).
 metadata:
   author: Luzmo
-  version: 0.1.1
-  last_updated: 2026-06-18
+  version: 0.1.2
+  last_updated: 2026-10-16
 ---
 
 # Luzmo Analytics Studio
@@ -78,18 +78,22 @@ Also covers programmatic dashboard construction via API (Path C).
 
 ```jsx
 // React example
-// 1. ACK configures (emits events)
-<luzmo-item-slot-drop-panel 
-  item-type="bar-chart"
-  onSlotChange={(e) => setSlotsContents(e.detail)} />
+import { LuzmoItemSlotDropPanel } from '@luzmo/analytics-components-kit/react';
+import { LuzmoVizItemComponent } from '@luzmo/react-embed';
 
 // 2. Your app stores state
-const [slotsContents, setSlotsContents] = useState({...})
+const [slots, setSlots] = useState([]);
 
-// 3. Separate rendering component displays
-<luzmo-embed-viz-item 
-  type="bar-chart" 
-  slotsContents={slotsContents} />
+// 1. ACK configures (emits luzmo-slots-contents-changed)
+<LuzmoItemSlotDropPanel
+  itemType="bar-chart"
+  slotsContents={slots}
+  authKey={authKey} authToken={authToken}
+  onLuzmoSlotsContentsChanged={(e) => setSlots(e.detail.slotsContents)} />
+
+// 3. Separate rendering component displays (its prop is `slots`)
+<LuzmoVizItemComponent type="bar-chart" slots={slots}
+  authKey={authKey} authToken={authToken} appServer={appServer} apiHost={apiHost} />
 ```
 
 ### Security Checkpoint
@@ -109,13 +113,13 @@ ACK `item-type` MUST match rendering component `type`:
 [ERROR] **WRONG - Types don't match:**
 ```javascript
 <luzmo-item-slot-drop-panel item-type="bar-chart" />
-<luzmo-embed-viz-item type="column-bar-chart" />  // Mismatch!
+<luzmo-embed-viz-item type="column-chart" />  // Mismatch!
 ```
 
 [OK] **CORRECT - Types synchronized:**
 ```javascript
-<luzmo-item-slot-drop-panel item-type="column-bar-chart" />
-<luzmo-embed-viz-item type="column-bar-chart" />  // Match
+<luzmo-item-slot-drop-panel item-type="column-chart" />
+<luzmo-embed-viz-item type="column-chart" />  // Match
 ```
 
 ### State Synchronization Rules
@@ -210,7 +214,7 @@ When building with ACK (Path B), these are the key components available:
 | Render one chart | `luzmo-embed-viz-item` | `https://developer.luzmo.com/guide/ack--components--chart-rendering--luzmo-embed-viz-item.md` |
 | Multi-chart grid (renders) | `luzmo-item-grid` | `https://developer.luzmo.com/guide/ack--components--chart-rendering--luzmo-item-grid.md` |
 
-Full component documentation: `references/embedded-editor.md`
+Full component documentation: `references/embedded-editor.md` (includes the ACK 1.0.7/1.0.8 filter and option-panel additions: `getFilters()` input, `format="clean"`, parameter-backed filters, filter-on-select/brush controls).
 
 ## Key Facts (all paths)
 
@@ -220,6 +224,8 @@ Full component documentation: `references/embedded-editor.md`
 - Keep ACK `item-type` and rendering component `type` synchronized.
 - Dashboard `contents` is **always fully replaced** on update — retrieve first, then patch, then send.
 - All user-facing text fields (`title`, `label`, etc.) must be localized objects: `{ "en": "..." }`.
+- **Package versions (ACK 1.0.8, also the 1.0.9 betas):** ACK declares peer `@luzmo/embed ^7.5.0`. Installing it next to `@luzmo/embed@8` fails with npm `ERESOLVE`; an unpinned `npm install @luzmo/analytics-components-kit @luzmo/embed` resolves embed 7.5.0, where dashboards default to iframe and Flex has no `inlineData`. Pin embed 7.x for ACK projects, or check the ACK peer range before using embed 8 features.
+- **Editor rendering:** view-mode dashboards default to a web component in embed 8.x, but any `editMode` other than `"view"` always renders the Embedded Dashboard Editor in an iframe.
 - **CORS — API/realtime origin:** For web component dashboards in embed mode, Flex charts, and IQ widgets, browser calls to the Luzmo API/realtime host must be routed through a host configured for the parent application. In local development, use the same-origin proxy in `core/references/local-development-proxy.md`: set `apiHost` to the app origin and keep `appServer` pointed directly at the Luzmo app host. In production, contact `support@luzmo.com` to arrange CNAMEs when custom domains are needed. EU and US base URLs cannot be mixed.
 
 ## Common Mistakes
@@ -256,8 +262,10 @@ const slots = ref([])
 </script>
 
 <template>
-  <luzmo-item-slot-drop-panel 
-    @slot-change="(e) => slots = e.detail.slots"
+  <luzmo-item-slot-drop-panel
+    item-type="bar-chart"
+    :slotsContents="slots"
+    @luzmo-slots-contents-changed="(e) => (slots = e.detail.slotsContents)"
   />
 </template>
 ```
@@ -314,7 +322,8 @@ For deeper, focused guidance on specific paths:
 
 - Using ACK components for view-only embedding — ACK is for editors; use `core` for read-only dashboard display.
 - Storing chart state inside ACK instead of in the host application (ACK emits events; your app owns state).
-- Inventing ACK event or prop names without fetching the current component API documentation.
+- Inventing ACK event or prop names without fetching the current component API documentation (the drop panel emits `luzmo-slots-contents-changed` with `detail.slotsContents`; the viz item takes `slots`).
+- Expecting `luzmo-item-grid` to render `inlineData`; inline-data charts need the standalone Flex viz item (`data-visualization`).
 
 ## Hand Off
 

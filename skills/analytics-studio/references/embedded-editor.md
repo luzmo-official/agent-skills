@@ -27,6 +27,8 @@ Use `designer` for most cases. Use `owner` only when the favoriting capability i
 
 Set `editMode` on the frontend component to activate the editor UI. Consult the editMode docs above for the full list of accepted values and their effect.
 
+Any `editMode` other than `"view"` renders the editor in an iframe, even with embed 8.x where view mode defaults to `embedMode="webComponent"`.
+
 ### Events
 
 Listen to dashboard events to react to edits in your application. Consult the capture-events doc above.
@@ -44,6 +46,8 @@ Install ACK first:
 ```bash
 npm install @luzmo/analytics-components-kit
 ```
+
+ACK 1.0.8 (and the 1.0.9 betas) declare peer `@luzmo/embed ^7.5.0`: `npm install` with `@luzmo/embed@8` fails with `ERESOLVE`, and an unpinned install resolves embed 7.5.0. Pin the 7.x embed line next to ACK until its peer range includes 8.x (then embed 8 features such as Flex `inlineData` become available).
 
 For standalone Flex chart rendering, also install the rendering package for your framework. You do not need a separate embed package when using ACK's `luzmo-item-grid` / `LuzmoItemGrid` for multi-chart grid rendering.
 
@@ -148,6 +152,18 @@ ACK components that fetch Luzmo data require an embed token (`role: "designer"`)
   api-host="https://api.luzmo.com"
 ></luzmo-embed-viz-item>
 ```
+
+### ACK 1.0.7 / 1.0.8 Additions
+
+Source: ACK component typings in `@luzmo/analytics-components-kit` 1.0.8 (the public `luzmo-filters` properties page may lag).
+
+| Need | Use |
+|---|---|
+| Edit the filters currently active on an embedded dashboard or viz item | Pass `await dashboard.getFilters()` (a `DashboardFilterOutput`/`ItemFilterOutput`, embed 7.4.0+) straight into `luzmo-filters.filters` |
+| Receive filters in the same clean shape | Set `format="clean"`; `luzmo-filters-changed` detail is `{ format, filters }`, so narrow on `detail.format`. Default stays `canonical` (`ItemFilterGroup[]`, what viz items accept) |
+| Let users bind a filter value to a parameter | `allow-parameters` + `parameters` (your app owns the definitions); persist new ones from `luzmo-parameter-created` |
+| Expose filter-on-select / brush in the option panel | `luzmo-item-option-panel` now shows an Interactivity group editing `options.interactivity.select` and `options.interactivity.brush`; enabling the brush clears Go to URL and custom events (except on parallel coordinates) |
+| Agent picker in the AI prompt box (`hide-agents`) | See `ai-analytics` |
 
 ### ACK State Rules
 

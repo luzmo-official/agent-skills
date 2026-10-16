@@ -40,6 +40,34 @@
     "should_trigger": true
   },
   {
+    "query": "Create a Luzmo Agent that can analyze revenue and build charts, associate our orders dataset, and call it from the backend with agent_id.",
+    "should_trigger": true
+  },
+  {
+    "query": "I saved a new version of our pricing Rule but the Agent still follows the old text. How do I publish it?",
+    "should_trigger": true
+  },
+  {
+    "query": "Call /aiprompt with agent_id plus agent: 'analyst' so our saved Agent's Rules apply but the answer comes from the analyst.",
+    "should_trigger": true
+  },
+  {
+    "query": "Set agentId on LuzmoIQChatComponent so the embedded chat uses our Finance Agent.",
+    "should_trigger": true
+  },
+  {
+    "query": "Pull the AI logs for the last week through the API and list questions that were out of scope.",
+    "should_trigger": true
+  },
+  {
+    "query": "Turn on the Luzmo IQ panel inside our embedded dashboard from Studio dashboard settings.",
+    "should_trigger": true
+  },
+  {
+    "query": "Add the Luzmo MCP server to Cursor with our API key so I can create datasets and formulas from chat.",
+    "should_trigger": false
+  },
+  {
     "query": "How do I embed a normal (non-AI) Luzmo dashboard in a Vue app?",
     "should_trigger": false
   },
@@ -77,6 +105,10 @@
   },
   {
     "query": "Connect a Salesforce account so our Luzmo dashboards can query opportunities.",
+    "should_trigger": false
+  },
+  {
+    "query": "Which tools does an embed-token session on the Luzmo MCP server get, and how do I enable more for end users?",
     "should_trigger": false
   }
 ]
