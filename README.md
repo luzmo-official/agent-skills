@@ -55,7 +55,7 @@ export LUZMO_KEY="your-api-key"
 export LUZMO_TOKEN="your-api-token"
 ```
 
-US: `https://api.us.luzmo.com/0.1.0/mcp` — VPC: `https://api.<vpc>.luzmo.com/0.1.0/mcp`
+US: `https://api.us.luzmo.com/0.1.0/mcp` — VPC: `https://<vpc>-api.luzmo.com/0.1.0/mcp`
 
 Full MCP guide (tools, auth, themes, saved Agents, MCP App): [developer.luzmo.com/guide/mcp--introduction](https://developer.luzmo.com/guide/mcp--introduction). Embed sessions default to `search_datasets`, `answer_question`, and `create_chart`; API-key and OAuth sessions get a wider set. Append `?agentId=<uuid>` to the MCP URL to pin a saved Agent — the installer does not set that id. In-repo skill: `skills/mcp/SKILL.md`.
 

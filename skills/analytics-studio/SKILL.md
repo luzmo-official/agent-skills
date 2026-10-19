@@ -79,22 +79,29 @@ Also covers programmatic dashboard construction via API (Path C).
 
 ```jsx
 // React example
+import { useState } from 'react';
 import { LuzmoItemSlotDropPanel } from '@luzmo/analytics-components-kit/react';
 import { LuzmoVizItemComponent } from '@luzmo/react-embed';
 
-// 2. Your app stores state
-const [slots, setSlots] = useState([]);
+export function ChartBuilder({ authKey, authToken, appServer, apiHost }) {
+  // 2. Your app stores state
+  const [slots, setSlots] = useState([]);
 
-// 1. ACK configures (emits luzmo-slots-contents-changed)
-<LuzmoItemSlotDropPanel
-  itemType="bar-chart"
-  slotsContents={slots}
-  authKey={authKey} authToken={authToken}
-  onLuzmoSlotsContentsChanged={(e) => setSlots(e.detail.slotsContents)} />
+  return (
+    <>
+      {/* 1. ACK configures (emits luzmo-slots-contents-changed) */}
+      <LuzmoItemSlotDropPanel
+        itemType="bar-chart"
+        slotsContents={slots}
+        authKey={authKey} authToken={authToken}
+        onLuzmoSlotsContentsChanged={(e) => setSlots(e.detail.slotsContents)} />
 
-// 3. Separate rendering component displays (its prop is `slots`)
-<LuzmoVizItemComponent type="bar-chart" slots={slots}
-  authKey={authKey} authToken={authToken} appServer={appServer} apiHost={apiHost} />
+      {/* 3. Separate rendering component displays (its prop is `slots`) */}
+      <LuzmoVizItemComponent type="bar-chart" slots={slots}
+        authKey={authKey} authToken={authToken} appServer={appServer} apiHost={apiHost} />
+    </>
+  );
+}
 ```
 
 ### Security Checkpoint

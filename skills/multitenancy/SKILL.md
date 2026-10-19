@@ -397,7 +397,7 @@ const userTenantId = getCurrentUser().tenantId
 ```javascript
 // Correct - server-side token generation
 const token = await client.create('authorization', {
-  parameter_overrides: { tenant_id: user.tenantId }
+  parameter_overrides: { tenant_id: [user.tenantId] }
 })
 // Send token.id and token.token to client
 ```

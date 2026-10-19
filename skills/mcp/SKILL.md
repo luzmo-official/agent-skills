@@ -62,7 +62,7 @@ Optional query parameters (all in the canonical guide):
 | `tools` | Comma-separated list that **replaces** the default tool set |
 | `permissions` | `read-only`, `non-destructive`, or `full` (default). Hides tools by impact. HTTP 400 if invalid or if it removes every listed tool |
 | `agentId` | Saved Agent UUID. Adds its Rules and datasets; narrows tools to its capabilities. Fixed when the session starts |
-| `themeId` | Default chart theme (alias `luzmo_theme_id`, header `X-Luzmo-Theme-Id`) |
+| `themeId` | Default chart theme (alias `luzmo_theme_id`, header `X-Luzmo-Theme-Id`): a custom theme UUID from your organization, or a built-in id (`default`, `default_dark`, `vivid`, `seasonal`, `orion`, `royale`, `urban`, `pinky`, `bliss`, `radiant`, `classic`, `classic_dark`). An invalid value returns HTTP 400 |
 | `luzmo_app_url` | Override app hosts so charts render against the right host |
 | `productName` | White-label name the server presents (header `X-Luzmo-Product-Name`); see Path B |
 

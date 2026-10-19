@@ -57,7 +57,6 @@ Catches the skills up with product releases since 2026-06-25 (Agents, Rules, AI 
 
 - Agents and rules: the AI engineer covers `agent_id` with or without `agent`, IQ Chat `agentId`, and the `mcp` skill. The embed engineer covers the `embedMode` default and sticky overrides. `luzmo-security` warns that `inlineData` bypasses token filters, and `luzmo-terminology` was updated.
 - `npx @luzmo/agent-skills add --with-mcp` now writes `type: "http"`.
-- Generated plugin READMEs now list the bundled skills from `skills.manifest.json` instead of a stale hard-coded list.
 
 ## [0.1.3] - 2026-06-18
 

@@ -273,7 +273,7 @@ Multi-turn: pass `conversation_id` from the previous `/aiprompt` response (or fr
 
 ### Regions
 
-Pin the host to your deployment: `https://api.luzmo.com`, `https://api.us.luzmo.com`, or `https://api.<vpc>.luzmo.com` — path stays `/0.1.0/aiprompt`.
+Pin the host to your deployment: `https://api.luzmo.com`, `https://api.us.luzmo.com`, or `https://<vpc>-api.luzmo.com` — path stays `/0.1.0/aiprompt`.
 
 ---
 
@@ -281,7 +281,7 @@ Pin the host to your deployment: `https://api.luzmo.com`, `https://api.us.luzmo.
 
 Use when an LLM agent needs to answer analytics questions by calling Luzmo data programmatically.
 
-1. Register a tool that POSTs to `/aiprompt` with the user's scoped embed token — `agent: "analyst"` for one-shot Q&A, or `agent_id` alone when a saved Agent should run. Or use the **hosted MCP server** (simpler; see below).
+1. Register a tool that POSTs to `/aiprompt` with the user's scoped embed token — `agent: "analyst"` for one-shot Q&A; add `agent_id` to run it on a saved Agent's datasets and Rules (see `references/agentic-integration.md`). Or use the **hosted MCP server** (simpler; see below).
 2. Parse the response (text, item asset, dashboard asset, or mixed per `response_mode`); use `conversation_id` for follow-ups.
 3. **Hosted MCP** (Cursor, Claude, LangChain, OpenAI Agents SDK): `https://api.<region>.luzmo.com/0.1.0/mcp` with the user's embed key-token. Use the `mcp` skill for tools, embed defaults, `agentId`, and white-labeling.
 
@@ -346,7 +346,7 @@ Docs: `https://academy.luzmo.com/article/fyeoiaei` (section "Using Luzmo IQ").
 
 ## Path H — AI Logs
 
-Every AI interaction (IQ, chart and dashboard generation, AI formulas, summaries) is logged per turn, from the app, embedded components, the API, and the MCP server. Owners review them on **Settings -> Agent Logs**; the read-only `ailog` resource exposes them through the API.
+Every AI interaction (IQ, chart and dashboard generation, AI formulas, summaries) is logged per turn, from the app, embedded components, the API, and the MCP server. Organization owners and admins review them on **Settings -> Agent Logs**; the read-only `ailog` resource exposes them through the API.
 
 - Actions: search, detail (one turn with the context used), conversation (all turns of a `conversation_id`).
 - Only organization owners and admins can read them; the plan must include AI logs; retention is 30 days.
