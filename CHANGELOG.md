@@ -5,6 +5,15 @@ All notable changes to Luzmo Agent Skills are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project is in `alpha`; until `1.0.0`, minor versions may include breaking changes.
 
+## [Unreleased]
+
+### Skill Changes
+
+- Updated `ai-analytics` from `0.1.1` to `0.1.2`: saved Agents (`agent_id`), published Rules, the `dashboard` agent, and dataset/column/formula `ai_context`.
+- Pointed data-modeling guidance at `ai_context` so business definitions are not left only in column descriptions.
+- Refreshed MCP setup notes for credential-based default tools, `permissions`, and `?agentId=`. `npx @luzmo/agent-skills add --with-mcp` now writes `type: "http"`.
+- Routed saved Agents, Rules, and AI context through the AI engineer agent, terminology, `core` `iq.context`, resource management, and troubleshooting.
+
 ## [0.1.3] - 2026-06-18
 
 ### Skill Changes

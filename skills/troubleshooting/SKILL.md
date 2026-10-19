@@ -253,6 +253,7 @@ Production: if same-domain hosting is not possible, contact **support@luzmo.com*
 
 - License errors, component loading issues, React Native incompatibility → `ai-analytics`
 - Wrong answers, wrong dataset selection, column understanding, formatting issues → `ai-analytics` (most are data-quality issues; may also need `data-integration` for modeling fixes)
+- `404` on `agent_id`, a linked Rule that never applies, prompt datasets silently dropped, or an Agent `theme_id` that does not show up on returned charts → `ai-analytics`
 
 ## Connection and Multi-Tenant Issues
 
@@ -314,7 +315,7 @@ This skill handles diagnostics and quick fixes — for deeper implementation, es
 - WHEN the issue is Flex chart rendering (0 height, slot errors, contextId) → use `data-visualization`
 - WHEN the issue is ACK/editor (ACK not rendering, state out of sync, viewer can't edit) → use `analytics-studio`
 - WHEN the issue is cross-tenant data exposure or filters not holding → use `multitenancy` (SECURITY CRITICAL)
-- WHEN the issue is IQ answer quality, IQ license, or IQ component loading → use `ai-analytics`
+- WHEN the issue is IQ answer quality, IQ license, IQ component loading, a saved Agent `404`, an unpublished Rule, a dataset dropped by an Agent allowlist, or an Agent theme that AIPrompt did not apply → use `ai-analytics`
 - WHEN the issue is data not loading, dataset/connection problems, createData errors → use `data-integration`
 - WHEN the issue is theming (dark mode container white, brand colors not applying) → use `theming`
 - WHEN the issue is script-side API errors (search/get confusion, delete safety) → use `resource-management`

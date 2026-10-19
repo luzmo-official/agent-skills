@@ -1,6 +1,8 @@
 # Data Modeling for IQ Quality
 
-IQ accuracy depends almost entirely on how your data is modeled — names, types, descriptions, and token scope. This reference goes deeper than the SKILL.md fundamentals.
+IQ accuracy depends almost entirely on how your data is modeled — names, types, descriptions, AI context, and token scope. This reference goes deeper than the SKILL.md fundamentals.
+
+Guide: `https://developer.luzmo.com/guide/guides--managing-ai-context.md`. Consult it before writing `ai_context` payloads.
 
 ## Why Data Modeling Matters for IQ
 
@@ -88,7 +90,29 @@ When to add:
 - Industry-specific terminology (HIPAA codes, financial instruments, etc.)
 - Columns with similar names but different meanings (`Gross Revenue` vs `Net Revenue`)
 
-### 6. Pre-Built Aggregation Formulas
+Descriptions stay. They do not replace `ai_context`.
+
+### 6. AI context (`ai_context`)
+
+Put definitions, caveats, exclusions, and sign conventions in `ai_context` when a name or description is not enough. Example: revenue is net of refunds, or negative amounts are refunds.
+
+IQ uses dataset, column, and formula AI context when answering and generating charts. Dashboard `ai_context` stores dashboard-level business context for AI-enabled workflows.
+
+| Resource | Endpoint | Field |
+|---|---|---|
+| Dashboard (`type: "dashboard"`) | `/0.1.0/securable` | `ai_context` |
+| Dataset (`type: "dataset"`) | `/0.1.0/securable` | `ai_context` |
+| Column | `/0.1.0/column` | `ai_context` |
+| Formula | `/0.1.0/formula` | `ai_context` |
+
+- Plain text, nullable, shared across languages. It is not a localized `{ en: "..." }` object like `name` or `description`.
+- Set `ai_context` to `null` to clear it.
+- Retrieve it by listing `ai_context` in `attributes`. It is not part of text search — do not use `find.search.keyphrase` to search inside it.
+- The API stores the full value. IQ may shorten long dataset, column, and formula context when building a prompt.
+- Write it for the assistant, not for end-user display. Keep it short and factual. Do not put secrets in it; anyone who can read the resource metadata can read `ai_context`.
+- `ai_context` is knowledge on the data. A saved Agent's published Rules are separate instructions — see `references/saved-agents.md`.
+
+### 7. Pre-Built Aggregation Formulas
 
 Create formulas for metrics users frequently ask about. Name them in natural language so IQ can match against the user's phrasing.
 
@@ -116,6 +140,7 @@ After applying these levers, verify with realistic questions:
 - **Renaming columns in dashboards instead of the dataset** — IQ reads dataset metadata, not dashboard overrides.
 - **Skipping subtype because "the dashboard formats it anyway"** — IQ uses subtype for both formatting AND query understanding.
 - **Vague descriptions like "this column has revenue data"** — be specific about units, scope, exclusions.
+- **Hiding a business rule only in `description`** — put the definition or caveat in `ai_context` as well. Names and descriptions stay.
 
 ## Common Modeling Issues That Hurt IQ
 
@@ -125,6 +150,7 @@ After applying these levers, verify with realistic questions:
 | 50 datasets in token context | IQ picks wrong dataset | Scope token to 5-10 relevant datasets |
 | No currency subtype | IQ formats as plain number | Set `subtype: "currency"` |
 | Missing column descriptions | IQ misunderstands calculated field | Add description explaining the calculation |
+| Business rule only in someone's head | IQ treats refunds as revenue, or misses a caveat | Set `ai_context` on the dataset, column, or formula |
 | Generic metric names | Users don't discover metrics | Use business terms: "Customer Lifetime Value" |
 
 ## Troubleshooting IQ Quality
@@ -134,12 +160,14 @@ After applying these levers, verify with realistic questions:
 1. Check token scope - limit `access.datasets` to 5-10 relevant datasets max
 2. Review dataset and column names - use business-friendly names, not technical codes
 3. Add column descriptions for calculated fields and business-specific terms
-4. Set correct column subtypes (currency, duration) for formatting
-5. Create common formulas users ask about (Average Order Value, etc.)
+4. Add `ai_context` for definitions, caveats, and sign conventions that the name does not carry
+5. Set correct column subtypes (currency, duration) for formatting
+6. Create common formulas users ask about (Average Order Value, etc.)
 
 ### IQ doesn't understand columns
 
 - Add descriptions to ambiguous columns
+- Add `ai_context` when the business meaning is not obvious from the name
 - Use clear column names (not abbreviations)
 - Set proper column types (datetime with format, numeric with subtype)
 
