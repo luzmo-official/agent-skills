@@ -20,7 +20,7 @@
     { "name": "update_formula", "impact": "destructive", "guide": true },
     { "name": "delete_formula", "impact": "destructive", "guide": true },
     { "name": "search_docs", "impact": "read", "guide": true },
-    { "name": "generate_dashboard", "impact": "read", "guide": false },
+    { "name": "generate_dashboard", "impact": "write", "guide": false },
     { "name": "save_generated_dashboard", "impact": "write", "guide": false }
   ]
 }

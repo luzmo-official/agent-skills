@@ -91,8 +91,8 @@ The session's tools come from the credential type. Always confirm the live set w
 | Group | Tools | Impact |
 |---|---|---|
 | Ask and visualize | `search_datasets`, `answer_question`, `answer_question_text`, `create_chart` | Read |
-| Dashboards | `generate_dashboard` (draft + live preview), `list_dashboards` | Read |
-| | `save_generated_dashboard`, `add_chart_to_dashboard` | Write |
+| Dashboards | `list_dashboards` | Read |
+| | `generate_dashboard` (draft + live preview), `save_generated_dashboard`, `add_chart_to_dashboard` | Write |
 | Data setup | `list_connections`, `list_connection_tables` | Read |
 | | `create_dataset` | Write |
 | | `update_dataset_data`, `update_dataset_sql`, `update_dataset_metadata` (names, descriptions, AI context) | Destructive |
