@@ -9,7 +9,7 @@ The Luzmo API uses POST-only with an `action` field in the body — never REST v
 | `create` | Create a new resource | Returns the created object with `id` |
 | `get` | Search/retrieve resources | Replaces "search" — `action: "search"` does NOT exist |
 | `update` | Modify an existing resource | Most resources are partially updatable via `find` + properties |
-| `delete` | Remove a resource | Permanent via the API (only app deletes of dashboards/datasets go to the 30-day Archive) — always show & confirm first |
+| `delete` | Remove a resource | IRREVERSIBLE — always show & confirm first |
 | `associate` | Link two resources (e.g. securable → collection) | |
 | `dissociate` | Unlink two resources | |
 

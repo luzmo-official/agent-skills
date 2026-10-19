@@ -93,7 +93,6 @@ For deeper auth/embed-token diagnostics, see `core`. For tenant-isolation diagno
 | Charts showing each other's data | Duplicate `contextId` | Fix contextId → `data-visualization` |
 | Wrong tenant's data visible | Token filtering not applied | Fix tenant isolation → `multitenancy` (SECURITY CRITICAL) |
 | Data not updating | Stale context/cache | Fix refresh → `data-visualization` |
-| Dashboard broke after its dataset was deleted | Dataset was archived or deleted | Restore from the Archive in the Luzmo app (30 days; API deletes cannot be restored) → `resource-management` |
 
 ## API Errors
 

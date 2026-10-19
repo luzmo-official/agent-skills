@@ -10,10 +10,10 @@ Every generated delete script should:
 2. Print each match before deletion.
 3. Default to dry-run.
 4. Require an explicit non-interactive opt-in such as `--execute --confirm-delete=yes` or `LUZMO_CONFIRM_DELETE=yes`.
-5. Mark the delete call as permanent: API deletes skip the Archive and cannot be restored through the API.
+5. Mark the delete call as irreversible.
 6. Stop on unexpected errors instead of swallowing them.
 
-Consult `https://developer.luzmo.com/api/delete{Resource}.md` before writing the final delete body. Do not add a "restore" step or tell users deleted items land in the Archive: only deletes made in the Luzmo app are archived (see `deletion-policy.md`). The examples below show the guardrail structure; adapt the actual delete payload to the resource-specific docs.
+Consult `https://developer.luzmo.com/api/delete{Resource}.md` before writing the final delete body. The examples below show the guardrail structure; adapt the actual delete payload to the resource-specific docs.
 
 ## JavaScript Guard
 
@@ -47,7 +47,7 @@ async function deleteMatches(resourceType, findPayload, options = {}) {
   }
 
   for (const item of items) {
-    // PERMANENT - API deletes skip the Archive; runs only after explicit confirmation above.
+    // IRREVERSIBLE - runs only after explicit confirmation above.
     // Build this from the delete{Resource}.md docs; payloads vary by resource.
     await deleteResource(resourceType, item);
     console.log(`Deleted: ${item.id}`);
@@ -93,7 +93,7 @@ def delete_matches(
         return
 
     for item in items:
-        # PERMANENT - API deletes skip the Archive; runs only after explicit confirmation above.
+        # IRREVERSIBLE - runs only after explicit confirmation above.
         # Build this from the delete{Resource}.md docs; payloads vary by resource.
         delete_resource(resource_type, item)
         print(f"Deleted: {item['id']}")

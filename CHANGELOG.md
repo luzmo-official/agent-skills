@@ -7,7 +7,7 @@ This project is in `alpha`; until `1.0.0`, minor versions may include breaking c
 
 ## [0.1.5] - 2026-10-19
 
-Catches the skills up with product releases since 2026-06-25 (Agents, Rules, AI context, the expanded MCP server, inline Flex data, web-component embeds, custom chart options and exports, the Archive, sticky overrides, and per-tenant fields).
+Catches the skills up with product releases since 2026-06-25 (Agents, Rules, AI context, the expanded MCP server, inline Flex data, web-component embeds, custom chart options and exports, sticky overrides, and per-tenant fields).
 
 ### Added
 
@@ -35,7 +35,6 @@ Catches the skills up with product releases since 2026-06-25 (Agents, Rules, AI 
   - `@luzmo/shared-embed` is deprecated.
   - Export feature flags `flag_export_data` / `flag_export_email_data`.
   - Pointers to `tenant` / `tenant_fields_rights` and to the Studio-enabled IQ panel.
-  - API deletes are documented as permanent instead of "irreversible" everywhere.
 - Updated `custom-charts` from `0.1.1` to `0.1.2`:
   - Manifest chart options (configurable in Studio) and `exportData`, which is required for CSV/XLSX on multi-query charts and must be re-exported from `index.ts`.
   - Slot `position`, async `render` before exports, the Private -> Publish flow, command-line upload, chart type naming rules, and metadata that helps AI agents pick a chart.
@@ -50,15 +49,13 @@ Catches the skills up with product releases since 2026-06-25 (Agents, Rules, AI 
   - Custom fields per tenant (`tenant`, `tenant_fields_rights`).
   - Fixed `embedfiltergroup` examples.
 - Updated `data-integration` from `0.1.1` to `0.1.2`: Databricks OAuth2 M2M and Snowflake key-pair connections (create them in the app, then reuse them), nested aggregation formulas (GA), formulas over linked datasets, and the new Delta sync schema-change default.
-- Updated `resource-management` from `0.1.1` to `0.1.2`:
-  - App deletes of dashboards and datasets go to a 30-day Archive, while API deletes stay permanent. Confirmation guardrails are unchanged.
-  - Exports to a webhook, Admin role scope, and e-mail export rate limits.
-- Updated `troubleshooting` from `0.1.1` to `0.1.2`: routes for web-component embed loaders, inline-data errors, ACK `ERESOLVE`, archived datasets, sticky overrides, export `429`s, and MCP issues.
+- Updated `resource-management` from `0.1.1` to `0.1.2`: exports to a webhook, Admin role scope, and e-mail export rate limits.
+- Updated `troubleshooting` from `0.1.1` to `0.1.2`: routes for web-component embed loaders, inline-data errors, ACK `ERESOLVE`, sticky overrides, export `429`s, and MCP issues.
 - Updated `skills.manifest.json` from `0.1.1` to `0.1.2` and registered `mcp`.
 
 ### Changed
 
-- Agents and rules: the AI engineer covers `agent_id` with or without `agent`, IQ Chat `agentId`, and the `mcp` skill. The embed engineer covers the `embedMode` default and sticky overrides. The data engineer uses the Archive-aware delete wording. `luzmo-security` warns that `inlineData` bypasses token filters, and `luzmo-terminology` was updated.
+- Agents and rules: the AI engineer covers `agent_id` with or without `agent`, IQ Chat `agentId`, and the `mcp` skill. The embed engineer covers the `embedMode` default and sticky overrides. `luzmo-security` warns that `inlineData` bypasses token filters, and `luzmo-terminology` was updated.
 - `npx @luzmo/agent-skills add --with-mcp` now writes `type: "http"`.
 - Generated plugin READMEs now list the bundled skills from `skills.manifest.json` instead of a stale hard-coded list.
 
