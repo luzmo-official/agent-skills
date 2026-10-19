@@ -5,29 +5,23 @@ All notable changes to Luzmo Agent Skills are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project is in `alpha`; until `1.0.0`, minor versions may include breaking changes.
 
-## [Unreleased]
-
-Teaches skills to use the Luzmo MCP tools when a session has them. Tool contracts (parameters, ordering, destructive confirmations) stay in the MCP server's tool descriptions and instructions; skills only name tools and choose between MCP and the API.
-
-### Added
-
-- `npm run mcp-tools:validate` (part of `npm run validate`): `scripts/validate-mcp-tool-refs.mjs` fails when a skill references a backticked MCP tool name that is not in `scripts/mcp-tools.snapshot.json`. The snapshot is the public MCP guide's tool table plus `generate_dashboard` and `save_generated_dashboard`; refresh it with `node scripts/validate-mcp-tool-refs.mjs --print-guide-tools`.
-- Evals for the MCP-connected and no-MCP cases in every skill.
-
-### Skill Changes
-
-- Every skill's Doc Retrieval section now prefers the MCP `search_docs` tool when available, then the developer.luzmo.com `.md` URLs. Versions: `ai-analytics`, `analytics-studio`, `core`, `custom-charts`, `data-integration`, `data-visualization`, `multitenancy`, `resource-management`, `theming`, `troubleshooting` from `0.1.2` to `0.1.3`; `mcp` from `0.1.0` to `0.1.1`.
-- `data-integration`: when MCP tools are available, use them for one-off setup (connections and tables, datasets, appended or replaced rows, SQL datasets, metadata); otherwise the scripts and API. No MCP tool creates connections.
-- `ai-analytics` Path E: write `ai_context`, names, and descriptions with `update_dataset_metadata` after reading them with `search_datasets`, and add metrics with `generate_formula` / `create_formula`; otherwise the Core API.
-- `resource-management`: quick dashboard and dataset listings with `list_dashboards` / `search_datasets`; bulk work, other resource types, and every delete stay on the API.
-
-## [0.1.5] - 2026-10-16
+## [0.1.5] - 2026-10-19
 
 Catches the skills up with product releases since 2026-06-25 (Agents, Rules, AI context, the expanded MCP server, inline Flex data, web-component embeds, custom chart options and exports, the Archive, sticky overrides, and per-tenant fields).
 
 ### Added
 
 - New `mcp` skill (`0.1.0`): the hosted Luzmo MCP server for two use cases. Developers set up a workspace from Claude, Cursor or ChatGPT (connections, datasets, metadata and AI context, formulas, answers, charts, dashboards, docs search). SaaS teams expose an embedded, white-labeled MCP to their own users (embed tokens, enabling extra tools, OAuth login, `agentId` URLs, Agent theme and name). `ai-analytics/references/mcp-server.md` now points to it.
+
+### Added (MCP-aware skills)
+
+- Skills now use the Luzmo MCP tools when a session has them, and fall back to the API or the app otherwise. Tool contracts (parameters, ordering, destructive confirmations) stay in the MCP server's tool descriptions and instructions; skills only name tools and choose between MCP and the API.
+  - Every skill's Doc Retrieval prefers the MCP `search_docs` tool when available, then the developer.luzmo.com `.md` URLs.
+  - `data-integration`: MCP tools for one-off setup (connections and tables, datasets, appended or replaced rows, SQL datasets, metadata); scripts and API otherwise. No MCP tool creates connections.
+  - `ai-analytics` Path E: write `ai_context`, names, and descriptions with `update_dataset_metadata` after reading them with `search_datasets`, and add metrics with `generate_formula` / `create_formula`.
+  - `resource-management`: quick dashboard and dataset listings with `list_dashboards` / `search_datasets`; bulk work, other resource types, and every delete stay on the API.
+  - Evals for the MCP-connected and no-MCP cases in every skill.
+- `npm run mcp-tools:validate` (part of `npm run validate`): fails when a skill references a backticked MCP tool name that is not in `scripts/mcp-tools.snapshot.json`. Refresh the snapshot with `node scripts/validate-mcp-tool-refs.mjs --print-guide-tools` (see CONTRIBUTING.md).
 
 ### Skill Changes
 

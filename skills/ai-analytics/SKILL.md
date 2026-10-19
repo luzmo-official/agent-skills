@@ -8,7 +8,7 @@ description: >-
   Not for the Luzmo MCP server (use mcp), standard chart embedding (use core for saved dashboards, data-visualization for Flex), or React Native (IQ embed components are web-only).
 metadata:
   author: Luzmo
-  version: 0.1.3
+  version: 0.1.2
   last_updated: 2026-10-19
 ---
 

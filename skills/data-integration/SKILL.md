@@ -11,7 +11,7 @@ description: >-
   Not for chart rendering (use data-visualization) or per-tenant access control (use multitenancy).
 metadata:
   author: Luzmo
-  version: 0.1.3
+  version: 0.1.2
   last_updated: 2026-10-19
 ---
 

@@ -9,7 +9,7 @@ description: >-
   Pair with core for token generation and data-integration for connection-level overrides.
 metadata:
   author: Luzmo
-  version: 0.1.3
+  version: 0.1.2
   last_updated: 2026-10-19
 ---
 

@@ -7,7 +7,7 @@ description: >-
   Not for direct /aiprompt calls, IQ Chat/Answer components, or creating saved Agents and Rules (use ai-analytics), or tenant row isolation in the embed token (use multitenancy).
 metadata:
   author: Luzmo
-  version: 0.1.1
+  version: 0.1.0
   last_updated: 2026-10-19
 ---
 

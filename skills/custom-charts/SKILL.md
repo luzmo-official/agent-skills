@@ -7,7 +7,7 @@ description: >-
   Not for Flex charts with built-in types (use data-visualization), embedding saved dashboards (use core), self-service chart editors (use analytics-studio), or auth setup (use core).
 metadata:
   author: Luzmo
-  version: 0.1.3
+  version: 0.1.2
   last_updated: 2026-10-19
 ---
 

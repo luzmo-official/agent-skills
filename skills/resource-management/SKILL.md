@@ -8,7 +8,7 @@ description: >-
   Not for embedding saved dashboards/charts (use core), auth setup (use core), or data ingestion (use data-integration).
 metadata:
   author: Luzmo
-  version: 0.1.3
+  version: 0.1.2
   last_updated: 2026-10-19
 ---
 

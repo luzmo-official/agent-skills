@@ -9,7 +9,7 @@ description: >-
   Not for view-only embedding of saved dashboards (use core), building charts in code (use data-visualization), data connection (use data-integration), or AI queries (use ai-analytics).
 metadata:
   author: Luzmo
-  version: 0.1.3
+  version: 0.1.2
   last_updated: 2026-10-19
 ---
 

@@ -9,7 +9,7 @@ description: >-
   Not for building charts in code (use data-visualization), data loading (use data-integration), or tenant isolation (use multitenancy).
 metadata:
   author: Luzmo
-  version: 0.1.3
+  version: 0.1.2
   last_updated: 2026-10-19
 ---
 
