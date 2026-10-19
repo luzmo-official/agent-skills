@@ -129,6 +129,16 @@
         "Passes the state to the renderer as `slots`, not `slotsContents`",
         "Keeps ACK `itemType` and renderer `type` identical"
       ]
+    },
+    {
+      "id": 12,
+      "prompt": "I have the Luzmo MCP server connected. In ACK, how do I add a date filter component to my dashboard builder?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'ACK filter component'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
+      ]
     }
   ]
 }

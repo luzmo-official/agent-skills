@@ -106,6 +106,16 @@
         "Recommends a unique and immutable `username` per end user",
         "References `https://developer.luzmo.com/api/createAuthorization.md`"
       ]
+    },
+    {
+      "id": 10,
+      "prompt": "Luzmo MCP is connected in my editor. How do parameter overrides work for row-level security in embed tokens?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'parameter overrides row-level security'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
+      ]
     }
   ]
 }

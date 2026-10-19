@@ -8,8 +8,8 @@ description: >-
   Not for embedding saved dashboards/charts (use core), auth setup (use core), or data ingestion (use data-integration).
 metadata:
   author: Luzmo
-  version: 0.1.2
-  last_updated: 2026-10-16
+  version: 0.1.3
+  last_updated: 2026-10-19
 ---
 
 # Luzmo Resource Management
@@ -19,6 +19,7 @@ Entry-point for operational resource management with the Luzmo API: create, list
 ## Doc Retrieval
 
 - `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- If the Luzmo MCP `search_docs` tool is available, use it first to find the right pages: it returns matching passages with their live developer.luzmo.com or Academy URLs. Fetch the `.md` URL when you need the full page or anything newer than the server's docs build. Without MCP, go straight to the `.md` URLs below.
 - Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
 - Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
@@ -81,6 +82,12 @@ Then consult exact resource docs:
 | dissociate / unlink | `dissociate{Resource}` |
 | delete / remove | `delete{Resource}` — **see deletion safety rule below** |
 | restore / undelete | Dashboards and datasets deleted in the Luzmo app: restore from the Archive within 30 days - see `references/deletion-policy.md`. API deletes cannot be restored. |
+
+### If Luzmo MCP tools are available
+
+For a quick look from an AI client connected to the Luzmo MCP server (see `mcp`), list dashboards with `list_dashboards` and find datasets (with their columns and AI context) with `search_datasets` instead of writing a script. They only list what the session's credentials can reach.
+
+Use the API and the scripts in this skill for everything else: other resource types (themes, users, groups, Agents, Rules), bulk updates, associations, exports, and every delete. No MCP tool deletes dashboards or datasets. Without MCP tools, use `"action": "get"` as in the Action Map.
 
 ## Deletion Safety Rule
 

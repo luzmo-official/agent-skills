@@ -131,6 +131,16 @@
         "Mentions the chart must be published (not Private) or that invalid manifests are skipped",
         "Hands off agent/IQ configuration questions to `ai-analytics` when relevant"
       ]
+    },
+    {
+      "id": 13,
+      "prompt": "With the Luzmo MCP connected in Claude Code: how do I make a custom chart support CSV export?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'custom chart exportData'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
+      ]
     }
   ]
 }

@@ -159,6 +159,30 @@
         "Keeps the embed token scoping requirement",
         "References `https://academy.luzmo.com/article/fyeoiaei` or the Path G guidance"
       ]
+    },
+    {
+      "id": 15,
+      "prompt": "IQ keeps getting 'revenue' wrong on our sales dataset - it should exclude refunds. I have the Luzmo MCP server connected in Cursor. Fix the AI context and add a proper Net Revenue metric.",
+      "expected_output": "Follows Path E with the MCP tools: read the current names, descriptions, and ai_context with search_datasets first and show the user the change; write ai_context with update_dataset_metadata (destructive, confirm); draft the metric with generate_formula and save with create_formula. Writes short factual ai_context (net of refunds). Does not restate tool parameters.",
+      "expectations": [
+        "Reads the existing AI context with `search_datasets` before overwriting it",
+        "Writes the AI context with `update_dataset_metadata` after explicit user confirmation",
+        "Uses `generate_formula` to draft and `create_formula` to save the Net Revenue metric",
+        "Writes a short, factual `ai_context` that states revenue excludes refunds",
+        "References Path E or `references/data-modeling-for-iq.md` for what to write"
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Our IQ answers confuse gross and net revenue. We don't use MCP; everything runs from our backend with the Luzmo Node SDK. How do we add business definitions so the AI gets it right?",
+      "expected_output": "Path E without MCP: set ai_context (plain text, nullable) on the dataset, column, and formula via the Core API (updateDataset / updateColumn / updateFormula), retrieving the current value via attributes first; optionally add a pre-built formula with createFormula. Points to the managing AI context guide. Server-side API key only.",
+      "expectations": [
+        "Sets `ai_context` through the Core API (dataset, column, or formula update), not MCP tools",
+        "States that `ai_context` is plain text, not a localized object",
+        "Suggests a pre-built, clearly named formula for net revenue",
+        "References `https://developer.luzmo.com/guide/guides--managing-ai-context.md`",
+        "Keeps API credentials server-side"
+      ]
     }
   ]
 }

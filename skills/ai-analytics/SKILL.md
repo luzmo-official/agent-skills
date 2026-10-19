@@ -8,8 +8,8 @@ description: >-
   Not for the Luzmo MCP server (use mcp), standard chart embedding (use core for saved dashboards, data-visualization for Flex), or React Native (IQ embed components are web-only).
 metadata:
   author: Luzmo
-  version: 0.1.2
-  last_updated: 2026-10-16
+  version: 0.1.3
+  last_updated: 2026-10-19
 ---
 
 # Luzmo AI Analytics
@@ -19,6 +19,7 @@ Entry-point for Luzmo AI analytics: the **`/aiprompt`** API (canonical backend),
 ## Doc Retrieval
 
 - `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- If the Luzmo MCP `search_docs` tool is available, use it first to find the right pages: it returns matching passages with their live developer.luzmo.com or Academy URLs. Fetch the `.md` URL when you need the full page or anything newer than the server's docs build. Without MCP, go straight to the `.md` URLs below.
 - Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
 - Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
@@ -295,6 +296,19 @@ See also `references/agentic-integration.md`.
 Read `references/data-modeling-for-iq.md` — it is the comprehensive quality reference. The checklist, examples, and modeling issues table all live there.
 
 Docs: `https://academy.luzmo.com/article/e6ght1rk` and `https://developer.luzmo.com/guide/guides--managing-ai-context.md`
+
+**Applying the fixes:**
+
+| Fix | If Luzmo MCP tools are available | Otherwise |
+|---|---|---|
+| Review current names, descriptions, `ai_context` | `search_datasets` (with columns) | `"action": "get"` on `securable` / `column` with `ai_context` in `attributes` |
+| Write names, descriptions, `ai_context` for many datasets and columns | `update_dataset_metadata` | `updateDataset` / `updateColumn` / `updateFormula`, or the dataset page in the Luzmo app |
+| Add a pre-built metric | `generate_formula` drafts it (does not save), `create_formula` saves it | `createFormula`, or the formula editor in the app |
+| Change or remove a metric | `update_formula`, `delete_formula` | `updateFormula` / `deleteFormula` |
+
+- Read the current AI context before overwriting it, and show the user what changes. `update_dataset_metadata` is destructive and keeps no copy.
+- Confirm before `update_formula` or `delete_formula`: every chart that uses the metric changes or breaks.
+- The tool descriptions hold the parameters. For connecting and tool availability, use the `mcp` skill.
 
 ---
 

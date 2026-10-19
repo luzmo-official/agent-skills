@@ -7,8 +7,8 @@ description: >-
   Not for direct /aiprompt calls, IQ Chat/Answer components, or creating saved Agents and Rules (use ai-analytics), or tenant row isolation in the embed token (use multitenancy).
 metadata:
   author: Luzmo
-  version: 0.1.0
-  last_updated: 2026-10-16
+  version: 0.1.1
+  last_updated: 2026-10-19
 ---
 
 # Luzmo MCP Server
@@ -23,6 +23,7 @@ The login method decides which tools a session gets. Pick the path first.
 ## Doc Retrieval
 
 - `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- If the Luzmo MCP `search_docs` tool is available, use it first to find the right pages: it returns matching passages with their live developer.luzmo.com or Academy URLs. Fetch the `.md` URL when you need the full page or anything newer than the server's docs build. Without MCP, go straight to the `.md` URLs below.
 - Before writing an MCP config or server, you MUST consult `https://developer.luzmo.com/guide/mcp--introduction.md`. It is the contract for URL, parameters, authentication, tools, permissions, saved Agents, themes, and MCP App.
 - Use `https://developer.luzmo.com/llms.txt` for discovery only. Do not copy the tool catalog into code from this skill; read the live list with the MCP `tools/list` call.
 

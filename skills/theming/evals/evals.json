@@ -114,6 +114,16 @@
         "Explains CSS variables inherit from a wrapper into ACK components",
         "Does not route ACK styling through createTheme"
       ]
+    },
+    {
+      "id": 11,
+      "prompt": "With the Luzmo MCP connected: how do I apply a custom theme to an embedded dashboard via the embed token?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'embed token theme'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
+      ]
     }
   ]
 }

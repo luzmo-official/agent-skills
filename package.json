@@ -9,9 +9,10 @@
   ],
   "scripts": {
     "format": "node -e \"console.log('no formatter configured')\"",
-    "validate": "npm run skills:validate && npm run unicode:validate",
+    "validate": "npm run skills:validate && npm run unicode:validate && npm run mcp-tools:validate",
     "skills:validate": "node scripts/validate-skill-frontmatter.mjs",
     "unicode:validate": "node scripts/validate-unicode-hygiene.mjs",
+    "mcp-tools:validate": "node scripts/validate-mcp-tool-refs.mjs",
     "typecheck": "npm -w @luzmo/agent-skills run typecheck && npm -w @luzmo/skills-plugin-builder run typecheck",
     "build": "npm -w @luzmo/agent-skills run build",
     "test": "npm -w @luzmo/agent-skills run test",

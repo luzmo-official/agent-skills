@@ -9,8 +9,8 @@ description: >-
   Not for view-only embedding of saved dashboards (use core), building charts in code (use data-visualization), data connection (use data-integration), or AI queries (use ai-analytics).
 metadata:
   author: Luzmo
-  version: 0.1.2
-  last_updated: 2026-10-16
+  version: 0.1.3
+  last_updated: 2026-10-19
 ---
 
 # Luzmo Analytics Studio
@@ -26,6 +26,7 @@ Also covers programmatic dashboard construction via API (Path C).
 ## Doc Retrieval
 
 - `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- If the Luzmo MCP `search_docs` tool is available, use it first to find the right pages: it returns matching passages with their live developer.luzmo.com or Academy URLs. Fetch the `.md` URL when you need the full page or anything newer than the server's docs build. Without MCP, go straight to the `.md` URLs below.
 - Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
 - Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 

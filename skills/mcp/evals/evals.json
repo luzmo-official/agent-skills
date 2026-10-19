@@ -80,6 +80,16 @@
         "States that an Agent rename applies to new MCP sessions only",
         "Explains the chart theme priority including the Agent's theme as fallback and `themeId` as override"
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "I'm connected to the Luzmo MCP server in Claude. How do I hide destructive tools for a session?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'MCP permissions read-only'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
+      ]
     }
   ]
 }

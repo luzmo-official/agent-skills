@@ -110,6 +110,28 @@
         "States that exports requested with an embed token must be retrieved with an Organization Admin API key/token",
         "References `https://developer.luzmo.com/api/createDataexport.md`"
       ]
+    },
+    {
+      "id": 10,
+      "prompt": "I'm chatting in Claude with the Luzmo MCP connector. Which dashboards do I have, and which datasets have a 'customer_id' column?",
+      "expected_output": "One-off lookup from an MCP session: use list_dashboards and search_datasets (with columns) instead of generating a script. Notes they only show what the session's credentials can reach.",
+      "expectations": [
+        "Uses `list_dashboards` for the dashboards",
+        "Uses `search_datasets` to find datasets and their columns",
+        "Does not generate a Node or Python API script for this one-off lookup",
+        "Notes that results are limited to what the session's credentials can access"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Write a nightly script that lists every dashboard not modified in 180 days and deletes them. We don't have MCP set up.",
+      "expected_output": "Script with the Core API: \"action\": \"get\" with a find/where on updated_at, paginated, server-side credentials; delete step guarded by dry-run default and explicit opt-in, with permanent-delete warning (API deletes skip the Archive). Notes no MCP tool deletes dashboards, so MCP would not change this.",
+      "expectations": [
+        "Uses the Core API `\"action\": \"get\"` on dashboards with pagination, not MCP tools",
+        "Defaults to a dry run and requires an explicit opt-in before deleting",
+        "States that API deletes are permanent and skip the 30-day Archive",
+        "Loads API credentials from environment variables"
+      ]
     }
   ]
 }

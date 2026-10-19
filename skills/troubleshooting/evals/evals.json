@@ -95,6 +95,16 @@
         "Recommends owning/sharing the dataset to that account or using an owned dataset",
         "Recommends minting a fresh embed token after fixing access"
       ]
+    },
+    {
+      "id": 9,
+      "prompt": "I have the Luzmo MCP server connected. My embedded dashboard shows 'Authorization token expired' after an hour. What's going on?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'authorization token expired'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
+      ]
     }
   ]
 }

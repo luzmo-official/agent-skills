@@ -77,6 +77,16 @@
         "Identifies that `field` values must be unique across slots",
         "Does not suggest adding datasetId/columnId to fix inline-data slots"
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "I'm using Cursor with the Luzmo MCP server. Which Flex chart type should I use to show a funnel, and what slots does it take?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'Flex funnel chart slots'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
+      ]
     }
   ]
 }
