@@ -67,7 +67,7 @@ See `references/chart-development.md` for details. Summary:
 3. **Implement** `render` and `resize` (each receives one `ChartParams` object), plus optional `buildQuery` and `exportData`. Re-export every implemented function from `index.ts`.
 4. **Style** with `options.theme` and `chart.css`.
 5. **Handle interactions** - `setFilter`, `customEvent`, `queryLoaded`.
-6. **Build and validate** (`npm run build` / `npm run validate`), then upload `bundle.zip` in Settings > Custom Charts or with `npm run charts -- upload`.
+6. **Build and validate** (`npm run build` / `npm run validate`), then upload `bundle.zip` in Settings > Custom Charts or with `npm run charts -- upload` (needs an Organization Owner API key/token).
 7. **Publish** - a new chart starts **Private** (only you can test it); publish it to make it available to the whole organization. Re-uploads enter **Update in preview** until published.
 
 ## Manifest and Runtime Essentials
