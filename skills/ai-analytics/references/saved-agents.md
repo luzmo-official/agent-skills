@@ -16,12 +16,20 @@ Consult these before generating production code. Do not invent payloads from thi
 
 | What the user means | What to send |
 |---|---|
-| One-shot router: analyze, chart, or build a dashboard for this call | `properties.agent`: `"analyst"` \| `"item"` \| `"dashboard"`, plus `task` |
-| A saved Agent configured in Luzmo (capabilities, datasets, Rules, theme) | `properties.agent_id` only |
+| Which agent runs this call | `properties.agent`: `"analyst"` \| `"item"` \| `"dashboard"` \| `"auto"` (universal), plus `task` |
+| A saved Agent configured in Luzmo (capabilities, datasets, Rules, theme) | `properties.agent_id`, alone or with `agent` |
 
-Do not combine `agent_id` with `agent`, `task`, or `capabilities`. Those values come from the saved Agent. The returned `user_message.agent` is `auto`.
+The two combine:
 
-IQ Chat and IQ Answer components have no documented `agent_id`. Invoke a saved Agent from the server (`/aiprompt`) or pin an MCP session with `?agentId=` (see `references/mcp-server.md`).
+- `agent_id` without `agent` (or with `agent: "auto"`): the universal agent runs with the saved Agent's capabilities (all of them if it has none). Per-request `capabilities` replace them for that call. The returned `user_message.agent` is `auto`.
+- `agent_id` with `agent: "analyst"` (or `item`, `dashboard`): that agent runs with its own `task` and `response_mode` rules. The saved Agent's capabilities are not used. This is what the embedded IQ Chat does.
+- In both cases the Agent's datasets and published Rules apply.
+
+Other surfaces:
+
+- **IQ Chat component:** `agentId` prop/input (`@luzmo/embed` and `@luzmo/react-embed` 7.3.0+, `@luzmo/ngx-embed` 9.4.0+, `@luzmo/vue-embed` 6.3.0+). The IQ Answer component has no `agentId`.
+- **MCP:** `?agentId=` on the MCP URL. See the `mcp` skill.
+- **Luzmo app:** the Agents page tests an Agent and generates its MCP links; the Home page (formerly Analyst) runs the universal agent, and its prompt box can pick a saved Agent.
 
 ## Setup (org API key, server-side)
 
@@ -30,7 +38,7 @@ IQ Chat and IQ Answer components have no documented `agent_id`. Invoke a saved A
 3. Optionally create a Rule, publish a version, then link it (below).
 4. Mint a per-user embed token that grants `use` on every dataset that user may query, including the Agent's datasets. Invoke with that embed key and token, not the org API key.
 
-Creating or configuring an Agent requires a Designer or Owner organization role. Update, associate, and dissociate also require modifier access on the Agent. Delete requires owner access.
+Creating or configuring an Agent requires a Designer or Owner organization role, in the API and in the app. Update, associate, and dissociate also require modifier access on the Agent. Delete requires owner access.
 
 Agents are invocable by every member of their organization. Sharing controls who may modify or own an Agent. It does not restrict who may invoke it. An unknown, deleted, or other-organization `agent_id` returns `404 Not Found`.
 
@@ -50,8 +58,9 @@ When the Agent has associated datasets:
 
 - Omit dataset inputs and AIPrompt starts from the Agent's datasets.
 - Supply dataset inputs and only IDs that are also associated with the Agent are considered.
-- In both cases, Luzmo drops datasets the authenticated user cannot access.
+- In both cases, Luzmo drops datasets the authenticated user cannot access. The embed token needs `use` on them, not `read`.
 - Dataset links from earlier conversation messages do not bypass the allowlist.
+- If every requested dataset is outside the Agent, or an input item reads one (also through a formula), the request returns `403 Forbidden`.
 
 With no associated datasets, normal AIPrompt selection applies: explicit dataset inputs when present; otherwise the conversation and datasets the user can access.
 
@@ -82,7 +91,7 @@ These combine. They are not substitutes for each other.
 
 ## Theme
 
-`theme_id` on the Agent is presentation metadata. AIPrompt does not load it or apply it to returned chart and dashboard assets. Retrieve the Agent and its Theme, then apply that theme when rendering (`theming`). On MCP, a session or tool `themeId` still overrides the Agent theme.
+`theme_id` on the Agent is presentation metadata. AIPrompt does not load it or apply it to returned chart and dashboard assets. Retrieve the Agent and its Theme, then apply that theme when rendering (`theming`). MCP sessions with `agentId` do fall back to the Agent theme; a session or tool `themeId` overrides it (see `mcp`).
 
 ## Invoke
 
@@ -97,6 +106,6 @@ await luzmoEmbedClient.create('aiprompt', {
 });
 ```
 
-Omit `conversation_id` to start a thread; pass the previous response's `conversation_id` to continue. Set `stream: true` for Server-Sent Events. You may still send per-request `context`; it is combined with the token's `iq.context` and the Agent's published Rules.
+This runs the universal agent with the Agent's capabilities. Add `agent: 'analyst'` to answer with the analyst agent instead. Omit `conversation_id` to start a thread; pass the previous response's `conversation_id` to continue. Conversations are stored and retrievable (`searchAIMessage`). Set `stream: true` for Server-Sent Events. You may still send per-request `context`; it is combined with the token's `iq.context` and the Agent's published Rules.
 
 Consult `https://developer.luzmo.com/api/createAIPrompt.md` for the full request. Search, update, associate, dissociate, and delete docs follow `https://developer.luzmo.com/api/{action}Agent.md` and `https://developer.luzmo.com/api/{action}AIRule.md`.

@@ -8,8 +8,8 @@ description: >-
   Not for chart data or slots (use data-visualization) or data security (use multitenancy).
 metadata:
   author: Luzmo
-  version: 0.1.1
-  last_updated: 2026-06-18
+  version: 0.1.2
+  last_updated: 2026-10-19
 ---
 
 # Luzmo Theming
@@ -19,6 +19,7 @@ Entry-point for visual customization of any Luzmo surface. Route to the right me
 ## Doc Retrieval
 
 - `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- If the Luzmo MCP `search_docs` tool is available, use it first to find the right pages: it returns matching passages with their live developer.luzmo.com or Academy URLs. Fetch the `.md` URL when you need the full page or anything newer than the server's docs build. Without MCP, go straight to the `.md` URLs below.
 - Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
 - Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
@@ -98,7 +99,8 @@ Docs:
 https://developer.luzmo.com/guide/iq--chat-component-api--customization.md
 ```
 
-- Includes `IQChatOptions` configuration and CSS variables.
+- Includes `IQChatOptions` configuration (passed as the `options` property; chart styling via `options.chartTheme`) and `--luzmo-iq-*` CSS variables (e.g. `--luzmo-iq-background-color`, `--luzmo-iq-font-color`, `--luzmo-iq-border-radius`).
+- `IQChatOptions` has no `primaryColor`/`font` keys; colors and fonts go through the `--luzmo-iq-*` variables.
 - Consult the customization doc before describing specific style props or variables.
 
 ---
@@ -110,7 +112,7 @@ Docs:
 https://developer.luzmo.com/guide/iq--answer-component-api--css-variables.md
 ```
 
-- The Answer component exposes CSS custom properties for color, font, and spacing.
+- The Answer component exposes `--luzmo-iq-*` CSS custom properties for color, font, and spacing (same prefix as IQ Chat).
 - Consult the CSS variables doc before listing available variables.
 
 ---
@@ -119,10 +121,12 @@ https://developer.luzmo.com/guide/iq--answer-component-api--css-variables.md
 
 Docs:
 ```
+https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--theming.md
 https://developer.luzmo.com/guide/ack--patterns.md
 ```
 
 - ACK components (from `@luzmo/analytics-components-kit`) have their own theming approach separate from the dashboard Theme API.
+- Globals are `--luzmo-*` custom properties on `:root` or a wrapper: `--luzmo-primary`, `--luzmo-background-color`, `--luzmo-font-family`, `--luzmo-border-radius`, `--luzmo-border-color-rgb` (RGB channels). Per-component overrides use `--luzmo-{component}-*` (e.g. `--luzmo-item-slot-drop-filled-background-color`). See `references/lucero-tokens.md`.
 - Consult the ACK theming guide before suggesting specific CSS variables or theme props.
 
 ---
@@ -197,11 +201,16 @@ const theme = await client.get('theme', {...});
 // IQ components need their own CSS variables
 ```
 **[OK] Use component-specific theming:**
+```css
+/* Correct - IQ components use their own --luzmo-iq-* variables */
+luzmo-iq-embed-chat {
+  --luzmo-iq-background-color: #0f172a;
+  --luzmo-iq-font-color: #e2e8f0;
+}
+```
 ```javascript
-// Correct - IQ components have separate styling mechanism
-<luzmo-iq-embed-chat 
-  customization={{ primaryColor: "#..." }}  // IQ-specific
-/>
+// Chart styling inside IQ answers goes through IQChatOptions.chartTheme
+iqChat.options = { chartTheme: { /* ItemThemeConfig */ } };
 ```
 
 **[ERROR] Confusing Theme API with token theme overrides:**

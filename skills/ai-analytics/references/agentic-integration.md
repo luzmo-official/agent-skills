@@ -6,8 +6,7 @@ Use this reference when an LLM agent (Claude, OpenAI, custom) needs to answer an
 
 - `https://developer.luzmo.com/api/createAIPrompt.md` (canonical; replaces legacy IQ Backend API)
 - `https://developer.luzmo.com/guide/guides--adding-luzmo-iq-to-agentic-workflow.md`
-- `https://developer.luzmo.com/guide/mcp--introduction.md` (hosted MCP; alternative to direct `/aiprompt` calls)
-- `references/mcp-server.md` - MCP tools, auth, themes, and `agentId` (this directory)
+- `https://developer.luzmo.com/guide/mcp--introduction.md` (hosted MCP; alternative to direct `/aiprompt` calls; see the `mcp` skill)
 - `references/saved-agents.md` - saved Agent `agent_id`, Rules, and dataset allowlist (this directory)
 
 Consult these and any relevant guides they reference before generating production code. Use docs as guidance for implementation details only.
@@ -19,13 +18,13 @@ LLM agents already run server-side, so they can call **`POST /0.1.0/aiprompt`** 
 ```text
 User -> LLM agent server
   1. Generate an Embed Authorization token for the logged-in user/tenant with the correct dataset scope.
-  2. POST /aiprompt with agent: "analyst", or with agent_id alone when a saved Agent should run.
+  2. POST /aiprompt with agent: "analyst" (add agent_id to apply a saved Agent's datasets and Rules).
   3. Return the answer, conversation_id, and any generated item or dashboard assets.
 ```
 
 The embed token's `access.datasets`, `parameter_overrides`, and `filters` determine exactly what data IQ can see — making token scoping the primary security and accuracy control.
 
-**Alternative:** Use the hosted Luzmo MCP server (`/0.1.0/mcp`) so the agent calls `answer_question` / `create_chart` without building custom `/aiprompt` integrations. Append `?agentId=<uuid>` to run those tools through a saved Agent. See `references/mcp-server.md`.
+**Alternative:** Use the hosted Luzmo MCP server (`/0.1.0/mcp`) so the agent calls `answer_question` / `create_chart` without building custom `/aiprompt` integrations. Append `?agentId=<uuid>` to run those tools through a saved Agent. See the `mcp` skill.
 
 ## Tool Definition (Claude / OpenAI style)
 
@@ -46,7 +45,7 @@ The embed token's `access.datasets`, `parameter_overrides`, and `filters` determ
       },
       "agent_id": {
         "type": "string",
-        "description": "Optional. Saved Luzmo Agent id. When set, the backend sends agent_id and omits agent and task."
+        "description": "Optional. Saved Luzmo Agent id. When set, the backend adds agent_id so the Agent's datasets and published Rules apply."
       }
     },
     "required": ["question"]
@@ -89,14 +88,17 @@ async function askLuzmoIQ({ question, conversation_id, agent_id, user }) {
     api_token: auth.token,
   });
   const resp = await luzmoEmbedClient.create('aiprompt', {
-    // One-shot analyst. For a saved Agent, send agent_id and omit agent and task.
-    ...(agent_id ? { agent_id } : { agent: 'analyst', task: 'generate' }),
+    // Analyst Q&A. agent_id adds a saved Agent's datasets and published Rules.
+    // (Omit agent to let the universal agent use the saved Agent's capabilities instead.)
+    agent: 'analyst',
+    task: 'generate',
+    ...(agent_id ? { agent_id } : {}),
     conversation_id,
     response_mode: 'mixed',
     input: [
       { type: 'text', text: question },
       // optional: { type: 'dataset', id: '<uuid>' } to limit the question to e.g. a specific dataset
-      // With a saved Agent, dataset inputs outside its allowlist are dropped.
+      // With a saved Agent, dataset inputs outside its datasets are dropped; only-outside returns 403.
     ],
   });
 
@@ -109,7 +111,7 @@ async function askLuzmoIQ({ question, conversation_id, agent_id, user }) {
 }
 ```
 
-For chart-only generation from a prompt, use `agent: 'item'` with `task: 'generate'`. For a whole dashboard, use `agent: 'dashboard'`. Do not send those fields together with `agent_id`. Consult `https://developer.luzmo.com/api/createAIPrompt.md` for the full agent/task matrix and `references/saved-agents.md` for saved Agents.
+For chart-only generation from a prompt, use `agent: 'item'` with `task: 'generate'`. For a whole dashboard, use `agent: 'dashboard'`. For multi-step requests (answer, chart, and dashboard in one prompt), use `agent: 'auto'` with `capabilities`. Each of these can carry `agent_id`. Consult `https://developer.luzmo.com/api/createAIPrompt.md` for the full agent/task matrix and `references/saved-agents.md` for saved Agents.
 
 ## Multi-Turn Conversations
 

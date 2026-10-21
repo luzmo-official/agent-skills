@@ -69,8 +69,7 @@
         "Does NOT attempt to fully document all createAuthorization fields from memory",
         "References `https://developer.luzmo.com/api/createAuthorization.md` for the canonical field list"
       ]
-    }
-  ,
+    },
     {
       "id": 7,
       "prompt": "We run a reseller platform. Each reseller partner manages their own end-customers, and end-customers should only see their own data rows. So we need two levels: partners see only their customers' data, and end-customers see only their own rows. Can Luzmo handle two levels of tenant hierarchy, and what's the right setup?",
@@ -81,6 +80,41 @@
         "States that `parameter_overrides` + `EmbedFilterGroup` handles row-level isolation for end-customers within each partner",
         "References `https://developer.luzmo.com/api/createAuthorization.md` for both `suborganization` and `parameter_overrides`",
         "Does NOT claim that `suborganization` alone provides row-level data isolation"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Our customers share one orders schema, but each customer's table has a few extra custom columns, and their admins want to add their own formulas in the embedded editor without being able to change our shared columns. How do I set this up in Luzmo?",
+      "expected_output": "Recommends custom fields per tenant: create a tenant per customer, a tenant dataset source routing the base dataset to the customer's table or query, and embed tokens with an explicit tenant plus tenant_fields_rights higher than rights for the dataset. Warns that suborganization alone does not scope fields and that tokens without tenant see all fields.",
+      "expectations": [
+        "References `https://developer.luzmo.com/guide/dashboard-embedding--custom-fields-per-tenant.md`",
+        "Uses `createTenant` and `createTenantDatasetSource` (with `source_sheet` or `source_query`)",
+        "Sets an explicit `tenant` on the embed token",
+        "Uses `tenant_fields_rights` in `access.datasets[]` with a higher level than `rights` (e.g. `rights: 'use'`, `tenant_fields_rights: 'modify'`)",
+        "States that `suborganization` alone does not activate tenant field scoping",
+        "Warns that group or user dataset grants are additive and can exceed `tenant_fields_rights`"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "We use account_overrides to point each embed user at their own schema. When users schedule an email export, it sometimes queries the wrong schema after they log in again from a different workspace. How do we fix that?",
+      "expected_output": "Explains that scheduled exports and alerts use the overrides of the most recent token for the same username, and that setting sticky: true on the connection's account_overrides entry pins the override from the token that created the schedule. Advises unique, immutable usernames.",
+      "expectations": [
+        "States that by default scheduled exports and alerts use the most recently created token for the same `username`",
+        "Sets `sticky: true` on the connection entry inside `account_overrides`",
+        "Uses the exact property name `account_overrides`",
+        "Recommends a unique and immutable `username` per end user",
+        "References `https://developer.luzmo.com/api/createAuthorization.md`"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Luzmo MCP is connected in my editor. How do parameter overrides work for row-level security in embed tokens?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'parameter overrides row-level security'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
       ]
     }
   ]

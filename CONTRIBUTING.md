@@ -33,6 +33,13 @@ npm run plugins:build             # regenerates root .cursor-plugin/ + .claude-p
 npm run evals:validate              # skill-creator eval fixture check
 ```
 
+`npm run validate` also checks that every backticked Luzmo MCP tool name in `skills/` (for example
+`update_dataset_metadata`) exists in [`scripts/mcp-tools.snapshot.json`](scripts/mcp-tools.snapshot.json).
+When the MCP server adds or renames tools, run `node scripts/validate-mcp-tool-refs.mjs --print-guide-tools`
+to compare the snapshot with the public guide's tool table, update the snapshot (tools not yet in the guide
+keep `"guide": false`), and bump its `updated` date. Skills name tools only; parameters and ordering live in
+the MCP server's tool descriptions.
+
 Skills, agents, and marketplace plugins all ship from **this single repo**. Cursor reads
 `.cursor-plugin/` and Claude Code reads `.claude-plugin/`; both manifests are generated from
 [`plugin.config.yaml`](plugin.config.yaml) by `npm run plugins:build`. Do not hand-edit the

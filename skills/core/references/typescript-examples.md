@@ -30,7 +30,11 @@ const auth: LuzmoAuthorizationToken = await client.create('authorization', {
 ```typescript
 interface AccessControl {
   dashboards?: Array<{ id: string; rights: 'read' | 'use' | 'modify' | 'own' }>;
-  datasets?: Array<{ id: string; rights: 'read' | 'use' | 'modify' | 'own' }>;
+  datasets?: Array<{
+    id: string;
+    rights: 'read' | 'use' | 'modify' | 'own';
+    tenant_fields_rights?: 'read' | 'use' | 'modify' | 'own'; // only with `tenant`; see multitenancy
+  }>;
   collections?: Array<{ id: string; inheritRights: 'read' | 'use' | 'modify' | 'own' }>;
 }
 
@@ -43,6 +47,7 @@ interface CreateAuthorizationParams {
   expiry?: string;  // RFC 3339 timestamp
   access?: AccessControl;
   suborganization?: string;
+  tenant?: string;  // tenant identifier; independent of suborganization
   parameter_overrides?: Record<string, any>;
   filters?: Array<{
     clause: string;

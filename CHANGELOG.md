@@ -5,14 +5,58 @@ All notable changes to Luzmo Agent Skills are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project is in `alpha`; until `1.0.0`, minor versions may include breaking changes.
 
-## [Unreleased]
+## [0.1.5] - 2026-10-19
+
+Catches the skills up with product releases since 2026-06-25 (Agents, Rules, AI context, the expanded MCP server, inline Flex data, web-component embeds, custom chart options and exports, sticky overrides, and per-tenant fields).
+
+### Added
+
+- New `mcp` skill (`0.1.0`): the hosted Luzmo MCP server for two use cases. Developers set up a workspace from Claude, Cursor or ChatGPT (connections, datasets, metadata and AI context, formulas, answers, charts, dashboards, docs search). SaaS teams expose an embedded, white-labeled MCP to their own users (embed tokens, enabling extra tools, OAuth login, `agentId` URLs, Agent theme and name). `ai-analytics/references/mcp-server.md` now points to it.
+
+### Added (MCP-aware skills)
+
+- Skills now use the Luzmo MCP tools when a session has them, and fall back to the API or the app otherwise. Tool contracts (parameters, ordering, destructive confirmations) stay in the MCP server's tool descriptions and instructions; skills only name tools and choose between MCP and the API.
+  - Every skill's Doc Retrieval prefers the MCP `search_docs` tool when available, then the developer.luzmo.com `.md` URLs.
+  - `data-integration`: MCP tools for one-off setup (connections and tables, datasets, appended or replaced rows, SQL datasets, metadata); scripts and API otherwise. No MCP tool creates connections.
+  - `ai-analytics` Path E: write `ai_context`, names, and descriptions with `update_dataset_metadata` after reading them with `search_datasets`, and add metrics with `generate_formula` / `create_formula`.
+  - `resource-management`: quick dashboard and dataset listings with `list_dashboards` / `search_datasets`; bulk work, other resource types, and every delete stay on the API.
+  - Evals for the MCP-connected and no-MCP cases in every skill.
+- `npm run mcp-tools:validate` (part of `npm run validate`): fails when a skill references a backticked MCP tool name that is not in `scripts/mcp-tools.snapshot.json`. Refresh the snapshot with `node scripts/validate-mcp-tool-refs.mjs --print-guide-tools` (see CONTRIBUTING.md).
 
 ### Skill Changes
 
-- Updated `ai-analytics` from `0.1.1` to `0.1.2`: saved Agents (`agent_id`), published Rules, the `dashboard` agent, and dataset/column/formula `ai_context`.
-- Pointed data-modeling guidance at `ai_context` so business definitions are not left only in column descriptions.
-- Refreshed MCP setup notes for credential-based default tools, `permissions`, and `?agentId=`. `npx @luzmo/agent-skills add --with-mcp` now writes `type: "http"`.
-- Routed saved Agents, Rules, and AI context through the AI engineer agent, terminology, `core` `iq.context`, resource management, and troubleshooting.
+- Updated `ai-analytics` from `0.1.1` to `0.1.2`:
+  - Saved Agents (`agent_id`), published Rules, the `dashboard` agent, and dataset/column/formula `ai_context`.
+  - `agent: "auto"` (universal agent) with `capabilities`. `agent_id` can be combined with `agent`; without it the universal agent uses the Agent's capabilities.
+  - IQ Chat `agentId`, the IQ panel enabled from Studio dashboard settings, AI logs (`ailog`), and Custom Charts used by AI agents.
+- Updated `data-visualization` from `0.1.1` to `0.1.2`: Flex `inlineData` (charts without a dataset, embed libraries 8.1.0 / ngx 10.1.0) with its limits, plus a warning that token filters do not apply to inline records. Also covers the viz-item `error` event and array filter expressions.
+- Updated `core` from `0.1.1` to `0.1.2`:
+  - Dashboards default to web-component `embedMode` in embed 8.x (needs `wss://`; edit modes stay in an iframe), plus the `error` event.
+  - `@luzmo/shared-embed` is deprecated.
+  - Export feature flags `flag_export_data` / `flag_export_email_data`.
+  - Pointers to `tenant` / `tenant_fields_rights` and to the Studio-enabled IQ panel.
+- Updated `custom-charts` from `0.1.1` to `0.1.2`:
+  - Manifest chart options (configurable in Studio) and `exportData`, which is required for CSV/XLSX on multi-query charts and must be re-exported from `index.ts`.
+  - Slot `position`, async `render` before exports, the Private -> Publish flow, command-line upload, chart type naming rules, and metadata that helps AI agents pick a chart.
+  - Corrected function signatures (one params object) and slot label rules.
+- Updated `analytics-studio` from `0.1.1` to `0.1.2`:
+  - ACK 1.0.8 filter additions (`getFilters()` input, `format="clean"`, parameter-backed filters, filter-on-select / brush options).
+  - The ACK peer range on `@luzmo/embed` 7.x.
+  - Corrected event, prop, and chart type names in the examples.
+- Updated `theming` from `0.1.1` to `0.1.2`: corrected IQ Chat/Answer CSS variables (`--luzmo-iq-*`), removed `IQChatOptions` keys that do not exist, and replaced invented ACK variable names with the documented ones.
+- Updated `multitenancy` from `0.1.1` to `0.1.2`:
+  - `sticky: true` overrides so scheduled exports and alerts keep the creating token's tenant scope.
+  - Custom fields per tenant (`tenant`, `tenant_fields_rights`).
+  - Fixed `embedfiltergroup` examples.
+- Updated `data-integration` from `0.1.1` to `0.1.2`: Databricks OAuth2 M2M and Snowflake key-pair connections (create them in the app, then reuse them), nested aggregation formulas (GA), formulas over linked datasets, and the new Delta sync schema-change default.
+- Updated `resource-management` from `0.1.1` to `0.1.2`: exports to a webhook, Admin role scope, and e-mail export rate limits.
+- Updated `troubleshooting` from `0.1.1` to `0.1.2`: routes for web-component embed loaders, inline-data errors, ACK `ERESOLVE`, sticky overrides, export `429`s, and MCP issues.
+- Updated `skills.manifest.json` from `0.1.1` to `0.1.2` and registered `mcp`.
+
+### Changed
+
+- Agents and rules: the AI engineer covers `agent_id` with or without `agent`, IQ Chat `agentId`, and the `mcp` skill. The embed engineer covers the `embedMode` default and sticky overrides. `luzmo-security` warns that `inlineData` bypasses token filters, and `luzmo-terminology` was updated.
+- `npx @luzmo/agent-skills add --with-mcp` now writes `type: "http"`.
 
 ## [0.1.3] - 2026-06-18
 

@@ -1,24 +1,24 @@
 {
   "skill_name": "custom-charts",
-  "boundary_notes": "Edge cases vs other skills: Flex charts with built-in types → data-visualization; embedding saved dashboards by id → core; self-service chart editing → analytics-studio; auth/token setup → core; chart broken/blank after release → troubleshooting FIRST.",
+  "boundary_notes": "Edge cases vs other skills: Flex charts with built-in types -> data-visualization; embedding saved dashboards by id -> core; self-service chart editing -> analytics-studio; auth/token setup -> core; chart broken/blank after release -> troubleshooting FIRST.",
   "evals": [
     {
       "id": 1,
       "prompt": "None of Luzmo's built-in chart types can render the proprietary funnel visualization we need. We want to build our own chart component, package it, and release it org-wide so our team can use it in dashboards and Flex embeds. Where do we start?",
-      "expected_output": "Route to custom chart development: confirm built-in types and Flex are exhausted, then scaffold a custom chart project, configure manifest slots, implement render/resize/buildQuery, package/upload, and org release. Consult and cite developer.luzmo.com custom charts docs as implementation-detail guidance.",
+      "expected_output": "Route to custom chart development: confirm built-in types and Flex are exhausted, then scaffold with the Custom Chart Builder, configure manifest slots (and optional options), implement render/resize (and optional buildQuery/exportData), build bundle.zip, upload, and publish to the organization. Consult and cite developer.luzmo.com custom charts docs as implementation-detail guidance.",
       "expectations": [
         "Confirms this is a custom chart path (not Flex with built-in types)",
         "Mentions manifest configuration and core functions (render, resize, buildQuery)",
-        "Mentions packaging, upload, and org-wide release workflow",
+        "Mentions packaging, upload, and publishing the chart org-wide (a new upload starts Private)",
         "References developer.luzmo.com custom charts documentation"
       ]
     },
     {
       "id": 2,
       "prompt": "We uploaded our custom chart but it doesn't show up in the chart picker. The manifest validates locally. What are we missing?",
-      "expected_output": "Identify that the chart must be uploaded and released org-wide before it appears in the picker. Walk through the upload and org release workflow.",
+      "expected_output": "Identify that a newly uploaded chart is Private (only the uploader can add it) until it is published to the organization; a re-upload stays in Update in preview until published. Walk through upload and publish in Settings > Custom Charts.",
       "expectations": [
-        "Identifies org-wide release as a likely missing step",
+        "Identifies that the chart is still Private (or the update is still in preview) and must be published org-wide",
         "Mentions upload/validation workflow",
         "Does not route to Flex chart sizing or contextId issues unless embed-specific"
       ]
@@ -26,7 +26,7 @@
     {
       "id": 3,
       "prompt": "How do I build a Flex bar chart in React with @luzmo/react-embed? I have my embed token already.",
-      "expected_output": "This is a Flex chart with a built-in type — route to data-visualization, not custom charts.",
+      "expected_output": "This is a Flex chart with a built-in type - route to data-visualization, not custom charts.",
       "expectations": [
         "Routes to `data-visualization` for Flex bar chart setup",
         "Does not start a custom chart development workflow",
@@ -35,12 +35,111 @@
     },
     {
       "id": 4,
-      "prompt": "Our custom chart renders in the dashboard but the data shape in render() doesn't match what we expected. We have a buildQuery function — could that be wrong?",
+      "prompt": "Our custom chart renders in the dashboard but the data shape in render() doesn't match what we expected. We have a buildQuery function - could that be wrong?",
       "expected_output": "Review buildQuery and manifest slot mapping vs. the data shape passed to render. Consult manifest and chart implementation docs as implementation-detail guidance.",
       "expectations": [
         "Identifies buildQuery or slot mapping as likely cause",
         "Mentions reviewing manifest slots vs. render data shape",
         "Does not route to dashboard embedding setup (core) unless user asks about embed"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Our custom KPI chart has a revenue slot and a target slot, and buildQuery returns two queries. Users now ask for a CSV/Excel download, but the dashboard shows only PNG export for this chart. How do we add a data export?",
+      "expected_output": "Multi-query custom charts have no CSV/Excel export until they implement exportData. Implement exportData(params) returning { columns, rows } that combines data[0] and data[1], re-export it from index.ts, keep cells to string/number/boolean/null, return numbers as numbers, and finish within 30 seconds. Link the implement-the-chart doc.",
+      "expectations": [
+        "States that a chart whose buildQuery returns more than one query has no CSV/Excel export without `exportData`",
+        "Shows `exportData` returning `{ columns, rows }` built from `data[0]` and `data[1]`",
+        "States that `exportData` must be re-exported from `index.ts`",
+        "Mentions allowed cell types (string, number, boolean, null) or the 30-second limit",
+        "References `https://developer.luzmo.com/guide/guides--custom-charts--implement-the-chart.md`"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "I added an exportData function to chart.ts in our custom chart, rebuilt and re-uploaded, but Luzmo still exports the default table and never seems to call my function. What's wrong?",
+      "expected_output": "Luzmo only calls exportData when the bundled module exports it. The builder's index.ts exports render, resize, buildQuery by default; add exportData to that export list, rebuild, re-upload (with the user's approval for that chart), and publish the update.",
+      "expectations": [
+        "Identifies the missing `exportData` export in `index.ts` as the cause",
+        "Shows `export { render, resize, buildQuery, exportData } from './chart'` or equivalent",
+        "Mentions that a re-upload must be published (Update in preview) before other users see it, or that it needs explicit approval to overwrite"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Our custom table chart pages through data with queryLoaded, so data only holds the current 50 rows. For CSV export we want every row, not just the visible page. Can exportData get different data?",
+      "expected_output": "Yes. exportData receives params.query(queryOrQueries): pass one query (or an ordered array) without the page limit and await the rows; the host applies dashboard filters and authorization and does not re-render the chart. It only works while the export runs and must finish within 30 seconds. Do not fetch Luzmo data directly from the chart.",
+      "expectations": [
+        "Uses `params.query(...)` inside `exportData` to request export-specific data",
+        "States that the host applies dashboard filters/authorization and the visualization is not re-rendered",
+        "Notes that the query is only available while the export is running or within the 30-second limit",
+        "Does not suggest calling the Luzmo data API directly from chart code with API credentials"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "I want dashboard editors to toggle data labels and pick a bar color for our custom chart from the Edit item panel in Studio. Do I need to build my own settings UI?",
+      "expected_output": "No. Add a top-level options array to manifest.json: a group with controls such as switch and color-picker, each with a dotted key and default, plus translations for labels. Luzmo renders the controls in the Edit item panel and the builder; read the values from options in render and resize and apply them. Do not use theme as a key.",
+      "expectations": [
+        "Uses a top-level `options` array with a `group` entry containing controls",
+        "Uses documented control types such as `switch` and `color-picker` with `default` values",
+        "States that chart code must read the values from `options` in `render`/`resize`",
+        "Warns that `theme` / `theme.*` keys are reserved",
+        "References `https://developer.luzmo.com/guide/guides--custom-charts--configure-the-manifest.md`"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Here's my custom chart code: export function render(data, options) { ... } and export function resize(width, height) { ... }. Also when users click a bar I post setFilter with parameters [{ columnId: col.columnId, datasetId: col.datasetId }, value] but nothing gets filtered. Any issues?",
+      "expected_output": "Both signatures are wrong: render and resize receive one ChartParams object ({ container, data, slots, slotConfigurations, options, language, timezoneId, dimensions }). setFilter parameters must use snake_case column_id and dataset_id; filters without parameters[0].dataset_id are silently discarded.",
+      "expectations": [
+        "Corrects `render`/`resize` to destructure a single params object",
+        "Lists `container`, `data`, `options`, and `dimensions` among the params",
+        "States that `setFilter` parameters use `column_id` and `dataset_id` (snake_case)",
+        "Explains that the camelCase filter is dropped or ignored"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Our custom chart has category, value and legend slots, and in the dashboard editor the slot buttons pile up in the corners on top of each other. How do I place them properly?",
+      "expected_output": "Set a unique kebab-case position on every visible slot next to the element it drives: category bottom, value left, legend right (or middle for a KPI measure). Avoid top-left/top-right. Unpositioned slots are auto-placed. Link the manifest doc's Position the slots section.",
+      "expectations": [
+        "Sets a unique `position` per visible slot",
+        "Uses kebab-case values such as `bottom`, `left`, `right`",
+        "Advises avoiding `top-left` and `top-right`",
+        "References the configure-the-manifest doc"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "I want to upload our custom chart from CI instead of the Settings page, using type 'bar-chart' since it's basically a fancy bar chart. Then I want my coding agent to push updates to the existing chart automatically on every merge. How?",
+      "expected_output": "Use the builder's command-line upload: put LUZMO_API_KEY/LUZMO_API_TOKEN in the gitignored .env.local or environment, npm run charts -- upload --type <type> --name <name>, --json for machine output. 'bar-chart' is a reserved built-in type name and is rejected; pick a unique type of at most 32 characters. Updating with --id overwrites the chart's code and needs explicit user approval for that chart id; the update stays in preview until published.",
+      "expectations": [
+        "Uses `npm run charts -- upload` from the Custom Chart Builder",
+        "Rejects `bar-chart` as a reserved built-in chart type name or requires a unique type of at most 32 characters",
+        "States that `upload --id` overwrites the existing chart and requires explicit user approval",
+        "Keeps API key/token out of client-side code and committed files"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "We published a custom funnel chart. When people ask Luzmo IQ or the dashboard agent for a conversion funnel, it keeps generating a built-in bar chart instead. What in our custom chart affects whether the agent picks it?",
+      "expected_output": "Agents see the chart type, chart name, slot definitions and option controls of published charts. Give the chart a descriptive name, fill slot labels and descriptions, set accurate slot types/accepted field types/isRequired, give options defaults, and keep the manifest valid (duplicate slot names or invalid options make agents skip it). Ensure it is published, not Private.",
+      "expectations": [
+        "States that agents use the chart name and slot definitions (labels/descriptions/types) to choose a custom chart",
+        "Recommends a descriptive chart name and slot `description`s",
+        "Mentions the chart must be published (not Private) or that invalid manifests are skipped",
+        "Hands off agent/IQ configuration questions to `ai-analytics` when relevant"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "With the Luzmo MCP connected in Claude Code: how do I make a custom chart support CSV export?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'custom chart exportData'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
       ]
     }
   ]

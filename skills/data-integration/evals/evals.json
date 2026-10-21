@@ -70,6 +70,64 @@
         "Does NOT attempt to fully cover the React embedding setup from the data-integration skill",
         "May briefly mention `@luzmo/react-embed` and embed token generation as context, but defers to `core` or `data-visualization` for the full guide"
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "We want to connect our Databricks SQL warehouse to Luzmo using a service principal instead of someone's personal token. Can your script set that up? Here are the client ID and secret.",
+      "expected_output": "Does not use or repeat the pasted secret. Explains Databricks supports OAuth2 machine-to-machine for service principals, has the user create the connection on the Luzmo Connections page, then reuses it with connect-datasource.js --account-id to register tables. Does not invent createAccount properties for this auth mode.",
+      "expectations": [
+        "Does not repeat the client secret or place it in a command, script, or tool argument",
+        "States that Databricks connections support OAuth2 machine-to-machine for service principals",
+        "Has the user create the connection in the Luzmo app (Connections page)",
+        "Reuses the connection with `connect-datasource.js --account-id <uuid>`",
+        "Does not invent `createAccount` property names for the OAuth2 M2M mode"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Our transactions dataset is linked to a monthly_targets dataset on month. I want a formula for average per-store revenue versus target. Can I reference the targets column in a formula, and can I nest aggregations?",
+      "expected_output": "Yes: formulas can reference columns of directly linked datasets, and nested aggregations such as AVG(GROUPINEX(SUM(...), [store], [])) are generally available on all connectors. Validate with validateFormula, then createFormula, referencing columns as {dataset_id:column_id}.",
+      "expectations": [
+        "States that a formula can reference columns from a directly linked dataset",
+        "Uses `GROUPINEX` (or equivalent nested aggregation) for the per-store inner aggregation",
+        "States that nested aggregation formulas are generally available (not beta-only)",
+        "Validates with `validateFormula` before `createFormula`",
+        "References `https://developer.luzmo.com/api/createFormula.md`"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "We added a column to a Postgres table behind a Warp delta-synced dataset. Will the sync break, and what should we set on the acceleration?",
+      "expected_output": "Explains delta_sync_schema_change_strategy defaults to sync, so safe schema changes trigger a full reload on the next sync, while tracking-column changes still need manual review; alert is the stricter option. Points to createAcceleration docs.",
+      "expectations": [
+        "Mentions `delta_sync_schema_change_strategy`",
+        "States that the default is `sync`, which runs a full reload after a safe schema change",
+        "Notes that changes to tracking columns still need manual review",
+        "References `https://developer.luzmo.com/api/createAcceleration.md`"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "I'm in Claude Code with the Luzmo MCP server connected (Luzmo login). Our Snowflake connection already exists in Luzmo. Turn the ORDERS table into a dataset, then rename the columns to business-friendly names and fix the SQL behind our existing 'Active customers' SQL dataset so it also returns region.",
+      "expected_output": "Uses the MCP tools instead of scripts: list_connections and list_connection_tables to find the table, create_dataset to add it, read current metadata with search_datasets before update_dataset_metadata, and update_dataset_sql for the SQL dataset. Confirms before the destructive calls and warns that a new query drops columns it no longer returns. Does not restate tool parameters and does not ask for database credentials.",
+      "expectations": [
+        "Uses `list_connections` / `list_connection_tables` and `create_dataset` rather than writing a connect-datasource or push-data script",
+        "Reads current names and descriptions with `search_datasets` before calling `update_dataset_metadata`",
+        "Uses `update_dataset_sql` for the SQL dataset and warns that columns the new query no longer returns are dropped",
+        "Asks for explicit user confirmation before `update_dataset_metadata` and `update_dataset_sql`",
+        "Does not ask for Snowflake host, user, or password"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "No MCP here - I'm writing a Node backend job. It needs to connect to our Postgres database and register the orders and customers tables as Luzmo datasets every time we onboard a new environment.",
+      "expected_output": "Without MCP tools and for a repeatable job, use the bundled connect-datasource.js script (or createAccount/getDataprovider/createDataprovider) server-side, reusing an existing account if one matches, with the DB password from an env var. MCP tools are not needed; mentions them at most as an option for one-off setup from an AI client.",
+      "expectations": [
+        "Uses `scripts/connect-datasource.js` or the `createDataprovider` API flow, not MCP tools",
+        "Checks for an existing account (`--list-accounts`) before creating one",
+        "Keeps the database password in a server-side environment variable (for example `--password-env`)",
+        "Runs the job server-side, not in client code"
+      ]
     }
   ]
 }

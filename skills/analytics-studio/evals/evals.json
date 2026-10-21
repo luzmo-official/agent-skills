@@ -96,6 +96,49 @@
         "Passes the React state value as the slotsContents prop to luzmo-embed-viz-item",
         "Does NOT suggest polling the ACK component for state"
       ]
+    },
+    {
+      "id": 9,
+      "prompt": "I'm adding @luzmo/analytics-components-kit 1.0.8 to a vanilla JS app and ran `npm install @luzmo/analytics-components-kit @luzmo/embed@8.1.0` so I can use Flex inlineData. npm fails with ERESOLVE. What's going on?",
+      "expected_output": "ACK 1.0.8 declares a peer dependency on @luzmo/embed ^7.5.0, so embed 8.x conflicts. Pin the 7.x embed line for the ACK project (accepting that inlineData and the webComponent dashboard default are embed 8 features), or wait for an ACK release whose peer range includes 8.x; do not paper over it with --force without understanding the risk.",
+      "expectations": [
+        "Identifies the ACK peer dependency `@luzmo/embed ^7.5.0` as the cause",
+        "Recommends pinning `@luzmo/embed` 7.x alongside ACK 1.0.8 or checking the ACK peer range",
+        "Notes that `inlineData` requires embed 8.1.0, so it is not available on the pinned 7.x line",
+        "Does not recommend `--force`/`--legacy-peer-deps` as the default fix"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "In my ACK studio I want users to edit the filters that are currently applied on an embedded Luzmo dashboard, and get them back in the same shape getFilters() returns. How do I wire luzmo-filters?",
+      "expected_output": "Pass the result of `dashboard.getFilters()` (DashboardFilterOutput, embed 7.4.0+) directly to `luzmo-filters.filters` (ACK 1.0.7+), set `format=\"clean\"` to emit clean clause groups, and in `luzmo-filters-changed` narrow on `event.detail.format` before using `event.detail.filters`. Keep the default canonical format when the output feeds a Flex viz item's `filters`.",
+      "expectations": [
+        "Passes `getFilters()` output directly into `luzmo-filters`",
+        "Uses `format=\"clean\"` to get clean output",
+        "Reads `event.detail.format` / `event.detail.filters` from `luzmo-filters-changed`",
+        "Keeps app-owned state (ACK does not persist filters)"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Show me a minimal React example where an ACK slot drop panel configures a bar chart and a Flex chart renders it.",
+      "expected_output": "Use `LuzmoItemSlotDropPanel` from `@luzmo/analytics-components-kit/react` with `itemType`, `slotsContents` and `onLuzmoSlotsContentsChanged` (reading `e.detail.slotsContents`) to update app state, and render with `LuzmoVizItemComponent` from `@luzmo/react-embed` using `type=\"bar-chart\"` and `slots={...}`, both with embed-token authKey/authToken.",
+      "expectations": [
+        "Uses `onLuzmoSlotsContentsChanged` (or `luzmo-slots-contents-changed`) and `e.detail.slotsContents`",
+        "Stores the slots in app state (one-way data flow)",
+        "Passes the state to the renderer as `slots`, not `slotsContents`",
+        "Keeps ACK `itemType` and renderer `type` identical"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "I have the Luzmo MCP server connected. In ACK, how do I add a date filter component to my dashboard builder?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'ACK filter component'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
+      ]
     }
   ]
 }

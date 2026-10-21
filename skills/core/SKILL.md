@@ -9,8 +9,8 @@ description: >-
   Not for building charts in code (use data-visualization), data loading (use data-integration), or tenant isolation (use multitenancy).
 metadata:
   author: Luzmo
-  version: 0.1.1
-  last_updated: 2026-06-18
+  version: 0.1.2
+  last_updated: 2026-10-19
 ---
 
 # Luzmo Core
@@ -20,6 +20,7 @@ Entry-point for all Luzmo integrations. Establishes security and API patterns th
 ## Doc Retrieval
 
 - `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- If the Luzmo MCP `search_docs` tool is available, use it first to find the right pages: it returns matching passages with their live developer.luzmo.com or Academy URLs. Fetch the `.md` URL when you need the full page or anything newer than the server's docs build. Without MCP, go straight to the `.md` URLs below.
 - Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
 - Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
@@ -306,6 +307,8 @@ The `createAuthorization` API generates short-lived tokens for frontend access:
 - `expiry` — RFC 3339 timestamp; defaults to 24 h, max 1 year
 - `parameter_overrides` — supply tenant-specific values for parameterized dataset filters (for full row-level tenant isolation, defer to `multitenancy` — do not assemble the complete filter pattern from core)
 - `account_overrides` — override database/plugin connection credentials per tenant (for full row-level tenant isolation, defer to `multitenancy` — do not assemble the complete filter pattern from core)
+- `tenant` — tenant identifier for custom fields per tenant and tenant dataset sources; independent of `suborganization` (setting only `suborganization` no longer activates tenant field scoping). Field-level `tenant_fields_rights` and the full pattern live in `multitenancy`
+- `feature_overrides` — enable/disable product features per token, e.g. `['!flag_export_data']` turns off CSV/XLSX data exports of dashboards and charts (see `references/authorization-patterns.md`)
 - `iq.context` — custom system prompt appended to IQ queries for this token. On a call it merges with per-request `context` and, for a saved Agent, that Agent's published Rules. Business knowledge on the data is `ai_context` — see `ai-analytics`
 - `environment` — pin to `"production"`, `"development"`, `"acceptance"`, `"qa"`, or `null` (latest)
 
@@ -339,6 +342,8 @@ These SDKs use embed tokens (`authKey`/`authToken`), never API credentials.
 
 **†** Dashboard/Flex embedding only — IQ Chat/Answer components require a web browser (see `ai-analytics`).
 
+`@luzmo/shared-embed` is deprecated (7.0.0 has no API). Since `@luzmo/embed` 8.0.0 its types and utilities ship in `@luzmo/embed`, `@luzmo/embed/shared`, and `@luzmo/embed/rn`; never add `@luzmo/shared-embed` as a dependency.
+
 ## Embedding a Saved Dashboard or Chart by ID
 
 Use this path when the user wants to **display an existing Luzmo dashboard or chart** that was already created and saved in Luzmo — identified by `dashboardId` (or `dashboardSlug`). This is the most common embedding scenario.
@@ -359,6 +364,18 @@ Use this path when the user wants to **display an existing Luzmo dashboard or ch
 `appServer`, `apiHost`, `authKey`, `authToken`, `dashboardId`
 
 Use `dashboardSlug` instead of `dashboardId` when the dashboard has a slug configured.
+
+### embedMode (Web Component by Default)
+
+Since `@luzmo/embed` / `@luzmo/react-embed` / `@luzmo/vue-embed` 8.0.0, `@luzmo/ngx-embed` 10.0.0 and `@luzmo/react-native-embed` 7.0.0, a view-mode dashboard renders as a **web component** in your page unless you set `embedMode`. Older majors default to `iframe`.
+
+| Need | Set |
+|---|---|
+| Default: product-analytics tools (Pendo, PostHog, Heap) see clicks, shared resources and cross-filtering for multiple items on one page | omit `embedMode` (or `"webComponent"`) |
+| Keep the previous iframe isolation | `embedMode="iframe"` (Angular `[embedMode]="'iframe'"`) |
+| `editMode` other than `"view"` | always renders in an iframe, whatever `embedMode` says |
+
+Web-component mode opens `wss://` connections from your page to `apiHost`: allow them in your CSP, reverse proxy, and firewall. Listen for the `error` event (embed 7.1.0+, `event.detail.errorMsg`) so a failed connection shows your own message instead of an endless loader. Docs: `https://developer.luzmo.com/guide/embedding--component-api-reference--properties.md`
 
 ### Sizing
 
@@ -446,6 +463,7 @@ Quick reference of top issues:
 - Using `action: "search"` instead of `action: "get"` ([WARNING] VERY COMMON)
 - Exposing API credentials in client-side code ([WARNING] COMMON - SECURITY CRITICAL)
 - Wrong property names for included models ([WARNING] COMMON)
+- Assuming a dashboard is still in an iframe after upgrading to embed 8.x (web component is now the default; CSP must allow `wss://` to `apiHost`) ([WARNING] COMMON)
 
 ## Avoid
 

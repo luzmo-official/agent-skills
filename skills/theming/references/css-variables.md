@@ -2,7 +2,7 @@
 
 Quick map of which Luzmo surface uses which styling mechanism. For exact CSS variable names per surface, consult the surface-specific doc; variable names change as components evolve. These docs guide implementation details only.
 
-> **Migration (0.1.0):** The deprecated `--luzmo-iq-*` prefix is removed. Use unified `--luzmo-*` variables on the container (same namespace as IQ Answer, embed, and ACK surfaces where documented).
+> **Prefixes differ per surface:** IQ Chat and IQ Answer use `--luzmo-iq-*` variables; ACK components use `--luzmo-*` globals (`--luzmo-primary`, `--luzmo-background-color`, ...) plus `--luzmo-{component}-*` overrides.
 
 ## Surface → Mechanism
 
@@ -10,9 +10,9 @@ Quick map of which Luzmo surface uses which styling mechanism. For exact CSS var
 |---|---|---|
 | Dashboard embedding | Theme API / token `theme` JSON | `https://developer.luzmo.com/api/createTheme.md` |
 | Standalone Flex chart runtime | Per-chart `options` object (`options.theme`, `options.color`, chart-specific styling fields) | `https://developer.luzmo.com/flex/examples/apply-custom-theme.md` |
-| IQ Chat component | `IQChatOptions` + `--luzmo-*` CSS variables | `https://developer.luzmo.com/guide/iq--chat-component-api--customization.md` |
-| IQ Answer component | `--luzmo-*` CSS custom properties | `https://developer.luzmo.com/guide/iq--answer-component-api--css-variables.md` |
-| ACK editor components | Lucero tokens + ACK globals | `references/lucero-tokens.md`, `https://developer.luzmo.com/guide/ack--patterns.md` |
+| IQ Chat component | `IQChatOptions` (`options.chartTheme` for charts) + `--luzmo-iq-*` CSS variables | `https://developer.luzmo.com/guide/iq--chat-component-api--customization.md` |
+| IQ Answer component | `--luzmo-iq-*` CSS custom properties | `https://developer.luzmo.com/guide/iq--answer-component-api--css-variables.md` |
+| ACK editor components | Lucero tokens + ACK globals (`--luzmo-*`) | `references/lucero-tokens.md`, `https://developer.luzmo.com/guide/guides--building-a-dashboard-studio--theming.md` |
 | Authorization `css` field | Server-generated or allowlisted CSS targeting Luzmo-rendered classes | `https://developer.luzmo.com/api/createAuthorization.md` |
 
 ## How to Use CSS Variables
@@ -21,8 +21,9 @@ For surfaces that expose CSS custom properties, override at the container level:
 
 ```css
 .luzmo-themed-container {
-  --luzmo-primary-color: #0F172A;
-  --luzmo-font-family: 'Inter', sans-serif;
+  --luzmo-iq-background-color: #ffffff;
+  --luzmo-iq-font-color: #0F172A;
+  --luzmo-iq-border-radius: .5rem;
   /* consult the per-component doc for the canonical variable list */
 }
 ```
@@ -41,15 +42,14 @@ See `references/lucero-tokens.md` for a curated cheatsheet. For the full catalog
 
 ## IQ Chat — Customization Props
 
-IQ Chat exposes both `IQChatOptions` (configuration object) and CSS variables. Use `IQChatOptions` for behavioral / visual config that has a documented property; use `--luzmo-*` CSS variables for typography and color tweaks beyond that.
+IQ Chat exposes both `IQChatOptions` (the `options` property) and CSS variables. Use `IQChatOptions` for documented behavior and chart styling (`chartTheme`); use `--luzmo-iq-*` CSS variables for colors, typography, and spacing. There is no `primaryColor` or `font` option.
 
 ```jsx
 <LuzmoIQChatComponent
   authKey={authKey}
   authToken={authToken}
   options={{
-    primaryColor: '#0F172A',
-    font: 'Inter, sans-serif',
+    chartTheme: { /* ItemThemeConfig, see the customization doc */ },
   }}
 />
 ```
@@ -74,7 +74,7 @@ CRITICAL: Prefer structured theme settings or constrained design tokens for tena
 - **Brand colors that apply to all dashboards** → Theme API (`createTheme`) + reference by id in tokens.
 - **Per-tenant dashboard colors** → inline `theme` JSON or allowlisted `css` in `createAuthorization` (sanitize!).
 - **Standalone Flex chart colors** → item `options` object; do not pass a top-level `theme` prop.
-- **IQ Chat / Answer look-and-feel** → `IQChatOptions` + `--luzmo-*` on the container.
+- **IQ Chat / Answer look-and-feel** → `IQChatOptions` + `--luzmo-iq-*` on the container.
 - **ACK editor styling** → Lucero tokens (see `lucero-tokens.md`).
 - **One-off pixel fixes** → token-level `css` injection.
 

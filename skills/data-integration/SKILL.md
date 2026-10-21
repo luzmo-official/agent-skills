@@ -11,8 +11,8 @@ description: >-
   Not for chart rendering (use data-visualization) or per-tenant access control (use multitenancy).
 metadata:
   author: Luzmo
-  version: 0.1.1
-  last_updated: 2026-06-18
+  version: 0.1.2
+  last_updated: 2026-10-19
 ---
 
 # Luzmo Data Integration
@@ -22,6 +22,7 @@ Entry-point for all data-side work: connecting sources, pushing data, modeling s
 ## Doc Retrieval
 
 - `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- If the Luzmo MCP `search_docs` tool is available, use it first to find the right pages: it returns matching passages with their live developer.luzmo.com or Academy URLs. Fetch the `.md` URL when you need the full page or anything newer than the server's docs build. Without MCP, go straight to the `.md` URLs below.
 - Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
 - Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
@@ -66,6 +67,21 @@ What data do you need to integrate?
 | Model columns, formulas, Warp | See `references/data-modeling.md` |
 | Plugin connector for unsupported source | See `references/connection-types.md` |
 | Custom chart type | See `references/connection-types.md` (custom charts section) |
+
+### If Luzmo MCP tools are available
+
+When the session has the Luzmo MCP tools (an AI client connected to the hosted MCP server, see `mcp`), use them for one-off workspace setup instead of writing scripts. Use the scripts and API in this skill for repeatable or code-driven pipelines, and whenever the tools are not available. The tool descriptions hold the parameters; do not restate them.
+
+| Task | With MCP tools | Without MCP |
+|---|---|---|
+| See existing connections and their tables | `list_connections`, `list_connection_tables` | `connect-datasource.js --list-accounts`, `getDataprovider` |
+| Create a connection or change its credentials | Not possible through MCP. Use the Connections page in the Luzmo app; never ask for host, user, or password in chat | `connect-datasource.js` (server-side, password from an env var) |
+| Dataset from a table, a SQL query, or a few hundred rows | `create_dataset` | `createDataprovider`, or `push-data.js` for rows |
+| Append or replace rows of a pushed dataset | `update_dataset_data` | `push-data.js` |
+| Change the query behind a SQL dataset | `update_dataset_sql` | The dataset's SQL editor in the Luzmo app |
+| Dataset and column names, descriptions, AI context | `update_dataset_metadata` | `updateDataset` / `updateColumn` (see `https://developer.luzmo.com/guide/guides--managing-ai-context.md`) |
+
+`update_dataset_data`, `update_dataset_sql`, and `update_dataset_metadata` are destructive: confirm with the user before each call. Replacing data discards the current rows, a new SQL query drops columns it no longer returns, and metadata writes overwrite without a copy, so read the current values with `search_datasets` first and show what changes. For what to write in AI context, use `ai-analytics` Path E.
 
 ---
 
@@ -125,6 +141,8 @@ node skills/data-integration/scripts/connect-datasource.js \
 ```
 
 Store the source password or token in a server-side environment variable such as `DB_PASSWORD`. Do not paste live database passwords, SaaS tokens, or plugin credentials directly into commands, scripts, logs, or committed files.
+
+**Token-, key-pair-, or service-principal-based connections** (for example Databricks with a personal access token or OAuth2 machine-to-machine for a service principal, or Snowflake key-pair): the script only creates host/user/password-style accounts. Have the user create the connection on the Connections page of the Luzmo app, then reuse it with `--account-id`. The provider-specific `createAccount` properties for these auth modes are not in the public API reference, so do not guess them.
 
 When helping a user connect a source, provide the env-var setup and the script command for them to run. Do not ask them to share the source password with the agent, and do not run the connection command yourself if the password is not already available through a permitted environment variable.
 
@@ -229,6 +247,7 @@ For deeper guidance on specific data integration topics:
 - `searchDataset` supports `include` for related resources: `Column`, `Account`, `Acceleration`, and linked dashboards.
 - For ad-hoc row-level data exports, query `/data` with `client.get('data', { queries: [...] })`; use `options.rollup_data: false`, `order`, and `limit`/`offset` to batch rows, then write CSV/XLSX in the app. Consult `https://developer.luzmo.com/api/getData.md` for current field shapes.
 - For dashboard/chart/Flex exports, use the `/export` service (`createExport`) instead: sync file response, async email, or scheduled email. Consult `https://developer.luzmo.com/api/createExport.md`.
+- Table data exports (`createDataexport`) can be delivered to a webhook channel instead of email; see `resource-management` (Exports and Background Tasks).
 - Fewer, wider tables in data-push datasets generally perform better than many narrow linked tables.
 
 ## Common Mistakes

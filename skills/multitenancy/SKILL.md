@@ -4,13 +4,13 @@ description: >-
   Multi-tenant data isolation - critical security skill for SaaS applications.
   Use whenever each user or customer must see only their own data.
   Triggers on: row-level security, tenant isolation, "users see each other's data", "data leak", per-customer filtering, designer/owner access with data isolation.
-  Covers three isolation patterns with tradeoffs.
+  Covers three isolation patterns with tradeoffs, plus custom fields per tenant (explicit `tenant`, `tenant_fields_rights`) and sticky overrides for scheduled exports and alerts.
   Use eagerly - wrong isolation is a security breach, not a bug.
   Pair with core for token generation and data-integration for connection-level overrides.
 metadata:
   author: Luzmo
-  version: 0.1.1
-  last_updated: 2026-06-18
+  version: 0.1.2
+  last_updated: 2026-10-19
 ---
 
 # Luzmo Multitenancy
@@ -20,6 +20,7 @@ Entry-point for multi-tenant embedding and data isolation. Security-critical - u
 ## Doc Retrieval
 
 - `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- If the Luzmo MCP `search_docs` tool is available, use it first to find the right pages: it returns matching passages with their live developer.luzmo.com or Academy URLs. Fetch the `.md` URL when you need the full page or anything newer than the server's docs build. Without MCP, go straight to the `.md` URLs below.
 - Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
 - Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
@@ -96,6 +97,7 @@ Do your tenants share the same database tables?
 | Row-level security for shared datasets with parameterized embed filters (multi-tenant data sources) | **Pattern 1 — Parameterized embed filters** |
 | Row-level security via static token-level filters for specified datasets (multi-tenant data sources) | **Pattern 2 — Static token filters** |
 | Each tenant has a separate database, schema, or connection (single-tenant data sources) | **Pattern 3 — Connection overrides (`account_overrides`)** |
+| Tenants share one data model, but each tenant's table or query has its own extra columns | **Custom fields per tenant** (explicit `tenant` + tenant dataset source) - see below; still isolate rows with Pattern 1, 2, or 3 where tables are shared |
 
 ---
 
@@ -263,6 +265,61 @@ account_overrides: {
 
 Consult both the connection overrides guide and the specific plugin documentation before configuring overrides.
 
+### Scheduled exports and alerts (sticky overrides)
+
+By default, scheduled exports and alerts run with the overrides of the **most recently created token for the same `username`**, not the token that created the schedule. To pin a connection override to the schedules a token creates, set `sticky: true` on that connection's entry; for parameter overrides use `{ "<parameter>": { "sticky": true, "value": ... } }`.
+
+```javascript
+account_overrides: {
+  '<base-connection-uuid>': {
+    sticky: true, // schedules created with this token keep this override
+    host: tenant.db_host,
+    schema: tenant.db_schema,
+  },
+},
+```
+
+Keep `username` unique and immutable per end user: a username reused across tenants makes non-sticky schedules run with another tenant's overrides. Docs: `https://developer.luzmo.com/api/createAuthorization.md` (`account_overrides`, `parameter_overrides`) and the example `https://developer.luzmo.com/api/createAuthorization/examples/specify-sticky-account-overrides-when-creating-an-embed-token/js`.
+
+---
+
+## Custom Fields per Tenant (`tenant`, `tenant_fields_rights`)
+
+Use when tenants share one data model and base dataset, but each tenant's table or SQL query has extra columns, or tenants create their own derived columns and formulas.
+
+Docs:
+```
+https://developer.luzmo.com/guide/dashboard-embedding--custom-fields-per-tenant.md
+https://developer.luzmo.com/api/createTenant.md
+https://developer.luzmo.com/api/createTenantDatasetSource.md
+https://developer.luzmo.com/api/createAuthorization.md
+```
+
+How it fits:
+- A **tenant** (`createTenant`) is one of your customers; its `identifier` is what you pass as `tenant` in the embed token. Tenants and tenant dataset sources are managed with main-organization API credentials.
+- A **tenant dataset source** routes the tenant's queries on the base dataset to its own table (`source_sheet`) or SQL query (`source_query`). It is stored per tenant and dataset; `account_overrides` are per token.
+- A token with an explicit `tenant` sees the shared fields plus its own tenant's fields. Tokens with `tenant` omitted or `null` see **all** fields, including other tenants' fields. `suborganization` alone does not activate tenant scoping.
+- Tenant field visibility is not a row filter. Where tenants share tables, keep Pattern 1 or 2 for rows.
+
+**Token example (tenant may edit only its own fields):**
+```javascript
+const auth = await client.create('authorization', {
+  type: 'embed',
+  role: 'designer',
+  username: user.id,
+  suborganization: user.org_id,
+  tenant: tenant.identifier, // explicit; never derived from suborganization
+  access: {
+    datasets: [{ id: datasetId, rights: 'use', tenant_fields_rights: 'modify' }],
+  },
+});
+```
+
+Rules for `tenant_fields_rights` (in `access.datasets[]` only):
+- Applies to the token's own tenant fields; `rights` keeps applying to shared fields. When omitted, `rights` applies to all fields. No effect without `tenant`.
+- Grants from the embed user, its groups, or integrations are **additive**: a suborganization group with modify access on the dataset overrides a lower `tenant_fields_rights`.
+- The API token creating the embed token needs dataset access at least as high as the higher of `rights` and `tenant_fields_rights`. Preview tokens cannot set `tenant`.
+
 ---
 
 ## Important Facts
@@ -272,6 +329,8 @@ Consult both the connection overrides guide and the specific plugin documentatio
 - Dashboard-level filters are weak and insecure — an editor can remove them. Use dataset-level filtering instead (either parameterized embed filters or static token filters).
 - `account_overrides` is the documented property name (not `connectionOverrides` or similar).
 - Plugin-specific overrides: consult the plugin docs too.
+- Scheduled exports and alerts use the overrides of the newest token for the same `username` unless the override is marked `sticky: true`.
+- Tenant field scoping needs an explicit `tenant` on the token; without it the token sees every tenant's fields.
 
 ## Hand Off
 
@@ -305,14 +364,13 @@ You'll see: users with `designer`/`owner` roles successfully removing or modifyi
 **Why this fails:** Dashboard-level filters live in the dashboard JSON. Anyone with edit permission on the dashboard can change them. This is a data-breach-in-waiting whenever editor roles are exposed.
 **[OK] Use server-side token/query enforcement instead:**
 ```javascript
-// Correct - Pattern 1 centralizes the tenant filter definition
-await client.create('embedfiltergroup', {
-  expression: 'tenant_id = ?',
-  parameters: [{ name: 'tenant_id' }]
-})
+// Correct - Pattern 1: the parameterized filter lives on the
+// embedfiltergroup-dataset association (see Pattern 1 setup above)
+const group = await client.create('embedfiltergroup', {})
+// associate group -> dataset with filters using parameter 'metadata.tenant_id'
 
 // In authorization:
-parameter_overrides: { tenant_id: '123' }
+parameter_overrides: { tenant_id: ['123'] }
 ```
 
 **[ERROR] Using wrong property name for connection overrides ([WARNING] COMMON — silent failure):**
@@ -339,7 +397,7 @@ const userTenantId = getCurrentUser().tenantId
 ```javascript
 // Correct - server-side token generation
 const token = await client.create('authorization', {
-  parameter_overrides: { tenant_id: user.tenantId }
+  parameter_overrides: { tenant_id: [user.tenantId] }
 })
 // Send token.id and token.token to client
 ```
@@ -347,21 +405,31 @@ const token = await client.create('authorization', {
 **[ERROR] Creating multiple EmbedFilterGroups:**
 ```javascript
 // Wrong - only one EmbedFilterGroup per organization
-await client.create('embedfiltergroup', { expression: 'tenant_id = {{tid}}' })
-await client.create('embedfiltergroup', { expression: 'region = {{r}}' })  // Will fail
+await client.create('embedfiltergroup', {})
+await client.create('embedfiltergroup', {})  // Will fail
 ```
 **[OK] Use a single EmbedFilterGroup with multiple parameters:**
 ```javascript
-// Correct - one group, multiple parameters
-await client.create('embedfiltergroup', {
-  expression: 'tenant_id = {{tenant_id}} AND region = {{region}}'
-})
+// Correct - one group; each dataset association holds its parameterized
+// filters (e.g. 'metadata.tenant_id' and 'metadata.region')
+const group = await client.create('embedfiltergroup', {})
 
 // Override both in token:
 parameter_overrides: {
-  tenant_id: '123',
-  region: 'EU'
+  tenant_id: ['123'],
+  region: ['EU']
 }
+```
+
+**[ERROR] Relying on `suborganization` to scope custom fields per tenant ([WARNING] COMMON - silent):**
+```javascript
+// Wrong - no tenant scoping: this token sees every tenant's custom fields
+await client.create('authorization', { type: 'embed', suborganization: 'acme', access: {...} })
+```
+You'll see: NO error. Columns and formulas assigned to other tenants appear in the field list, and tenant dataset source routing does not apply.
+**[OK] Set the tenant explicitly:**
+```javascript
+await client.create('authorization', { type: 'embed', suborganization: 'acme', tenant: 'acme', access: {...} })
 ```
 
 **[ERROR] Forgetting to extend Pattern 2 filters when dataset access expands:**
@@ -408,6 +476,8 @@ filters: [
 - Inventing `EmbedFilterGroup` or `account_overrides` payloads without fetching the exact API docs.
 - Using property names other than `account_overrides` for connection overrides.
 - Creating multiple `EmbedFilterGroup` resources (only one per organization is allowed).
+- Omitting `tenant` on embed tokens for datasets with tenant-assigned fields (the token then sees every tenant's fields).
+- Assuming scheduled exports and alerts keep the overrides of the token that created them without `sticky: true`.
 
 ## Canonical Sources
 

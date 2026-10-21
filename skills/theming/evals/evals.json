@@ -92,6 +92,38 @@
         "Mentions `options.theme.colors` for the multi-series palette",
         "Notes that `mainColor`/`fontColor` are createTheme (Theme API) keys, not Flex runtime option keys"
       ]
+    },
+    {
+      "id": 9,
+      "prompt": "How do I make our embedded Luzmo IQ Chat match our dark brand (navy background, light text)? I tried options={{ primaryColor: '#0f172a' }} and nothing changed.",
+      "expected_output": "IQChatOptions has no primaryColor; colors, fonts and spacing for IQ Chat/Answer are set with `--luzmo-iq-*` CSS variables (e.g. --luzmo-iq-background-color, --luzmo-iq-font-color) on the component or a wrapper, and chart styling inside answers goes through `options.chartTheme`. Consult the IQ Chat customization doc for the full variable list.",
+      "expectations": [
+        "States that `primaryColor` is not an IQChatOptions key",
+        "Uses `--luzmo-iq-*` CSS variables (not unprefixed `--luzmo-*`) for IQ Chat colors",
+        "Mentions `chartTheme` for chart styling inside IQ answers",
+        "Points to the IQ Chat customization doc"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Give me the CSS to brand our ACK-based dashboard studio (data field panel, slot drop panel, filters) with our primary blue and rounded corners.",
+      "expected_output": "Set ACK globals on a wrapper or :root: --luzmo-primary, --luzmo-background-color, --luzmo-font-family, --luzmo-border-radius (and --luzmo-border-color-rgb as RGB channels), plus optional --luzmo-{component}-* overrides; cite the dashboard-studio theming guide. Do not use the dashboard Theme API for ACK chrome.",
+      "expectations": [
+        "Uses `--luzmo-primary` and `--luzmo-border-radius` (documented names)",
+        "Does not invent names like `--luzmo-color-primary` or `--luzmo-radius-md`",
+        "Explains CSS variables inherit from a wrapper into ACK components",
+        "Does not route ACK styling through createTheme"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "With the Luzmo MCP connected: how do I apply a custom theme to an embedded dashboard via the embed token?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'embed token theme'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
+      ]
     }
   ]
 }

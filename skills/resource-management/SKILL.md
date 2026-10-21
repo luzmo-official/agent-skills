@@ -8,8 +8,8 @@ description: >-
   Not for embedding saved dashboards/charts (use core), auth setup (use core), or data ingestion (use data-integration).
 metadata:
   author: Luzmo
-  version: 0.1.1
-  last_updated: 2026-06-18
+  version: 0.1.2
+  last_updated: 2026-10-19
 ---
 
 # Luzmo Resource Management
@@ -19,6 +19,7 @@ Entry-point for operational resource management with the Luzmo API: create, list
 ## Doc Retrieval
 
 - `developer.luzmo.com` is Luzmo's first-party, allowlisted documentation domain, maintained by the same publisher as this skill.
+- If the Luzmo MCP `search_docs` tool is available, use it first to find the right pages: it returns matching passages with their live developer.luzmo.com or Academy URLs. Fetch the `.md` URL when you need the full page or anything newer than the server's docs build. Without MCP, go straight to the `.md` URLs below.
 - Before starting implementation, you MUST consult the exact relevant `https://developer.luzmo.com/.../*.md` docs and their referenced URLs for implementation details.
 - Use `https://developer.luzmo.com/llms.txt` and/or `/llms-full.txt` for discovery only.
 
@@ -81,6 +82,12 @@ Then consult exact resource docs:
 | dissociate / unlink | `dissociate{Resource}` |
 | delete / remove | `delete{Resource}` — **see deletion safety rule below** |
 
+### If Luzmo MCP tools are available
+
+For a quick look from an AI client connected to the Luzmo MCP server (see `mcp`), list dashboards with `list_dashboards` and find datasets (with their columns and AI context) with `search_datasets` instead of writing a script. They only list what the session's credentials can reach.
+
+Use the API and the scripts in this skill for everything else: other resource types (themes, users, groups, Agents, Rules), bulk updates, associations, exports, and every delete. No MCP tool deletes dashboards or datasets. Without MCP tools, use `"action": "get"` as in the Action Map.
+
 ## Deletion Safety Rule
 
 Deleting a resource is irreversible. Treat delete requests as an agent-owned approval workflow, not something delegated to generated script code.
@@ -104,6 +111,15 @@ Read `references/deletion-policy.md` before handling delete requests. Read `refe
 ## Script Templates
 
 Use `references/script-examples.md` for reusable JavaScript and Python API client templates. For deletion scripts, combine those base clients with the guardrails in `references/delete-script-patterns.md`.
+
+## Exports and Background Tasks
+
+For automation around data exports, alerts, and schedules:
+
+- Table data exports (`createDataexport`) can go to a webhook instead of email: set `channel_id` to a webhook Channel shared with the organization. Luzmo POSTs the export `taskId` once (no retries), with the channel secret in the body and the `x-secret` header - verify it. Docs: `https://developer.luzmo.com/api/createDataexport.md`, `https://developer.luzmo.com/api/createChannel.md`.
+- Retrieve the file with `searchTask` by `id` and read `result.downloadUrl` (expires after 7 days). Exports requested with an embed token belong to the embed user: retrieve them with the API key/token of an Organization Admin. Docs: `https://developer.luzmo.com/api/searchTask.md`.
+- Organization Admins can see all alerts, alert channels with recipients, and every user's tasks (Academy: `https://academy.luzmo.com/article/jme3i2tm`).
+- Email exports are rate limited per user and per organization. An over-limit request is refused (`429`), so back off instead of retrying in a tight loop; a scheduled export over the limit skips that run and stays active. Limits are not published - prefer webhook delivery for high-volume automation.
 
 ## Association Flows
 

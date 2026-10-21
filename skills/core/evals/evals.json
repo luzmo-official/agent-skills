@@ -124,6 +124,49 @@
         "Does NOT attempt to fully solve this with only embedding patterns",
         "May briefly mention that `parameter_overrides` in `createAuthorization` is part of the solution"
       ]
+    },
+    {
+      "id": 12,
+      "prompt": "We upgraded @luzmo/react-embed from 7.5 to 8.1 and our embedded dashboard now spins forever for some customers behind a strict corporate proxy. Pendo also suddenly records clicks inside the dashboard. What changed and how do we handle it?",
+      "expected_output": "Explain that 8.0.0 made `webComponent` the default `embedMode`, so the dashboard renders in the page (which is why Pendo now sees clicks) and connects to `apiHost` over wss:// from the page. Allow wss:// to the API host in CSP/proxy/firewall, listen for the `error` event to show a message instead of a stuck loader, or set `embedMode=\"iframe\"` to restore the old behavior.",
+      "expectations": [
+        "States that embed 8.x defaults `embedMode` to `webComponent` (previously `iframe`)",
+        "Says web-component mode needs wss:// connectivity to `apiHost` allowed by CSP/proxy/firewall",
+        "Mentions `embedMode=\"iframe\"` as the opt-out",
+        "Mentions handling the `error` event (event.detail.errorMsg) instead of an endless loader",
+        "Does not claim edit modes render as a web component (edit modes stay in an iframe)"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Our embed token users should still be able to export charts as PNG, but must not download CSV or XLSX data. What do I put in createAuthorization?",
+      "expected_output": "Use `feature_overrides: ['!flag_export_data']` on the server-side createAuthorization call; flag_export_data controls CSV/XLSX exports and depends on flag_export, which stays enabled. Optionally add '!flag_export_email_data' to remove CSV from scheduled exports.",
+      "expectations": [
+        "Recommends `feature_overrides` with `!flag_export_data`",
+        "Does not disable `flag_export` entirely",
+        "Keeps the createAuthorization call server-side",
+        "May mention `!flag_export_email_data` for scheduled CSV exports"
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "My Vite build complains that @luzmo/shared-embed has no exports after I bumped Luzmo packages. I import shared embed types and helpers from it. Where do they live now?",
+      "expected_output": "`@luzmo/shared-embed` 7.0.0 is deprecated with no API; since @luzmo/embed 8.0.0 those types/utilities are exported from `@luzmo/embed` (or `@luzmo/embed/shared`, `@luzmo/embed/rn`). Remove the shared-embed dependency and update imports.",
+      "expectations": [
+        "States `@luzmo/shared-embed` is deprecated",
+        "Points imports to `@luzmo/embed` / `@luzmo/embed/shared`",
+        "Recommends removing the `@luzmo/shared-embed` dependency"
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "How do I set an expiry on Luzmo embed tokens and what's the maximum? I have the Luzmo MCP server connected.",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'embed token expiry'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
+      ]
     }
   ]
 }

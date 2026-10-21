@@ -1,6 +1,6 @@
 {
   "skill_name": "ai-analytics",
-  "boundary_notes": "Edge cases vs other skills: pure data modeling fixes that improve IQ accuracy → also data-integration; per-tenant IQ token scoping → also multitenancy; styling IQ components → theming; IQ in React Native (NOT supported); IQ returns wrong answers → troubleshooting FIRST.",
+  "boundary_notes": "Edge cases vs other skills: pure data modeling fixes that improve IQ accuracy → also data-integration; per-tenant IQ token scoping → also multitenancy; styling IQ components → theming; IQ in React Native (NOT supported); IQ returns wrong answers → troubleshooting FIRST; hosted MCP server setup, embed MCP sessions, and agentId MCP URLs -> mcp; new chart types for AI to use -> custom-charts.",
   "evals": [
     {
       "id": 1,
@@ -84,10 +84,11 @@
     {
       "id": 8,
       "prompt": "We created a Luzmo Agent called Revenue assistant and I want our Node backend to call it. I was going to POST /aiprompt with agent: 'analyst', task: 'generate', and agent_id set to the Agent's id. Is that the right request?",
-      "expected_output": "Invoke the saved Agent with agent_id only. Do not also send agent, task, or capabilities — those come from the saved Agent. Call /aiprompt with the user's embed token, not the organization API key. Point at the Agents guide and createAIPrompt docs.",
+      "expected_output": "Sending agent and agent_id together is valid: agent: 'analyst' runs the analyst with the saved Agent's datasets and published Rules, but the Agent's capabilities are not used. Omit agent (or send 'auto') to run the universal agent with the Agent's capabilities. Call /aiprompt with the user's embed token, not the organization API key. Point at the Agents guide and createAIPrompt docs.",
       "expectations": [
         "Uses `agent_id` for the saved Agent",
-        "States that `agent_id` must not be combined with `agent`, `task`, or `capabilities`",
+        "States that `agent_id` may be combined with `agent` (for example `analyst`), and that the Agent's datasets and published Rules then apply",
+        "States that with `agent` set the saved Agent's capabilities are not used; omitting `agent` (or `auto`) runs the universal agent with those capabilities",
         "Identifies `/aiprompt` or `createAIPrompt` as the invocation API",
         "States that the call uses the user's embed token",
         "References `https://developer.luzmo.com/guide/guides--creating-and-using-agents-through-the-api.md` or `https://developer.luzmo.com/api/createAIPrompt.md`"
@@ -113,6 +114,74 @@
         "States that `ai_context` is plain text and not a localized name/description object",
         "States that name and description stay; AI context enriches them",
         "References `https://developer.luzmo.com/guide/guides--managing-ai-context.md` or the data-modeling-for-iq guidance"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "One prompt from our users can ask for an answer, a chart, and a full dashboard at once. Which /aiprompt agent handles that, and how do I limit it to analysis and charts only?",
+      "expected_output": "Use the universal agent: agent 'auto' (task generate) with capabilities ['data_analysis','chart_creation']. Omitting capabilities enables every capability the user may use. Requires the IQ addon.",
+      "expectations": [
+        "Recommends `agent: 'auto'` (the universal agent)",
+        "Shows `capabilities` with `data_analysis` and `chart_creation` to exclude dashboard creation",
+        "States that omitting `capabilities` enables every capability available to the user",
+        "References `https://developer.luzmo.com/api/createAIPrompt.md`"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "We embed LuzmoIQChatComponent in React. We created a 'Finance assistant' Agent with two datasets and a published Rule. How do we make the embedded chat use that Agent?",
+      "expected_output": "Set the agentId prop on LuzmoIQChatComponent (react-embed 7.3.0+). The chat runs the analyst with the Agent's datasets and published Rules. The embed token must still grant use on those datasets.",
+      "expectations": [
+        "Uses the `agentId` prop on `LuzmoIQChatComponent`",
+        "Mentions a minimum package version (`@luzmo/react-embed` 7.3.0 or later)",
+        "States that the embed token must still grant `use` on the Agent's datasets",
+        "Does not claim the IQ Answer component supports `agentId`"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Our PM wants a weekly report of questions our embedded users asked IQ that failed or were out of scope, per customer. Is there an API for that?",
+      "expected_output": "Yes: the read-only ailog resource (search / detail / conversation), filtered by success, out_of_scope, source 'embedded', and suborganization_id. Owner/admin only, plan-gated, 30-day retention. Also the Agent Logs page.",
+      "expectations": [
+        "Identifies the `ailog` API (Search AILog) or the Agent Logs page",
+        "Mentions filters such as `success`, `out_of_scope`, `source`, or `suborganization_id`",
+        "States that only owners and admins can read AI logs and that retention is 30 days",
+        "References `https://developer.luzmo.com/api/searchAILog.md`"
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "We already embed a Luzmo dashboard with the web component. Can our users ask IQ questions about that dashboard without us building a chat UI?",
+      "expected_output": "Yes: enable Luzmo IQ in the dashboard settings in Studio. The embedded dashboard shows a dashboard-aware IQ panel that respects active filters and inherits theme and language. Token scoping still applies.",
+      "expectations": [
+        "States that IQ can be enabled from the dashboard settings in Luzmo Studio without code changes",
+        "Mentions that the panel is dashboard-aware (respects dashboard filters)",
+        "Keeps the embed token scoping requirement",
+        "References `https://academy.luzmo.com/article/fyeoiaei` or the Path G guidance"
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "IQ keeps getting 'revenue' wrong on our sales dataset - it should exclude refunds. I have the Luzmo MCP server connected in Cursor. Fix the AI context and add a proper Net Revenue metric.",
+      "expected_output": "Follows Path E with the MCP tools: read the current names, descriptions, and ai_context with search_datasets first and show the user the change; write ai_context with update_dataset_metadata (destructive, confirm); draft the metric with generate_formula and save with create_formula. Writes short factual ai_context (net of refunds). Does not restate tool parameters.",
+      "expectations": [
+        "Reads the existing AI context with `search_datasets` before overwriting it",
+        "Writes the AI context with `update_dataset_metadata` after explicit user confirmation",
+        "Uses `generate_formula` to draft and `create_formula` to save the Net Revenue metric",
+        "Writes a short, factual `ai_context` that states revenue excludes refunds",
+        "References Path E or `references/data-modeling-for-iq.md` for what to write"
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Our IQ answers confuse gross and net revenue. We don't use MCP; everything runs from our backend with the Luzmo Node SDK. How do we add business definitions so the AI gets it right?",
+      "expected_output": "Path E without MCP: set ai_context (plain text, nullable) on the dataset, column, and formula via the Core API (updateDataset / updateColumn / updateFormula), retrieving the current value via attributes first; optionally add a pre-built formula with createFormula. Points to the managing AI context guide. Server-side API key only.",
+      "expectations": [
+        "Sets `ai_context` through the Core API (dataset, column, or formula update), not MCP tools",
+        "States that `ai_context` is plain text, not a localized object",
+        "Suggests a pre-built, clearly named formula for net revenue",
+        "References `https://developer.luzmo.com/guide/guides--managing-ai-context.md`",
+        "Keeps API credentials server-side"
       ]
     }
   ]

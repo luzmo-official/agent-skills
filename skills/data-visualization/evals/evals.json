@@ -55,6 +55,38 @@
         "Says to keep `appServer` pointed directly at the Luzmo app host",
         "Does NOT recommend proxying or rewriting `appServer` under a sub-path"
       ]
+    },
+    {
+      "id": 6,
+      "prompt": "Our backend already computes monthly revenue per product (about 40 rows) and I don't want to create a Luzmo dataset for it. Can I still render it in a Luzmo Flex bar chart in our React app?",
+      "expected_output": "Yes: use the `inlineData` prop on LuzmoVizItemComponent (@luzmo/react-embed 8.1.0+). Slots bind record properties with `field` instead of datasetId/columnId, records are rendered as-is (no aggregation, filtering, ranking), and the backend must pre-filter to what the viewer may see because token filters do not apply.",
+      "expectations": [
+        "Recommends the `inlineData` property with a `{ records: [...] }` envelope",
+        "Shows slot contents bound with `field` and without `datasetId`/`columnId`",
+        "States a minimum embed package version (react-embed 8.1.0 or later)",
+        "States records must be final: no aggregation, filtering, or ranking is applied",
+        "Warns that embed-token filters are not applied to inline records, so the server must filter them"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "I passed inlineData to a Flex regular-table and also to a bar chart where two slots both use field: 'value'. Both charts show an error state. What is wrong?",
+      "expected_output": "Two inline-data constraints: `regular-table` (like pivot tables, filters, custom charts and venn diagrams) does not support inline data, and fields must be unique across all slot contents. Use a supported chart type and give each slot content its own record property.",
+      "expectations": [
+        "Identifies that `regular-table` does not support inline data",
+        "Identifies that `field` values must be unique across slots",
+        "Does not suggest adding datasetId/columnId to fix inline-data slots"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "I'm using Cursor with the Luzmo MCP server. Which Flex chart type should I use to show a funnel, and what slots does it take?",
+      "expected_output": "Uses the MCP `search_docs` tool first (for example a query like 'Flex funnel chart slots'), answers in its own words from the returned passages, and cites the developer.luzmo.com or Academy URLs. Fetches the full `.md` page when the passage is not enough. Does not answer from memory alone.",
+      "expectations": [
+        "Calls `search_docs` before answering",
+        "Cites the developer.luzmo.com or academy.luzmo.com URLs it used",
+        "Answers in its own words instead of pasting a whole page"
+      ]
     }
   ]
 }

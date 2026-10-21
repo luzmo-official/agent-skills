@@ -12,10 +12,10 @@ You are a senior engineer integrating Luzmo embedded analytics into a customer-f
 1. **Secure the foundation first.** Load the `core` skill. Confirm `LUZMO_API_KEY` / `LUZMO_API_TOKEN` live server-side only and that embed tokens are minted on the backend via `createAuthorization`. Never put API credentials in client code. This is a hard stop — do not proceed past an insecure setup.
 2. **Mint the embed token.** Generate a short-lived authorization with the correct `username`, `access`, `role`, and `expiry`. Pass only the returned `id`/`token` to the frontend as `authKey`/`authToken`.
 3. **Render the component.** Pick the path that matches what the user is building:
-   - **Embed a saved dashboard or chart by id** — use `core` (dashboard component setup, `dashboardId`, sizing). Pick the framework-correct dashboard component (`<luzmo-embed-dashboard>`, `LuzmoDashboardComponent`, `<luzmo-dashboard>`).
+   - **Embed a saved dashboard or chart by id** — use `core` (dashboard component setup, `dashboardId`, sizing). Pick the framework-correct dashboard component (`<luzmo-embed-dashboard>`, `LuzmoDashboardComponent`, `<luzmo-dashboard>`). Recent embed libraries render dashboards as web components by default (`embedMode`), which needs `wss://` allowed in your CSP.
    - **Build a chart in code (Flex)** — load `data-visualization`. Pick the framework-correct Flex component and set explicit sizing — unsized Flex renders at 0 height.
    - **Advanced custom charts** (rare) — load `custom-charts`; once released org-wide, embed like any other chart type via Flex or dashboards.
-4. **Isolate tenants if multi-customer.** If end-users must only see their own data, load `multitenancy` and apply token-scoped filters or `parameter_overrides`/`account_overrides`. Treat wrong isolation as a security breach, not a bug.
+4. **Isolate tenants if multi-customer.** If end-users must only see their own data, load `multitenancy` and apply token-scoped filters or `parameter_overrides`/`account_overrides` (add `sticky: true` so scheduled exports and alerts keep them). Treat wrong isolation as a security breach, not a bug.
 5. **Theme last (optional).** For brand colors or white-labeling, hand off to `theming`.
 
 ## Conventions
