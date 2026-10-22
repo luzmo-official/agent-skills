@@ -68,7 +68,7 @@ See `references/chart-development.md` for details. Summary:
 4. **Style** with `options.theme` and `chart.css`.
 5. **Handle interactions** - `setFilter`, `customEvent`, `queryLoaded`.
 6. **Build and validate** (`npm run build` / `npm run validate`), then upload `bundle.zip` in Settings > Custom Charts or with `npm run charts -- upload` (needs an Organization Owner API key/token).
-7. **Publish** - a new chart starts **Private** (only you can test it); publish it to make it available to the whole organization. Every re-upload puts the chart back in **Private** / **Update in preview**, so publish again after each one. The builder's `charts` command only lists and uploads; to publish through the API, send a separate multipart `update` with `properties.status=published` (see `references/chart-development.md`).
+7. **Publish** - a new chart starts **Private** (only you can test it); publish it to make it available to the whole organization. A re-upload of a published chart puts the new version in **Update in preview**: the API sets `status` to `private` and stores the new files as candidates that only you see, while other viewers keep the published version. Publish again to roll it out. The builder's `charts` command only lists and uploads; to publish through the API, send a separate multipart `update` with `properties.status=published` (see `references/chart-development.md`).
 
 ## Manifest and Runtime Essentials
 
@@ -139,7 +139,8 @@ For framework-specific component names and Flex sizing details, see `data-visual
 
 | Problem | Likely Cause | Solution |
 |---|---|---|
-| Custom chart not in other users' chart picker | Still **Private**, or re-upload still in **Update in preview** | Publish the chart (or the update) in Settings > Custom Charts, or with the API publish call |
+| Custom chart not in other users' chart picker | Still **Private** (never published) | Publish the chart in Settings > Custom Charts, or with the API publish call |
+| Other users still see the old version after a re-upload | The update is still in **Update in preview** | Publish the update in Settings > Custom Charts, or with the API publish call |
 | Chart shows a network or CSP error, or loads nothing | Fetch to a host outside the sandbox allowlist | Bundle the asset, or load it from `cdn.jsdelivr.net/npm/` |
 | Agent puts the wrong column in a slot | Slot `description` too vague | Describe what one value represents, with examples; re-test with MCP `create_chart` |
 | Chart renders but data is wrong | Incorrect `buildQuery` or slot mapping | Review slot order/type vs. the row shape `render` receives (dimensions first, then measures) |

@@ -94,7 +94,7 @@ A published chart is offered to every dashboard and agent in the organization, s
 - **Credentials:** creating, updating, or deleting custom charts requires an API key/token of an **Organization Owner** (and the custom chart feature on the organization). Other keys can list charts but uploads fail with a permission error.
 - **Overwrites need approval:** `npm run charts -- upload --id <chart-id>` (or a UI re-upload) replaces that chart's code. Never run it without the user's explicit approval for that chart id.
 - **Chart type rules:** at most 32 characters and not a built-in chart type name (uploads with a reserved type are rejected).
-- **Lifecycle:** a new chart is **Private** (only the uploader can add and test it) until published to the organization. Every re-upload sets it back to **Private** / **Update in preview**; other users keep the published version until you publish again.
+- **Lifecycle:** a new chart is **Private** (only the uploader can add and test it) until published to the organization. A re-upload of a published chart puts the new version in **Update in preview**: the API sets `status` to `private` and stores the new files as candidates that only you see, while other viewers keep the published version. Publish again (`properties.status=published`) to roll it out.
 - **Publishing through the API:** the builder's `charts` command lists and uploads but does not publish. Call `POST /0.1.0/customchart` yourself, always as `multipart/form-data` - JSON bodies are rejected with "Unsupported Content-Type":
   ```bash
   # Publish an uploaded chart (status and file can't be changed in the same call)
@@ -143,7 +143,8 @@ Published custom charts are offered to Luzmo's dashboard agent, IQ, and item edi
 
 | Problem | Likely Cause | Solution |
 |---|---|---|
-| Not in other users' chart picker | Chart still Private, or update still in preview | Publish it in Settings > Custom Charts |
+| Not in other users' chart picker | Chart still Private (never published) | Publish it in Settings > Custom Charts |
+| Other users still see the old version after a re-upload | Update still in preview | Publish the update in Settings > Custom Charts |
 | Chart renders but data is wrong | Incorrect `buildQuery` or slot mapping | Compare slot order/type with the row shape `render` receives |
 | CSV/Excel downloads nothing | `exportData` not in `index.ts`, timeout, or invalid cells | Re-export it; return within 30 s; cells are string/number/boolean/`null` |
 | No CSV/Excel action at all | Multi-query chart without `exportData` | Implement and re-export `exportData` |
