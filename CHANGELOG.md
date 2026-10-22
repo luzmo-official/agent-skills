@@ -14,6 +14,7 @@ This project is in `alpha`; until `1.0.0`, minor versions may include breaking c
   - Upload size limits: JS 10 MB, CSS 1 MB, manifest 1 MB, icon 5 KB.
   - The 9-slot budget, multi-field slots, and how their fields arrive in `render`.
   - Publishing through the API: multipart only, a separate publish call, and re-uploads going to **Update in preview** until published again.
+  - Reading column references from both `datasetId`/`columnId` and `set`/`column` in custom `buildQuery` and `setFilter` code.
   - Designing reusable charts: role-based slots, raw measures scaled in the chart, dashboard filters instead of in-chart slicing.
   - Slot names as a versioning contract: publish breaking changes as a new chart type.
   - Concrete slot descriptions for AI agents, tested with the Luzmo MCP.

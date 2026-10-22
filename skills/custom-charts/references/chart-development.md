@@ -35,6 +35,7 @@ Index: `https://developer.luzmo.com/guide/guides--custom-charts.md`. Read the ma
    - `render(params)` - draw the chart. `params` = `{ container, data, slots, slotConfigurations, options, timezoneId, language, dimensions }`. May return a Promise; the host awaits it before marking the item rendered (dashboard and PNG/PDF exports wait for it).
    - `resize(params)` - same payload with new `dimensions`.
    - `buildQuery({ slots, slotConfigurations })` (optional) - always returns an **array** of queries; `data[i]` matches query `i`. Slots feeding independent queries need `canAcceptDataIndependentOf`.
+   - **Column references:** if you write `buildQuery` or `setFilter` yourself, read `content.datasetId ?? content.set` and `content.columnId ?? content.column`.
    - `exportData(params)` (optional) - see Exports.
 4. **Re-export** what you implemented from `index.ts`, e.g. `export { render, resize, buildQuery, exportData } from './chart';`. The builder's default `index.ts` does not export `exportData` - add it, or Luzmo never calls it.
 5. **Style** with `options.theme` (`ThemeConfig`) and `chart.css`; format values with `formatter` / `getValueForFormatter` from `@luzmo/analytics-components-kit/utils` (pass `timezoneId` for datetimes).
