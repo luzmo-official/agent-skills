@@ -95,14 +95,14 @@ A published chart is offered to every dashboard and agent in the organization, s
 - **Overwrites need approval:** `npm run charts -- upload --id <chart-id>` (or a UI re-upload) replaces that chart's code. Never run it without the user's explicit approval for that chart id.
 - **Chart type rules:** at most 32 characters and not a built-in chart type name (uploads with a reserved type are rejected).
 - **Lifecycle:** a new chart is **Private** (only the uploader can add and test it) until published to the organization. A re-upload of a published chart puts the new version in **Update in preview**: the API sets `status` to `private` and stores the new files as candidates that only you see, while other viewers keep the published version. Publish again (`properties.status=published`) to roll it out.
-- **Publishing through the API:** the builder's `charts` command lists and uploads but does not publish. Call `POST /0.1.0/customchart` yourself, always as `multipart/form-data` - JSON bodies are rejected with "Unsupported Content-Type":
+- **Publishing through the API:** the builder's `charts` command lists and uploads but does not publish. Call `POST /0.1.0/customchart` yourself, always as `multipart/form-data`. JSON bodies are rejected with "Unsupported Content-Type", even though the message suggests JSON:
   ```bash
   # Publish an uploaded chart (status and file can't be changed in the same call)
   curl -sS https://api.luzmo.com/0.1.0/customchart \
     -F version=0.1.0 -F action=update -F "key=<$KEY_FILE" -F "token=<$TOKEN_FILE" \
-    -F id=<chart-id> -F properties.status=published
+    -F "id=$CHART_ID" -F properties.status=published
   ```
-  Creating uses the same form with `action=create`, `file=@bundle.zip`, `properties.type`, and `properties.name` (a JSON string such as `{"en":"My chart"}`). Read the key and token from files (`<file` form fields) rather than putting them on the command line.
+  Publishing only works while the chart is private: a new chart, or a re-upload in Update in preview. Creating uses the same form with `action=create`, `file=@bundle.zip`, `properties.type` and `properties.name` (a JSON string such as `{"en":"My chart"}`). Read the key and token from files (`<file` form fields) rather than putting them on the command line, and write those files without a trailing newline.
 - **Versioning:** slot `name`s are stored in every dashboard item that uses the chart. Renaming or removing a slot, or changing its meaning, breaks those items. Additive changes (new optional slots, new options with defaults) are safe to publish as an update. For breaking changes, publish a new chart type (e.g. `my-chart-v2`), move dashboards to it, then retire the old type.
 
 ## AI Agents and Custom Charts
