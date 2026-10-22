@@ -74,10 +74,9 @@ See `references/chart-development.md` for details. Summary:
 
 - **Chart options:** a top-level `options` array of groups with typed controls becomes the settings UI in Studio's **Edit item** panel and the builder. Your code must read the saved values from `options` in `render`/`resize` and apply them; option changes re-call `render` without a new query. Never define a `theme` or `theme.*` option key - `theme` is reserved for the host theme.
 - **Slot layout:** give every visible slot a unique kebab-case `position` (`bottom`, `left`, `right`, `middle`, ...) next to the chart element it drives. Unpositioned slots are auto-placed and may land somewhere unhelpful.
-- **Slot budget:** there are 9 positions, so at most 9 visible slots - about 7 in practice, because the top corners hold editor controls. Combine fields that belong together into one slot with `canAcceptMultipleDataFields` + `requiredMinimumColumnsCount` (e.g. latitude and longitude as one 2-field slot) instead of spending a slot on each.
+- **Slot budget:** there are 9 positions, so at most 9 visible slots - about 7 in practice, because the top corners hold editor controls. A slot can accept several fields (`canAcceptMultipleDataFields`, optionally with `requiredMinimumColumnsCount`); each field then arrives as its own column in the rows, in the order the user added them.
 - **Sandbox:** the chart runs in a sandboxed iframe with a strict content security policy. It can load scripts and styles only from `cdn.jsdelivr.net/npm/` (and `*.bing.com`), and fetch only from its own origin, `cdn.jsdelivr.net/npm/`, `cdn.luzmo.com`, Google Fonts, and `*.bing.com` (images may come from any host). Anything else - GitHub Pages, your own API or CDN - is blocked, so bundle large assets into the chart (e.g. esbuild `--loader:.bin=binary`).
 - **Size limits:** JS bundle 10 MB, CSS 1 MB, `manifest.json` 1 MB, `icon.svg` 5 KB. Check `index.js` size after each build, especially when embedding assets.
-- **Column references:** read slot content as `content.datasetId ?? content.set` and `content.columnId ?? content.column` - saved dashboards can store either form.
 - **Labels:** slot `label` can be a plain string; localize slot and option labels through the top-level `translations` object (falls back to `en`).
 - **Exports:** a single-query chart exports CSV/Excel automatically. A chart whose `buildQuery` returns more than one query has **no** CSV/Excel export until it implements and re-exports `exportData`, which returns `{ columns, rows }` within 30 seconds. PNG export captures the rendered chart.
 - **Async rendering:** `render` may return a Promise; the host waits for it before marking the item rendered, so dashboard and PNG/PDF exports capture the finished chart.
@@ -134,7 +133,6 @@ For framework-specific component names and Flex sizing details, see `data-visual
 | Upload rejected for chart type `bar-chart` (or similar) | Pick a type that is not a built-in chart type name, at most 32 characters |
 | Chart fetches data or geometry from GitHub Pages or your own server | Blocked by the sandbox CSP - bundle the asset into `index.js` (within the 10 MB limit) |
 | JSON body to `/customchart` ("Unsupported Content-Type") | Send `multipart/form-data` for create, update, and publish |
-| One slot per field until the 9 positions run out | Combine related fields in one multi-field slot (`canAcceptMultipleDataFields`) |
 | Renaming slots in a published chart | Publish a new chart type instead; existing dashboards keep the old slot names |
 
 ## Troubleshooting

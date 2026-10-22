@@ -38,7 +38,6 @@ Index: `https://developer.luzmo.com/guide/guides--custom-charts.md`. Read the ma
    - `exportData(params)` (optional) - see Exports.
 4. **Re-export** what you implemented from `index.ts`, e.g. `export { render, resize, buildQuery, exportData } from './chart';`. The builder's default `index.ts` does not export `exportData` - add it, or Luzmo never calls it.
 5. **Style** with `options.theme` (`ThemeConfig`) and `chart.css`; format values with `formatter` / `getValueForFormatter` from `@luzmo/analytics-components-kit/utils` (pass `timezoneId` for datetimes).
-   - **Read column references defensively:** slot content can carry `datasetId`/`columnId` or the older `set`/`column`, depending on how the dashboard was saved. Use `content.datasetId ?? content.set` and `content.columnId ?? content.column` in `buildQuery` and when building `setFilter` parameters.
 6. **Interactions:** `window.parent.postMessage({ type: 'setFilter', filters }, '*')`, `customEvent`, and `queryLoaded` (runtime query changes such as sorting or pagination only).
 7. **Build and upload** (see Upload and Publish).
 
@@ -50,13 +49,9 @@ Index: `https://developer.luzmo.com/guide/guides--custom-charts.md`. Read the ma
 - **Reserved:** never use `theme` or `theme.*` as an option key - Luzmo rejects it; `options.theme` is the host dashboard theme.
 - **Behavior:** editors change options in Studio's **Edit item** panel; Luzmo re-calls `render` with the existing data (no new query). Applying the value is your code's job.
 - **Position values differ by context:** slot `position` is kebab-case (`top-left`); the `position-picker` control uses camelCase (`topLeft`).
-- **Slot budget:** 9 positions means at most 9 visible slots, and about 7 if you keep the top corners free. Before adding a slot per field, combine fields that are always used together into one slot:
-  ```json
-  { "name": "coordinates", "label": "Latitude & longitude", "type": "numeric", "position": "left",
-    "canAcceptMultipleDataFields": true, "requiredMinimumColumnsCount": 2,
-    "description": "Two numeric columns: latitude first, then longitude (WGS84)." }
-  ```
-  `render` then receives the fields in the order the user added them. Say that order in the `description`.
+- **Slot budget:** 9 positions means at most 9 visible slots, and about 7 if you keep the top corners free.
+- **Multiple fields per slot:** a slot can accept more than one field with `canAcceptMultipleDataFields: true`. Add `requiredMinimumColumnsCount` when the chart needs a minimum number of fields before it can query.
+- **How `render` receives them:** with auto-generated queries, every field in the slot becomes its own column in each row: categorical slots among the dimensions, numeric slots among the measures. Fields appear in the order the user added them to the slot. Read `slots[].content` to know how many fields each slot holds before indexing rows, and say in the slot `description` what order the chart expects. With a custom `buildQuery`, the row layout is whatever your queries define.
 
 ## Runtime Sandbox and Limits
 
