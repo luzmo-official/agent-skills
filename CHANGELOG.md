@@ -16,7 +16,7 @@ This project is in `alpha`; until `1.0.0`, minor versions may include breaking c
   - Publishing through the API: multipart only, a separate publish call, and re-uploads going to **Update in preview** until published again.
   - Designing reusable charts: role-based slots, raw measures scaled in the chart, dashboard filters instead of in-chart slicing.
   - Slot names as a versioning contract: publish breaking changes as a new chart type.
-  - Concrete slot descriptions for AI agents, tested with MCP `create_chart`.
+  - Concrete slot descriptions for AI agents, tested with the Luzmo MCP.
 
 ## [0.1.5] - 2026-10-19
 

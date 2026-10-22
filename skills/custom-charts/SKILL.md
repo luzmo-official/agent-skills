@@ -85,7 +85,7 @@ See `references/chart-development.md` for details. Summary:
 
 Luzmo's dashboard agent, IQ, and item editing can pick and configure published custom charts automatically. They see the chart **type**, **chart name**, the slot definitions, and the option controls - so give the chart a descriptive name, fill slot `label`/`description`, and set accurate slot `type`, accepted data field types, `isRequired`, and option `default`s. A manifest with duplicate slot names or invalid options is skipped by the agents.
 
-Agents choose columns from the slot text, so make descriptions concrete: say what one value of the slot represents and give examples (e.g. a label slot: "One point per value, e.g. a company or store; each value must have a single location"). Vague descriptions get a plausible but wrong column. After publishing, test with an MCP `create_chart` request that names the chart type and check which column landed in each slot.
+Agents choose columns from the slot text, so make descriptions concrete: say what one value of the slot represents and give examples (e.g. a label slot: "One point per value, e.g. a company or store; each value must have a single location"). Vague descriptions get a plausible but wrong column. After publishing, test with the Luzmo MCP (e.g. a `create_chart` request that names the chart type) and check which column landed in each slot.
 
 ## Using a Published Custom Chart
 
@@ -142,7 +142,7 @@ For framework-specific component names and Flex sizing details, see `data-visual
 | Custom chart not in other users' chart picker | Still **Private** (never published) | Publish the chart in Settings > Custom Charts, or with the API publish call |
 | Other users still see the old version after a re-upload | The update is still in **Update in preview** | Publish the update in Settings > Custom Charts, or with the API publish call |
 | Chart shows a network or CSP error, or loads nothing | Fetch to a host outside the sandbox allowlist | Bundle the asset, or load it from `cdn.jsdelivr.net/npm/` |
-| Agent puts the wrong column in a slot | Slot `description` too vague | Describe what one value represents, with examples; re-test with MCP `create_chart` |
+| Agent puts the wrong column in a slot | Slot `description` too vague | Describe what one value represents, with examples; re-test with the Luzmo MCP |
 | Chart renders but data is wrong | Incorrect `buildQuery` or slot mapping | Review slot order/type vs. the row shape `render` receives (dimensions first, then measures) |
 | No CSV/Excel export on a multi-query chart | No `exportData` exported | Implement and re-export `exportData` |
 | Slots overlap or sit in the corners | Missing or duplicate slot `position` | Give each visible slot a unique kebab-case `position` |

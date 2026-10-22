@@ -111,7 +111,7 @@ Published custom charts are offered to Luzmo's dashboard agent, IQ, and item edi
 - Use a descriptive **Chart name** at upload, not just a slug.
 - Give every slot a clear `label` and `description` and accurate type/required constraints.
 - Make descriptions concrete: say what one value of the slot represents and give examples, e.g. a label slot: "One point per value, e.g. a company or store; each value must have a single location". With a vague "Label" description, agents pick a plausible but wrong column (e.g. a category instead of the entity).
-- After publishing, test with an MCP `create_chart` request that names the chart type (e.g. "Show revenue per store on the `my-chart` custom chart") and check which column landed in each slot.
+- After publishing, test with the Luzmo MCP: ask for a chart that names the chart type (e.g. with `create_chart`) (e.g. "Show revenue per store on the `my-chart` custom chart") and check which column landed in each slot.
 - Give every option control a sensible `default`.
 - Keep slot names unique and options valid - charts with an invalid configuration are skipped.
 
@@ -157,7 +157,7 @@ Published custom charts are offered to Luzmo's dashboard agent, IQ, and item edi
 | Works in the builder, blank or CSP error in a dashboard | Fetch to a host outside the sandbox allowlist | Bundle the asset into `index.js`, or load it from `cdn.jsdelivr.net/npm/` |
 | "Unsupported Content-Type" from `/customchart` | JSON body | Send `multipart/form-data` |
 | Existing dashboard items break after an update | Slot renamed or removed | Restore the slot, or publish the change as a new chart type |
-| Agent fills a slot with the wrong column | Vague slot `description` | Describe what one value represents, with examples; re-test with MCP `create_chart` |
+| Agent fills a slot with the wrong column | Vague slot `description` | Describe what one value represents, with examples; re-test with the Luzmo MCP |
 
 ## Hand Off
 
