@@ -5,6 +5,20 @@ All notable changes to Luzmo Agent Skills are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project is in `alpha`; until `1.0.0`, minor versions may include breaking changes.
 
+## [Unreleased]
+
+### Changed
+
+- `custom-charts` (`0.1.3`): lessons from building and publishing a chart end to end.
+  - The runtime sandbox's allowed hosts per resource type, with bundling of large assets (esbuild binary loader) as the workaround.
+  - Upload size limits: JS 10 MB, CSS 1 MB, manifest 1 MB, icon 5 KB.
+  - The 9-slot budget, and combining related fields into one multi-field slot.
+  - Publishing through the API: multipart only, a separate publish call, and re-uploads returning the chart to private.
+  - Reading both `datasetId`/`columnId` and `set`/`column` from slot content.
+  - Designing reusable charts: role-based slots, raw measures scaled in the chart, dashboard filters instead of in-chart slicing.
+  - Slot names as a versioning contract: publish breaking changes as a new chart type.
+  - Concrete slot descriptions for AI agents, tested with MCP `create_chart`.
+
 ## [0.1.5] - 2026-10-19
 
 Catches the skills up with product releases since 2026-06-25 (Agents, Rules, AI context, the expanded MCP server, inline Flex data, web-component embeds, custom chart options and exports, sticky overrides, and per-tenant fields).
