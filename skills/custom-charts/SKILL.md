@@ -7,8 +7,8 @@ description: >-
   Not for Flex charts with built-in types (use data-visualization), embedding saved dashboards (use core), self-service chart editors (use analytics-studio), or auth setup (use core).
 metadata:
   author: Luzmo
-  version: 0.1.2
-  last_updated: 2026-10-19
+  version: 0.1.3
+  last_updated: 2026-10-22
 ---
 
 # Luzmo Custom Charts
@@ -68,12 +68,15 @@ See `references/chart-development.md` for details. Summary:
 4. **Style** with `options.theme` and `chart.css`.
 5. **Handle interactions** - `setFilter`, `customEvent`, `queryLoaded`.
 6. **Build and validate** (`npm run build` / `npm run validate`), then upload `bundle.zip` in Settings > Custom Charts or with `npm run charts -- upload` (needs an Organization Owner API key/token).
-7. **Publish** - a new chart starts **Private** (only you can test it); publish it to make it available to the whole organization. Re-uploads enter **Update in preview** until published.
+7. **Publish** - a new chart starts **Private** (only you can test it); publish it to make it available to the whole organization. A re-upload of a published chart puts the new version in **Update in preview**: the API sets `status` to `private` and stores the new files as candidates that only you see, while other viewers keep the published version. Publish again to roll it out. The builder's `charts` command only lists and uploads; to publish through the API, send a separate multipart `update` with `properties.status=published` (see `references/chart-development.md`).
 
 ## Manifest and Runtime Essentials
 
 - **Chart options:** a top-level `options` array of groups with typed controls becomes the settings UI in Studio's **Edit item** panel and the builder. Your code must read the saved values from `options` in `render`/`resize` and apply them; option changes re-call `render` without a new query. Never define a `theme` or `theme.*` option key - `theme` is reserved for the host theme.
 - **Slot layout:** give every visible slot a unique kebab-case `position` (`bottom`, `left`, `right`, `middle`, ...) next to the chart element it drives. Unpositioned slots are auto-placed and may land somewhere unhelpful.
+- **Slot budget:** there are 9 positions, so at most 9 visible slots - about 7 in practice, because the top corners hold editor controls. A slot can accept several fields (`canAcceptMultipleDataFields`, optionally with `requiredMinimumColumnsCount`); each field then arrives as its own column in the rows, in the order the user added them.
+- **Sandbox:** the chart runs in a sandboxed iframe with a strict content security policy. It can load scripts and styles only from `cdn.jsdelivr.net/npm/` (and `*.bing.com`), and fetch only from its own origin, `cdn.jsdelivr.net/npm/`, `cdn.luzmo.com`, Google Fonts, and `*.bing.com` (images may come from any host). Anything else - GitHub Pages, your own API or CDN - is blocked, so bundle large assets into the chart (e.g. esbuild `--loader:.bin=binary`).
+- **Size limits:** JS bundle 10 MB, CSS 1 MB, `manifest.json` 1 MB, `icon.svg` 5 KB. Check `index.js` size after each build, especially when embedding assets.
 - **Labels:** slot `label` can be a plain string; localize slot and option labels through the top-level `translations` object (falls back to `en`).
 - **Exports:** a single-query chart exports CSV/Excel automatically. A chart whose `buildQuery` returns more than one query has **no** CSV/Excel export until it implements and re-exports `exportData`, which returns `{ columns, rows }` within 30 seconds. PNG export captures the rendered chart.
 - **Async rendering:** `render` may return a Promise; the host waits for it before marking the item rendered, so dashboard and PNG/PDF exports capture the finished chart.
@@ -81,6 +84,8 @@ See `references/chart-development.md` for details. Summary:
 ## AI Agents and Published Custom Charts
 
 Luzmo's dashboard agent, IQ, and item editing can pick and configure published custom charts automatically. They see the chart **type**, **chart name**, the slot definitions, and the option controls - so give the chart a descriptive name, fill slot `label`/`description`, and set accurate slot `type`, accepted data field types, `isRequired`, and option `default`s. A manifest with duplicate slot names or invalid options is skipped by the agents.
+
+Agents choose columns from the slot text, so make descriptions concrete: say what one value of the slot represents and give examples (e.g. a label slot: "One point per value, e.g. a company or store; each value must have a single location"). Vague descriptions get a plausible but wrong column. After publishing, test with the Luzmo MCP (e.g. a `create_chart` request that names the chart type) and check which column landed in each slot.
 
 ## Using a Published Custom Chart
 
@@ -102,7 +107,7 @@ For framework-specific component names and Flex sizing details, see `data-visual
 
 ## Bundled References
 
-- `references/chart-development.md` - Builder, manifest (slots, positions, options, translations), `render`/`resize`/`buildQuery`/`exportData`, styling, interactions, build, upload, publish, and AI-agent metadata.
+- `references/chart-development.md` - Builder, manifest (slots, positions, slot budget, options, translations), runtime sandbox and size limits, designing a reusable chart, `render`/`resize`/`buildQuery`/`exportData`, styling, interactions, build, upload, API publishing, versioning, and AI-agent metadata.
 
 ## Rules
 
@@ -112,6 +117,8 @@ For framework-specific component names and Flex sizing details, see `data-visual
 - Re-export every implemented function from `index.ts`; Luzmo only calls `exportData` when the bundle exports it.
 - Chart type at upload: unique in the org, at most 32 characters, and not a built-in chart type name.
 - Never re-upload over an existing chart (`npm run charts -- upload --id ...` or the UI re-upload) without the user's explicit approval for that chart id - it overwrites the chart's code.
+- Design for reuse: name slots after the role a field plays in the chart (label, measure, color, details), not after one dataset's columns; take raw measures and scale or normalize them inside the chart; leave filtering and slicing to dashboard filters instead of building them into the chart. See `references/chart-development.md`.
+- Treat slot names as a public contract: renaming or removing a slot breaks every dashboard that uses the chart. For such changes, publish a new chart type and move those dashboards over.
 - Use embed tokens from the backend - never API credentials client-side.
 
 ## Common Mistakes
@@ -124,12 +131,18 @@ For framework-specific component names and Flex sizing details, see `data-visual
 | Option key `theme.color` or reading `options.theme` as a custom option | Rename the option; `options.theme` is the host-provided dashboard theme |
 | Expecting option controls to change the chart automatically | Read the value from `options` in `render` and `resize` and apply it yourself |
 | Upload rejected for chart type `bar-chart` (or similar) | Pick a type that is not a built-in chart type name, at most 32 characters |
+| Chart fetches data or geometry from GitHub Pages or your own server | Blocked by the sandbox CSP - bundle the asset into `index.js` (within the 10 MB limit) |
+| JSON body to `/customchart` ("Unsupported Content-Type") | Send `multipart/form-data` for create, update, and publish |
+| Renaming slots in a published chart | Publish a new chart type instead; existing dashboards keep the old slot names |
 
 ## Troubleshooting
 
 | Problem | Likely Cause | Solution |
 |---|---|---|
-| Custom chart not in other users' chart picker | Still **Private**, or re-upload still in **Update in preview** | Publish the chart (or the update) in Settings > Custom Charts |
+| Custom chart not in other users' chart picker | Still **Private** (never published) | Publish the chart in Settings > Custom Charts, or with the API publish call |
+| Other users still see the old version after a re-upload | The update is still in **Update in preview** | Publish the update in Settings > Custom Charts, or with the API publish call |
+| Chart shows a network or CSP error, or loads nothing | Fetch to a host outside the sandbox allowlist | Bundle the asset, or load it from `cdn.jsdelivr.net/npm/` |
+| Agent puts the wrong column in a slot | Slot `description` too vague | Describe what one value represents, with examples; re-test with the Luzmo MCP |
 | Chart renders but data is wrong | Incorrect `buildQuery` or slot mapping | Review slot order/type vs. the row shape `render` receives (dimensions first, then measures) |
 | No CSV/Excel export on a multi-query chart | No `exportData` exported | Implement and re-export `exportData` |
 | Slots overlap or sit in the corners | Missing or duplicate slot `position` | Give each visible slot a unique kebab-case `position` |
