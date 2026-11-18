@@ -28,7 +28,13 @@ const skillsDir = join(root, 'skills');
 const snapshotPath = join(root, 'scripts', 'mcp-tools.snapshot.json');
 const guideUrl = 'https://developer.luzmo.com/guide/mcp--introduction.md';
 
-const NON_TOOL_IDENTIFIERS = new Set([]);
+// Config keys and result fields that start with a tool verb (answer, query, run).
+const NON_TOOL_IDENTIFIERS = new Set([
+  'answer_text', // semantic-layer: IQ run result field
+  'query_budget', // semantic-layer: config key
+  'query_timeout', // semantic-layer: named as a server option that does not exist
+  'run_sha256', // semantic-layer: IQ assessment field
+]);
 const EXTRA_VERBS = [
   'get', 'remove', 'set', 'fetch', 'run', 'query', 'export', 'rename', 'edit', 'append',
   'upsert', 'share', 'move', 'copy', 'archive', 'restore', 'invite', 'publish', 'describe',

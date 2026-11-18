@@ -6,7 +6,7 @@
 
 Agent skills for building embedded analytics applications with [Luzmo](https://luzmo.com). Compatible with Cursor, Claude Code, Codex, Windsurf, Google Antigravity, GitHub Copilot, and any tool that supports the [Agent Skills](https://agentskills.io/) standard.
 
-A set of 11 skills that turn your AI coding agent into a Luzmo embedded-analytics expert. They cover the full lifecycle: authentication and the POST + `action` API model, embedding saved dashboards and charts, building Flex and custom charts in code, self-service analytics (Embedded Dashboard Editor or ACK), AI / natural-language Q&A (`/aiprompt`, saved Agents, Rules, AI context, IQ), the hosted Luzmo MCP server, multi-tenant isolation, data integration, resource CRUD, theming, and troubleshooting.
+A set of 12 skills that turn your AI coding agent into a Luzmo embedded-analytics expert. They cover the full lifecycle: authentication and the POST + `action` API model, embedding saved dashboards and charts, building Flex and custom charts in code, self-service analytics (Embedded Dashboard Editor or ACK), AI / natural-language Q&A (`/aiprompt`, saved Agents, Rules, AI context, IQ), auditing and improving the semantic layer behind IQ answers, the hosted Luzmo MCP server, multi-tenant isolation, data integration, resource CRUD, theming, and troubleshooting.
 
 So your agent ships correct, secure integrations the first time instead of guessing the API and tripping over the common traps (leaked API keys, missing tenant filters, REST-verb / `action: "search"` mistakes).
 
@@ -147,6 +147,7 @@ Cursor and Claude Code marketplace manifests are generated from [`plugin.config.
 | **data-integration** | Connectors, push data, SQL views |
 | **resource-management** | CRUD for dashboards, datasets, accounts, ... |
 | **theming** | Themes, Lucero/ACK tokens, CSS variables |
+| **semantic-layer** | Audit and improve descriptions, AI context, Rules, and Agents for Luzmo IQ; applies only human-approved changes |
 
 Always install `core` at minimum.
 

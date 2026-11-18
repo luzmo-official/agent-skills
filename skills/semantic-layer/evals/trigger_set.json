@@ -1,0 +1,74 @@
+[
+  {
+    "query": "We're onboarding a new customer to Luzmo IQ next week. Can you audit their datasets and suggest better column descriptions and AI context before they go live?",
+    "should_trigger": true
+  },
+  {
+    "query": "IQ keeps answering 'revenue' questions with the gross amount instead of net. I think our column descriptions are misleading. Can you review them and propose fixes?",
+    "should_trigger": true
+  },
+  {
+    "query": "Our dataset descriptions only exist in English but our end users work in Dutch and French. Translate the Luzmo descriptions and push them after I approve.",
+    "should_trigger": true
+  },
+  {
+    "query": "Review the AI rules and saved agents in our Luzmo account. Some rules were never published and I'm not sure which agents link them.",
+    "should_trigger": true
+  },
+  {
+    "query": "Can you check whether the formulas in our orders dataset actually match their descriptions, and suggest new formulas for metrics people ask IQ about?",
+    "should_trigger": true
+  },
+  {
+    "query": "Run our usual end-user questions through IQ before and after we update the dataset metadata so we can compare the answers.",
+    "should_trigger": true
+  },
+  {
+    "query": "Generate a review page of proposed description and AI context changes for our Luzmo datasets so our data owner can sign off before anything is written.",
+    "should_trigger": true
+  },
+  {
+    "query": "The AI context on our datasets is a mess of copy-pasted notes and dashboard references. Clean it up for IQ without losing the useful definitions.",
+    "should_trigger": true
+  },
+  {
+    "query": "Restore the dataset descriptions from the backup taken before yesterday's semantic layer update.",
+    "should_trigger": true
+  },
+  {
+    "query": "IQ picks the wrong dataset for support-ticket questions. Improve the dataset-level descriptions and AI context so it chooses the right one.",
+    "should_trigger": true
+  },
+  {
+    "query": "Embed the IQ Chat component in our React app and scope the embed token to three datasets.",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I call /aiprompt from our Node backend and render the returned chart in our own UI?",
+    "should_trigger": false
+  },
+  {
+    "query": "Connect our Postgres database to Luzmo and keep the orders table in sync every hour.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a script that renames every dataset with a 'tmp_' prefix and deletes the unused ones.",
+    "should_trigger": false
+  },
+  {
+    "query": "Make our embedded IQ Chat match our dark brand colors and font.",
+    "should_trigger": false
+  },
+  {
+    "query": "Getting an IQ license error in the console when the chat component loads. Is IQ a separate add-on?",
+    "should_trigger": false
+  },
+  {
+    "query": "Set up the hosted Luzmo MCP server in Claude Desktop with our API key.",
+    "should_trigger": false
+  },
+  {
+    "query": "Each tenant must only see their own rows in IQ answers. How do I add the embed filter?",
+    "should_trigger": false
+  }
+]

@@ -30,3 +30,4 @@ You build conversational and agentic analytics on Luzmo: the `/aiprompt` API for
 - Getting/modeling the underlying data → `data-engineer` agent or `data-integration` skill
 - Visual styling of IQ surfaces → `theming` skill
 - Wrong answers traced to isolation → `multitenancy` skill
+- Customer-wide audit or enrichment of descriptions, AI context, Rules, and Agents (reviewed and approved before writing) → `semantic-layer` skill

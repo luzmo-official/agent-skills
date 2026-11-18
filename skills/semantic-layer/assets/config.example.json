@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "customer": "",
+  "languages": ["en"],
+  "datasets": [],
+  "discovery_max_pages": 20,
+  "dashboard_limit": 100,
+  "query_budget": 30,
+  "profile_days_limit": 31,
+  "profile_group_limit": 20,
+  "sample_rows": 1000,
+  "iq_question_budget": 30,
+  "iq_timeout_seconds": 150
+}

@@ -1,0 +1,6 @@
+.env
+.env.*
+!.env.example
+work/
+node_modules/
+*.zip

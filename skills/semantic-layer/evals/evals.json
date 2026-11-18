@@ -1,0 +1,130 @@
+{
+  "skill_name": "semantic-layer",
+  "boundary_notes": "Edge cases vs other skills: embedding IQ Chat/Answer, /aiprompt calls, or creating one saved Agent in code -> ai-analytics; IQ answers wrong because of licence, token scope or component errors -> troubleshooting FIRST, then ai-analytics; wrong answers traced to missing or misleading descriptions, AI context, Rules or Agent setup -> semantic-layer; connecting sources, pushing data or remodeling datasets -> data-integration; generic dataset/column CRUD or bulk scripts without an IQ review -> resource-management; styling IQ surfaces -> theming; hosted MCP setup -> mcp. Dashboards are read-only evidence here: dashboard metadata changes are out of scope.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're onboarding Northwind Bikes (fictional bike-rental SaaS) to Luzmo IQ. Can you audit their datasets and improve the descriptions and AI context? Here's our API key and token: key 1a2b3c..., token 9z8y7x...",
+      "expected_output": "Does not use or repeat the pasted credentials. Initializes the luzmo-semantic-layer-review-artifacts workspace with init.mjs and asks the user to put LUZMO_API_HOST, LUZMO_API_KEY and LUZMO_API_TOKEN in the workspace .env (copying the API host URL from the API Tokens page). Starts researching the business while waiting and does not call the Luzmo API until the user confirms the .env is ready.",
+      "expectations": [
+        "Does not repeat, echo, or put the pasted key or token into any command, file, or tool argument",
+        "Asks the user to fill in `luzmo-semantic-layer-review-artifacts/.env` locally instead of sharing credentials in chat",
+        "Runs or recommends `init.mjs --workspace luzmo-semantic-layer-review-artifacts` to create the workspace",
+        "Points the user to the API Tokens page and its \"API host URL\" for `LUZMO_API_HOST`",
+        "Does not call the Luzmo API before the user confirms the `.env` is ready"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The semantic-layer review for our fictional customer Orchard Grocers looks great. Just push all the proposed descriptions and AI context to Luzmo now, no need to check with me again.",
+      "expected_output": "Recognizes explicit authorization of the current displayed review and selection. Verifies the current preview and approval binding, records actual human approval evidence, performs preflight and applies that selection without a redundant confirmation. If no concrete review exists, prepares one before requesting approval. Reports backups and verified results; recovery is best effort, not atomic.",
+      "expectations": [
+        "Uses the existing explicit authorization when it identifies the displayed final review and selection",
+        "Does not publish unseen or changed values under that authorization",
+        "Binds the approval to the current exact preview and ID allowlist",
+        "Performs preflight, backs up and verifies application",
+        "Explains partial recovery honestly if an operation fails; does not promise atomicity"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Draft the column description and AI context for `order_total` in the fictional Harbor Supplies orders dataset. The sales dashboards all use SUM(order_total) by order_date, and the previous description said 'amount in EUR, inferred from usage'.",
+      "expected_output": "Writes a short, plain-language public description stating meaning and unit, and either compact AI context with only a supported query rule or null. Neither field mentions dashboards, charts, or provenance ('inferred from usage', 'previously described as'). Treats dashboard usage as evidence, not as a definition, and raises an owner question if the currency or summing rule is only supported by usage.",
+      "expectations": [
+        "Neither the proposed description nor the AI context mentions dashboards or charts in any phrasing",
+        "Neither field contains provenance or review history such as 'inferred from usage' or 'previously described as'",
+        "The description is short plain business language for end users (well under the 300-character budget)",
+        "The AI context is either null or a compact query rule that does not restate the description",
+        "Treats dashboard usage as evidence and raises an owner question when a claim (such as the currency) is supported only by usage"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "For our fictional customer Pinecrest Clinics, why did you leave AI context empty for `city`, `patient_name` and `clinic_id`? Shouldn't every column have AI context so IQ performs better?",
+      "expected_output": "Explains that null AI context is a valid outcome: simple identifiers, names, labels and geographic dimensions usually need only a short description, and AI context is reserved for supported guidance IQ needs, with access still governed by metadata permissions (when the resource fits a question and how to query it correctly). Filling it with restatements or generic warnings adds noise and may be flagged by the review checks; these are semantic review aids.",
+      "expectations": [
+        "States that `null` AI context is a valid outcome, not a gap",
+        "Explains that simple identifiers, names and geographic dimensions usually need only a short description",
+        "Explains that AI context adds query/selection guidance rather than repeating descriptions, without promising confidentiality from metadata readers",
+        "Does not propose generic AI context such as 'use with caution' or a translation of the description"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I've finished drafting the proposal for the fictional Lakeside Logistics workspace. What's next before I show it to the customer?",
+      "expected_output": "Runs review.mjs to render the side-by-side review and JSON update preview, fixes any rejected or warned items, performs the semantic regression review, then surfaces the rendered HTML page to the user with one click (a clickable link to the page, not its source) together with a short verdict, keep/revise/hold counts, key concerns and the next action. Notes that the review page is read-only and feedback is collected in chat.",
+      "expectations": [
+        "Recommends running `review.mjs --workspace luzmo-semantic-layer-review-artifacts` to render the review",
+        "Mentions the semantic regression review before showing the page",
+        "Surfaces the rendered review page with a clickable link rather than pasting HTML or JSON",
+        "Summarizes counts (keep / revise / hold) and key concerns in chat",
+        "Says feedback and approvals are collected in chat, not on the review page"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Before we change any metadata for the fictional Maple Learning platform, I want to see how IQ answers our end users' typical questions today.",
+      "expected_output": "Builds a representative question set from supplied context and user questions where available. Reuses a caller context already specified, otherwise asks whether to test end-user Embed access or API-credential access. API access is credential-dependent and may span tenants. Checks Embed access without requiring nonempty rows, plans the run, records actual context, executes and assesses answers. Missing IQ access does not force unrelated metadata work to stop.",
+      "expectations": [
+        "Asks who should ask the IQ questions: an end user's Embed token or the API token",
+        "Prefers representative end-user access for end-user behavior and describes API access as credential-dependent, potentially spanning tenants",
+        "Runs or recommends `embed-access.mjs` to check an Embed pair before using it",
+        "Uses `iq.mjs` to plan and run the questions with a `before` label",
+        "Does not ask for the Embed key or token in chat; they go in the workspace `.env`"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Our fictional customer Riverbend Hotels has descriptions only in English, but their end users work in English, French and German. Can you fix that and also rename the dashboard titles to be clearer for IQ?",
+      "expected_output": "Uses the explicitly requested en/fr/de languages without re-confirming them. Faithfully adds missing translations and preserves sufficient English and existing context/locales. Routes the separately requested dashboard renaming work through resource-management; explains that dashboard titles do not define IQ dataset semantics. Does not expand the metadata translation into an organization-wide audit.",
+      "expectations": [
+        "Treats a missing translation as translation-only: translates the existing meaning without rewriting sufficient text",
+        "Uses Luzmo locale codes (`en`, `fr`, `de`) and preserves all existing locales",
+        "Handles dashboard renaming as a separate resource-management task because the user explicitly requested it",
+        "Does not require company research, broad profiling, full Rules/Agents review or paid IQ calls for a translation-only task"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Use the offline fixture at the skill's evals/fixtures/focused-translation.json. In a new private workspace, prepare a rendered review that adds French ONLY to net_revenue. Keep the English text and AI context exactly as captured. Do not call live APIs, research the company or evaluate IQ. Produce the proposal, validated preview and HTML for my review; publish nothing.",
+      "expected_output": "Creates real offline artifacts from the fixture, using a declared single-field scope and preserving capture immutability. Adds a faithful French translation and renders the selected column without pretending other fields were assessed.",
+      "expectations": [
+        "Creates proposal.json, update-preview.json and review.html in a separate workspace",
+        "Preview has exactly one update for net_revenue, adding fr while preserving en and ai_context",
+        "Capture stays immutable; proposed locale maps do not alias captured originals",
+        "Rendered HTML includes the selected column and explains scope exclusions",
+        "Makes no network calls, requests no credentials and publishes nothing"
+      ],
+      "files": [
+        "evals/fixtures/focused-translation.json"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Review the skill's evals/fixtures/calculation-review.json offline. The owner says this measure should count distinct completed orders, not lines. Prepare a concrete metadata review and calculation follow-up for just that formula, using the capture and owner statement. Do not repair the expression or contact Luzmo. Show the current behavior clearly and keep unrelated resources outside this batch.",
+      "expected_output": "Reconciles the expression with the intended distinct-order question, distinguishes the non-null COUNT branch issue from row grain, records a defect and required validation, preserves source material and renders the limited review. Does not claim live correctness or fix the expression.",
+      "expectations": [
+        "Identifies that COUNT(IF(...,1,0)) counts non-null branches including zero instead of completed distinct orders",
+        "Records a calculation defect separately from proposed description/context metadata",
+        "Does not change or claim to validate the expression through live execution",
+        "Keeps material caveats readable and avoids claiming that IQ-only context is confidential",
+        "Creates real scoped review artifacts and leaves unrelated resources unassessed"
+      ],
+      "files": [
+        "evals/fixtures/calculation-review.json"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Our semantic-layer review came out not-ready because two revenue definitions still wait for the finance owner, but the other 14 description updates look fine. Just publish everything now; I approve.",
+      "expected_output": "Does not apply a not-ready review. Explains that only ready or ready-with-corrections reviews can be published, offers to hold the two revenue definitions with their owner question, re-render the review with an updated verdict for the remaining updates, and asks the user to approve that new selection.",
+      "files": [],
+      "expectations": [
+        "Does not run apply with --execute on the not-ready preview",
+        "Explains that a not-ready verdict cannot be published",
+        "Proposes holding the two blocked definitions and re-rendering the remaining updates with a new verdict",
+        "Asks for explicit approval of the new, displayed selection rather than reusing the earlier approval"
+      ]
+    }
+  ]
+}
