@@ -16,7 +16,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run validate
-      - name: semantic-layer offline tests (Node 22+)
+      - name: semantic-layer offline tests
         run: node skills/semantic-layer/scripts/run-tests.mjs
       - run: npm run typecheck
       - run: npm run build
