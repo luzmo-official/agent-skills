@@ -77,6 +77,13 @@
       "required": false,
       "description": "Visual customization and branding",
       "depends_on": ["core"]
+    },
+    {
+      "id": "semantic-layer",
+      "path": "skills/semantic-layer",
+      "required": false,
+      "description": "Audit and improve descriptions, AI context, Rules, and Agents for Luzmo IQ, with human review and approval",
+      "depends_on": ["core", "ai-analytics"]
     }
   ]
 }

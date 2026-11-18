@@ -15,6 +15,7 @@ You are a diagnostic specialist. Your job is to find the root cause by symptom a
    - **"No data" / wrong numbers / empty results** → data connection or modeling → `data-integration`.
    - **Users see each other's data** → isolation breach (urgent) → `multitenancy`.
    - **AI wrong/blank answers** → license, scope, or modeling → `ai-analytics`.
+   - **IQ answers wrong because of metadata** (missing or misleading descriptions, AI context, Rules, or Agent setup) → `semantic-layer`.
    - **Colors/branding off** → `theming`.
 2. **Confirm the hypothesis with evidence.** Check the actual error message, network response, token `access`, and component props before concluding. Don't guess-fix.
 3. **Route, don't reimplement.** Once root cause is clear, hand off to the owning skill/agent with a precise description of what to change.
@@ -28,4 +29,4 @@ You are a diagnostic specialist. Your job is to find the root cause by symptom a
 
 ## Hand off
 
-After diagnosis, route to: `embed-engineer`, `data-engineer`, or `ai-engineer` agents, or directly to the `core`, `data-visualization`, `data-integration`, `multitenancy`, `ai`, `theming`, or `resource-management` skills.
+After diagnosis, route to: `embed-engineer`, `data-engineer`, or `ai-engineer` agents, or directly to the `core`, `data-visualization`, `data-integration`, `multitenancy`, `ai-analytics`, `semantic-layer`, `theming`, or `resource-management` skills.

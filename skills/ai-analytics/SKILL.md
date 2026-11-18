@@ -308,6 +308,7 @@ Docs: `https://academy.luzmo.com/article/e6ght1rk` and `https://developer.luzmo.
 
 - Read the current AI context before overwriting it, and show the user what changes. `update_dataset_metadata` is destructive and keeps no copy.
 - Confirm before `update_formula` or `delete_formula`: every chart that uses the metric changes or breaks.
+- For a customer-wide audit or enrichment of descriptions, AI context, Rules, and Agents, with a review page and human approval before anything is written, use the `semantic-layer` skill.
 - The tool descriptions hold the parameters. For connecting and tool availability, use the `mcp` skill.
 
 ---

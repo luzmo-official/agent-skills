@@ -25,6 +25,7 @@ Or install skills into `.agents/skills/` manually from the `skills/` directory.
 | `data-integration` | Connectors, push data, SQL views |
 | `resource-management` | CRUD for Luzmo resources |
 | `theming` | Themes, Lucero/ACK tokens, CSS variables |
+| `semantic-layer` | Audit and improve descriptions, AI context, Rules, and Agents for IQ, with human review and approval |
 
 Load the relevant `skills/<name>/SKILL.md` when the user's task matches.
 

@@ -7,6 +7,17 @@ This project is in `alpha`; until `1.0.0`, minor versions may include breaking c
 
 ## [Unreleased]
 
+### Added
+
+- New `semantic-layer` skill (`0.1.0`): audit and improve a customer's semantic layer for Luzmo IQ (dataset, field and formula descriptions, AI context, AI rules and saved agents) from evidence, and publish only the changes a person approves.
+  - Scripts with no dependencies: discovery and capture, usage and profiling, IQ question runs before and after, review rendering, approval-gated apply with backups and restore.
+  - Safety guards: apply refuses a `not-ready` review or anything that changed (including renames) since capture; restore accepts only unmodified backups listed in `artifacts/backups/manifest.json`; rules-and-agents backups hold the full inventory; Ctrl+C stops cleanly and cancels a running IQ question. Runs on Node.js 18 or newer.
+  - A private review page for non-technical reviewers: verdict and counts first, a prioritized “Check these first” list, word-level diffs of descriptions and AI context, filters, and separate views for AI rules and agents, test questions and how IQ answers today. Every number at the top opens its section. Unchanged items are hidden (also in print) unless the reviewer ticks “Also show unchanged items”, and the review is written in the user's language (`review_language`) while quoting customer metadata as is. Light and dark mode, phone layout and print.
+  - “Open in Luzmo” links for datasets, fields, metrics, agents, rules and evidence dashboards. The address comes from the optional `LUZMO_APP_HOST` in `.env` (for custom domains), otherwise from `LUZMO_API_HOST`, and the reviewer can change it in a field at the top of the page.
+  - A compact `SKILL.md` (workflow, always-on rules and when to read which reference); detailed guidance loads from step-specific reference files only when needed.
+  - Offline test suite (`scripts/run-tests.mjs`), now run in CI, plus task and trigger evals.
+  - Routed from `ai-analytics`, `luzmo-ai-engineer` and `luzmo-troubleshooter` for customer-wide metadata audits and wrong IQ answers caused by metadata.
+
 ### Changed
 
 - `custom-charts` (`0.1.3`): lessons from building and publishing a chart end to end.

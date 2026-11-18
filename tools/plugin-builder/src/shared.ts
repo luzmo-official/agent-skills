@@ -67,7 +67,7 @@ ${installSnippet}
 
 ## Skills
 
-All 9 Luzmo agent skills are bundled: foundation, visualizations, analytics-studio, ai-analytics, multitenancy, data-integration, resource-management, theming, troubleshooting.
+All 12 Luzmo agent skills are bundled: core, troubleshooting, data-visualization, custom-charts, analytics-studio, ai-analytics, mcp, multitenancy, data-integration, resource-management, theming, semantic-layer.
 
 ## MCP server (optional)
 

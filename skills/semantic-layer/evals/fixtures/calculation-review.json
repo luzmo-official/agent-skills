@@ -1,0 +1,137 @@
+{
+  "config": {
+    "schema_version": 1,
+    "customer": "Fictional offline sales review",
+    "languages": [
+      "en"
+    ],
+    "datasets": [
+      {
+        "id": "11111111-1111-4111-8111-111111111111"
+      }
+    ],
+    "review_scope": {
+      "resource_ids": [
+        "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
+      ],
+      "rationale": "Review the completed-order measure only."
+    }
+  },
+  "capture": {
+    "schema_version": 1,
+    "captured_at": "2026-10-28T10:00:00.000Z",
+    "host": "https://api.example.invalid",
+    "selection": [
+      "11111111-1111-4111-8111-111111111111"
+    ],
+    "complete": true,
+    "issues": [],
+    "dashboards": [],
+    "resources": [
+      {
+        "id": "11111111-1111-4111-8111-111111111111",
+        "name": {
+          "en": "Fictional order lines"
+        },
+        "kind": "dataset",
+        "resource": "securable",
+        "dataset_id": "11111111-1111-4111-8111-111111111111",
+        "type": "dataset",
+        "description": {
+          "en": "One row per order line. For sales and refund analysis."
+        },
+        "ai_context": "Synthetic fixture contract: net line amounts are EUR excluding tax; negative values are refunds."
+      },
+      {
+        "id": "22222222-2222-4222-8222-222222222222",
+        "name": {
+          "en": "tenant_id"
+        },
+        "type": "hierarchy",
+        "kind": "column",
+        "resource": "column",
+        "dataset_id": "11111111-1111-4111-8111-111111111111",
+        "description": {
+          "en": "Tenant identifier."
+        },
+        "ai_context": null,
+        "expression": null
+      },
+      {
+        "id": "33333333-3333-4333-8333-333333333333",
+        "name": {
+          "en": "order_date"
+        },
+        "type": "datetime",
+        "kind": "column",
+        "resource": "column",
+        "dataset_id": "11111111-1111-4111-8111-111111111111",
+        "description": {
+          "en": "Order creation timestamp."
+        },
+        "ai_context": null,
+        "expression": null
+      },
+      {
+        "id": "44444444-4444-4444-8444-444444444444",
+        "name": {
+          "en": "net_revenue"
+        },
+        "type": "numeric",
+        "kind": "column",
+        "resource": "column",
+        "dataset_id": "11111111-1111-4111-8111-111111111111",
+        "description": {
+          "en": "Net line revenue. Negative values represent refunds."
+        },
+        "ai_context": null,
+        "expression": null
+      },
+      {
+        "id": "55555555-5555-4555-8555-555555555555",
+        "name": {
+          "en": "line_id"
+        },
+        "type": "hierarchy",
+        "kind": "column",
+        "resource": "column",
+        "dataset_id": "11111111-1111-4111-8111-111111111111",
+        "description": {
+          "en": "Order-line identifier."
+        },
+        "ai_context": null,
+        "expression": null
+      },
+      {
+        "id": "66666666-6666-4666-8666-666666666666",
+        "name": {
+          "en": "status"
+        },
+        "type": "hierarchy",
+        "kind": "column",
+        "resource": "column",
+        "dataset_id": "11111111-1111-4111-8111-111111111111",
+        "description": {
+          "en": "Recorded order status."
+        },
+        "ai_context": null,
+        "expression": null
+      },
+      {
+        "id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+        "kind": "formula",
+        "resource": "formula",
+        "dataset_id": "11111111-1111-4111-8111-111111111111",
+        "name": {
+          "en": "Completed orders"
+        },
+        "description": {
+          "en": "Number of distinct completed orders."
+        },
+        "ai_context": null,
+        "expression": "COUNT(IF({11111111-1111-4111-8111-111111111111:66666666-6666-4666-8666-666666666666} = 'completed', 1, 0))"
+      }
+    ]
+  },
+  "owner_statement": "This measure should count distinct completed orders, not order lines. The dataset has one row per order line."
+}
