@@ -7,6 +7,8 @@ This project is in `alpha`; until `1.0.0`, minor versions may include breaking c
 
 ## [Unreleased]
 
+## [0.1.6] - 2026-11-20
+
 ### Added
 
 - New `semantic-layer` skill (`0.1.0`): audit and improve the metadata Luzmo IQ relies on (dataset, column and formula descriptions, AI context, AI rules and saved agents). It proposes evidence-backed changes in a private review page and publishes only what a person approves, with backups and restore. Scripts have no dependencies (Node.js 18+) and are tested in CI. `ai-analytics`, `luzmo-ai-engineer` and `luzmo-troubleshooter` now route metadata audits and wrong IQ answers caused by metadata to it.
